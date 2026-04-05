@@ -9,7 +9,7 @@ import {
 
 type TerminalLayoutProps = PropsWithChildren<{
   header: ReactNode
-  footer: ReactNode
+  footer?: ReactNode
 }>
 
 const TerminalLayout = ({
@@ -18,10 +18,10 @@ const TerminalLayout = ({
   children,
 }: TerminalLayoutProps) => {
   return (
-    <TerminalFrame>
+    <TerminalFrame $hasFooter={Boolean(footer)}>
       <TerminalHeader>{header}</TerminalHeader>
       <TerminalContent>{children}</TerminalContent>
-      <TerminalFooter>{footer}</TerminalFooter>
+      {footer ? <TerminalFooter>{footer}</TerminalFooter> : null}
     </TerminalFrame>
   )
 }

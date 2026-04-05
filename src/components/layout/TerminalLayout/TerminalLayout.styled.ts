@@ -4,11 +4,12 @@ import { ACTIVE_SCREEN_MODE, SCREEN_RESOLUTIONS } from '../../../config/screenCo
 
 const activeResolution = SCREEN_RESOLUTIONS[ACTIVE_SCREEN_MODE]
 
-export const TerminalFrame = styled.div`
+export const TerminalFrame = styled.div<{ $hasFooter: boolean }>`
   width: ${activeResolution.width}px;
   height: ${activeResolution.height}px;
   display: grid;
-  grid-template-rows: 120px 1fr 140px;
+  grid-template-rows: ${({ $hasFooter }) =>
+    $hasFooter ? '120px 1fr 150px' : '120px 1fr'};
   background-color: #ffffff;
   overflow: hidden;
 `

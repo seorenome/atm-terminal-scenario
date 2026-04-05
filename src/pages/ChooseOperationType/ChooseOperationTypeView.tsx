@@ -1,4 +1,7 @@
-import { ContentWrapper, PageTitle } from './ChooseOperationTypeView.styled'
+import {
+  ContentWrapper,
+  PageTitle,
+} from './ChooseOperationTypeView.styled'
 
 const ChooseOperationTypeView = () => {
   return (

@@ -7,8 +7,15 @@ export const ContentWrapper = styled.div`
 `
 
 export const PageTitle = styled.h1`
-  margin: 0;
+  margin: 0 0 40px;
   font-size: 40px;
   font-weight: 600;
   line-height: 1.2;
+`
+
+export const ButtonsPreview = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
 `
