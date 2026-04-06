@@ -9,13 +9,12 @@ export const TerminalFrame = styled.div<{ $hasFooter: boolean }>`
   height: ${activeResolution.height}px;
   display: grid;
   grid-template-rows: ${({ $hasFooter }) =>
-    $hasFooter ? '120px 1fr 150px' : '120px 1fr'};
-  background-color: #ffffff;
+    $hasFooter ? '100px 1fr 150px' : '100px 1fr'};
+  background-color: #F4F5FA;
   overflow: hidden;
 `
 
 export const TerminalHeader = styled.header`
-  border-bottom: 1px solid #d9d9d9;
 `
 
 export const TerminalContent = styled.main`
@@ -23,5 +22,4 @@ export const TerminalContent = styled.main`
 `
 
 export const TerminalFooter = styled.footer`
-  border-top: 1px solid #d9d9d9;
 `
