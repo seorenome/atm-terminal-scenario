@@ -9,6 +9,7 @@ const en = {
   footer: {
     cancel: 'Cancel',
     repeat: 'Repeat',
+    continue: 'Continue',
   },
   errorScreen: {
     title: 'You entered an incorrect recipient card number!',
@@ -16,6 +17,12 @@ const en = {
     secondaryMessage:
       'To correct the data and continue the card top-up operation, press the “REPEAT” button',
   },
+  printerErrorScreen: {
+  title: 'It is impossible to print a receipt after the operation is completed',
+  primaryMessage: 'The receipt printer is temporarily unavailable.',
+  secondaryMessage:
+    'If you agree to perform the operation without a receipt, press the “Continue” button',
+},
 }
 
 export default en
