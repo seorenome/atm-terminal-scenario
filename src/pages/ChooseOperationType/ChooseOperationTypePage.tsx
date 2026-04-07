@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
@@ -30,28 +29,8 @@ const ChooseOperationTypePage = () => {
             supportDescription={t.header.supportDescription}
           />
         }
-        footer={
-          <TerminalFooter
-            leftButtons={[
-              {
-                label: t.footer.cancel,
-                variant: 'cancel',
-              },
-            ]}
-            rightButtons={[
-              {
-                label: t.footer.repeat,
-                variant: 'repeat',
-              },
-            ]}
-          />
-        }
       >
-        <ChooseOperationTypeView
-          title={t.errorScreen.title}
-          primaryMessage={t.errorScreen.primaryMessage}
-          secondaryMessage={t.errorScreen.secondaryMessage}
-        />
+        <ChooseOperationTypeView t={t} />
       </TerminalLayout>
     </TerminalViewport>
   )
