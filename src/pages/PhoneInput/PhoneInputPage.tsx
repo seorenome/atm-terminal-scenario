@@ -20,6 +20,7 @@ const PhoneInputPage = () => {
   return (
     <TerminalViewport>
       <TerminalLayout
+        variant="numeric-entry"
         header={
           <TerminalHeader
             variant="action-button"

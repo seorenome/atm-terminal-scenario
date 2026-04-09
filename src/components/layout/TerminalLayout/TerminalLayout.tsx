@@ -1,5 +1,4 @@
 import type { PropsWithChildren, ReactNode } from 'react'
-
 import {
   TerminalContent,
   TerminalFooter,
@@ -10,18 +9,26 @@ import {
 type TerminalLayoutProps = PropsWithChildren<{
   header: ReactNode
   footer?: ReactNode
+  variant?: 'default' | 'numeric-entry'
 }>
 
 const TerminalLayout = ({
   header,
   footer,
   children,
+  variant = 'default',
 }: TerminalLayoutProps) => {
+  const hasFooter = Boolean(footer)
+
   return (
-    <TerminalFrame $hasFooter={Boolean(footer)}>
+    <TerminalFrame $hasFooter={hasFooter} $variant={variant}>
       <TerminalHeader>{header}</TerminalHeader>
-      <TerminalContent>{children}</TerminalContent>
-      {footer ? <TerminalFooter>{footer}</TerminalFooter> : null}
+
+      <TerminalContent $variant={variant}>{children}</TerminalContent>
+
+      {footer ? (
+        <TerminalFooter $variant={variant}>{footer}</TerminalFooter>
+      ) : null}
     </TerminalFrame>
   )
 }

@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 export const Keypad = styled.div`
-  background: #26cfc8;
   width: 545px;
-  height: 921px;
+  height: 100%;
+  min-height: 100%;
   padding: 210px 0 0;
 
   display: flex;
@@ -11,17 +11,17 @@ export const Keypad = styled.div`
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  align-self: stretch;
+
+  background: #26cfc8;
 `
 
 export const KeyRows = styled.div`
-  height: 457.193px;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
-  flex-shrink: 0;
 `
 
 export const Row = styled.div`
@@ -87,8 +87,8 @@ export const DeleteLabel = styled.span`
   color: #111e29;
   text-align: center;
   font-family: 'Oschad Sans';
-  font-size: 36px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 600;
-  line-height: normal;
+  line-height: 24px;
 `

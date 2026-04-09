@@ -105,7 +105,7 @@ export const ActionButton = styled.button`
   border: none;
   border-radius: 15px;
   background: rgba(235, 246, 250, 1);
-  cursor: default;
+  cursor: pointer;
 `
 
 export const ActionIcon = styled.img`
@@ -115,13 +115,15 @@ export const ActionIcon = styled.img`
 `
 
 export const ActionLabel = styled.span`
-  color: rgba(0, 130, 155, 1);
+  color: #00829b;
   height: auto;
   text-align: left;
-  line-height: 24px;
   font-family: 'Oschad Sans', Arial, sans-serif;
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.56px;
+  text-transform: uppercase;
   text-decoration: none;
 `

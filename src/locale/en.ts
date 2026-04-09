@@ -45,12 +45,12 @@ const en = {
     },
   },
   phoneInputScreen: {
-    title: 'Enter the confirmation code received by SMS',
+    title: 'Enter the phone number for top-up',
     hint: 'Please enter your phone number in the format +38 (0XX) XXX XX XX',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',
-    emptyMask: '+38 (0__) ___ __ __',
+    emptyMask: '+38 (___) ___ __ __',
   },
 }
 

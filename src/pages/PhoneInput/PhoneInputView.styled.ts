@@ -3,9 +3,10 @@ import styled from 'styled-components'
 export const Content = styled.main`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: stretch;
   flex: 1 0 auto;
   align-self: stretch;
+  min-height: 100%;
   overflow: hidden;
 `
 
@@ -78,4 +79,6 @@ export const Right = styled.aside`
   min-width: 545px;
   flex-shrink: 0;
   align-self: stretch;
+  min-height: 100%;
+  display: flex;
 `
