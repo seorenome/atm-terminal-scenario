@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { routePaths } from '../constants/routePaths'
 import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
+import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 
 export const router = createBrowserRouter([
@@ -11,6 +12,10 @@ export const router = createBrowserRouter([
   {
     path: routePaths.chooseOperationType,
     element: <ChooseOperationTypePage />,
+  },
+  {
+    path: routePaths.phoneInput,
+    element: <PhoneInputPage />,
   },
   {
     path: routePaths.printerError,

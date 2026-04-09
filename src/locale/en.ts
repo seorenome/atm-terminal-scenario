@@ -4,7 +4,7 @@ const en = {
     supportDescription: 'free within Ukraine',
     languageUa: 'UA',
     languageEn: 'EN',
-    exit: 'EXIT',
+    exit: 'Exit',
   },
   footer: {
     cancel: 'Cancel',
@@ -43,6 +43,14 @@ const en = {
         description: 'Payment of utility services by details across Ukraine',
       },
     },
+  },
+  phoneInputScreen: {
+    title: 'Enter the confirmation code received by SMS',
+    hint: 'Please enter your phone number in the format +38 (0XX) XXX XX XX',
+    back: 'Back',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: '+38 (0__) ___ __ __',
   },
 }
 

@@ -4,7 +4,7 @@ const uk = {
     supportDescription: 'в межах України безкоштовно',
     languageUa: 'UA',
     languageEn: 'EN',
-    exit: 'ЗАВЕРШИТИ',
+    exit: 'Завершити',
   },
   footer: {
     cancel: 'Скасувати',
@@ -43,6 +43,14 @@ const uk = {
         description: 'Оплата комунальних послуг за реквізитами по всій Україні',
       },
     },
+  },
+  phoneInputScreen: {
+    title: 'Введіть отриманий код підтвердженя з смс',
+    hint: 'Будь ласка, введіть свій номер телефону у форматі +38 (0XX) XXX XX XX',
+    back: 'Назад',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: '+38 (0__) ___ __ __',
   },
 }
 

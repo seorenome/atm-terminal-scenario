@@ -1,7 +1,6 @@
 import ExitIcon from '../../../assets/icons/exit.svg'
 import LineIcon from '../../../assets/icons/line.svg'
 import Logo from '../../../assets/icons/logo.svg'
-
 import {
   ActionButton,
   ActionIcon,
@@ -35,7 +34,7 @@ const TerminalHeader = ({
 
   return (
     <HeaderRoot>
-      <HeaderLogo src={Logo} alt="Ощадбанк" />
+      <HeaderLogo src={Logo} alt="Oschadbank logo" />
 
       <HeaderInfo>
         <HeaderPhone>{supportPhone}</HeaderPhone>
@@ -53,7 +52,7 @@ const TerminalHeader = ({
               EN
             </LanguageButton>
 
-            <LanguageDivider src={LineIcon} alt="" aria-hidden="true" />
+            <LanguageDivider src={LineIcon} alt="" />
 
             <LanguageButton
               type="button"
@@ -65,7 +64,7 @@ const TerminalHeader = ({
           </LanguageSwitcher>
         ) : (
           <ActionButton type="button">
-            <ActionIcon src={ExitIcon} alt="" aria-hidden="true" />
+            <ActionIcon src={ExitIcon} alt="" />
             <ActionLabel>{actionLabel}</ActionLabel>
           </ActionButton>
         )}

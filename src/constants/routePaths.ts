@@ -2,5 +2,5 @@ export const routePaths = {
   home: '/',
   chooseOperationType: '/choose-operation-type',
   printerError: '/printer-error',
-  cardError: '/card-error',
+  phoneInput: '/phone-input',
 } as const

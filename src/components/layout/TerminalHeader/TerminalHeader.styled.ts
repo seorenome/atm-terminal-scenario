@@ -8,8 +8,10 @@ export const HeaderRoot = styled.header`
   align-items: flex-start;
   flex-shrink: 0;
   align-self: stretch;
-  background: #FFF;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 4px 80px 0 rgba(0, 130, 155, 0.10);
+  background: #fff;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 4px 80px 0 rgba(0, 130, 155, 0.1);
 `
 
 export const HeaderLogo = styled.img`
@@ -77,7 +79,6 @@ export const LanguageButton = styled.button<{ $active: boolean }>`
   border: none;
   background: transparent;
   cursor: pointer;
-
   color: rgba(17, 30, 41, 1);
   height: auto;
   text-align: right;
