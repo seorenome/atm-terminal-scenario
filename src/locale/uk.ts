@@ -52,6 +52,14 @@ const uk = {
     delete: 'Стерти',
     emptyMask: '+38 (___) ___ __ __',
   },
+  cardInputScreen: {
+    title: 'Введіть номер картки для поповнення',
+    hint: 'Будь ласка, введіть свій номер картки у форматі XXXX XXXX XXXX XXXX',
+    back: 'Назад',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: '____ ____ ____ ____',
+  },
 }
 
 export default uk

@@ -52,6 +52,14 @@ const en = {
     delete: 'Delete',
     emptyMask: '+38 (___) ___ __ __',
   },
+  cardInputScreen: {
+    title: 'Enter the card number for top-up',
+    hint: 'Please enter your card number in the format XXXX XXXX XXXX XXXX',
+    back: 'Back',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: '____ ____ ____ ____',
+  },
 }
 
 export default en
