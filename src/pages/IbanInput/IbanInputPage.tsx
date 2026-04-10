@@ -5,18 +5,15 @@ import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeade
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import CardInput from '../../components/ui/CardInput/CardInput'
+import IbanInput from '../../components/ui/IbanInput/IbanInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
-import { withInactivity } from '../../hoc/withInactivity'
-
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
+import IbanInputView from './IbanInputView'
 
-import CardInputView from './CardInputView'
-
-const CardInputPage = () => {
+const IbanInputPage = () => {
   const [locale, setLocale] = useState<Locale>(defaultLocale)
-  const [value, setValue] = useState('')
+  const [digits, setDigits] = useState('')
 
   const t = translations[locale]
 
@@ -25,20 +22,20 @@ const CardInputPage = () => {
   }
 
   const handleDigitClick = (digit: string) => {
-    setValue((prev) => {
-      if (prev.length >= 16) {
-        return prev
-      }
-
-      return prev + digit
-    })
+    if (digits.length < 27) {
+      setDigits((prev) => prev + digit)
+    }
   }
 
   const handleDeleteClick = () => {
-    setValue((prev) => prev.slice(0, -1))
+    setDigits((prev) => prev.slice(0, -1))
   }
 
-  const isValid = value.length === 16
+  const handleChange = (newDigits: string) => {
+    setDigits(newDigits)
+  }
+
+  const isValid = digits.length === 27
 
   return (
     <TerminalViewport>
@@ -57,13 +54,13 @@ const CardInputPage = () => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.cardInputScreen.back,
+                label: t.ibanInputScreen.back,
                 variant: 'cancel',
               },
             ]}
             rightButtons={[
               {
-                label: t.cardInputScreen.continue,
+                label: t.ibanInputScreen.continue,
                 variant: 'continue',
                 disabled: !isValid,
               },
@@ -71,19 +68,20 @@ const CardInputPage = () => {
           />
         }
       >
-        <CardInputView
+        <IbanInputView
           t={t}
           input={
-            <CardInput
-              value={value}
-              placeholder={t.cardInputScreen.emptyMask}
+            <IbanInput
+              value={digits}
+              onChange={handleChange}
+              placeholder={t.ibanInputScreen.emptyMask}
             />
           }
           keypad={
             <NumericKeypad
               onDigitClick={handleDigitClick}
               onDeleteClick={handleDeleteClick}
-              deleteLabel={t.cardInputScreen.delete}
+              deleteLabel={t.ibanInputScreen.delete}
             />
           }
         />
@@ -92,4 +90,4 @@ const CardInputPage = () => {
   )
 }
 
-export default withInactivity(CardInputPage)
+export default IbanInputPage

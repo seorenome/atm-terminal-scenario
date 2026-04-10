@@ -60,6 +60,14 @@ const en = {
     delete: 'Delete',
     emptyMask: '____ ____ ____ ____',
   },
+  ibanInputScreen: {
+    title: 'Enter IBAN number',
+    hint: 'Enter IBAN containing 27 digits in the format UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    back: 'Back',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: 'UA __ ______ ___________________',
+  },
 }
 
 export default en

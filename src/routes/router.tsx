@@ -3,6 +3,7 @@ import { routePaths } from '../constants/routePaths'
 import CardErrorPage from '../pages/CardError/CardErrorPage'
 import CardInputPage from '../pages/CardInput/CardInputPage'
 import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
+import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 
@@ -30,5 +31,9 @@ export const router = createBrowserRouter([
   {
     path: routePaths.cardError,
     element: <CardErrorPage />,
+  },
+  {
+    path: routePaths.ibanInput,
+    element: <IbanInputPage />,
   },
 ])

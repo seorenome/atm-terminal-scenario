@@ -1,75 +1,44 @@
 import os
 import sys
+from pathlib import Path
+
+def should_include(file_path: Path, root: Path) -> bool:
+    """Перевіряє, чи варто включати файл."""
+    # Виключити зайве
+    exclude_dirs = {'node_modules', '.git', 'dist', 'build', '__pycache__', '.next'}
+    if any(part in exclude_dirs for part in file_path.parts):
+        return False
+    
+    # Розширення, які включаємо
+    extensions = {'.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.html', '.py', '.txt', '.svg', '.woff2'}
+    return file_path.suffix in extensions
 
 def collect_files():
-    # Get list of all files from the command output
-    files = [
-        "src/App.tsx",
-        "src/components/layout/TerminalFooter/TerminalFooter.styled.ts",
-        "src/components/layout/TerminalFooter/TerminalFooter.tsx",
-        "src/components/layout/TerminalFooter/TerminalFooter.types.ts",
-        "src/components/layout/TerminalHeader/TerminalHeader.styled.ts",
-        "src/components/layout/TerminalHeader/TerminalHeader.tsx",
-        "src/components/layout/TerminalHeader/TerminalHeader.types.ts",
-        "src/components/layout/TerminalLayout/TerminalLayout.styled.ts",
-        "src/components/layout/TerminalLayout/TerminalLayout.tsx",
-        "src/components/layout/TerminalViewport/TerminalViewport.styled.ts",
-        "src/components/layout/TerminalViewport/TerminalViewport.tsx",
-        "src/components/ui/Button/Button.styled.ts",
-        "src/components/ui/Button/Button.tsx",
-        "src/components/ui/Button/Button.types.ts",
-        "src/components/ui/CardInput/CardInput.styled.ts",
-        "src/components/ui/CardInput/CardInput.tsx",
-        "src/components/ui/CardInput/CardInput.types.ts",
-        "src/components/ui/InputField/InputField.styled.ts",
-        "src/components/ui/InputField/InputField.tsx",
-        "src/components/ui/InputField/InputField.types.ts",
-        "src/components/ui/NumericKeypad/NumericKeypad.styled.ts",
-        "src/components/ui/NumericKeypad/NumericKeypad.tsx",
-        "src/components/ui/NumericKeypad/NumericKeypad.types.ts",
-        "src/components/ui/OperationCard/OperationCard.styled.ts",
-        "src/components/ui/OperationCard/OperationCard.tsx",
-        "src/components/ui/OperationCard/OperationCard.types.ts",
-        "src/components/ui/PhoneInput/PhoneInput.styled.ts",
-        "src/components/ui/PhoneInput/PhoneInput.tsx",
-        "src/components/ui/PhoneInput/PhoneInput.types.ts",
-        "src/config/screenConfig.ts",
-        "src/constants/routePaths.ts",
-        "src/locale/en.ts",
-        "src/locale/index.ts",
-        "src/locale/types.ts",
-        "src/locale/uk.ts",
-        "src/main.tsx",
-        "src/pages/CardInput/CardInputPage.tsx",
-        "src/pages/CardInput/CardInputView.styled.ts",
-        "src/pages/CardInput/CardInputView.tsx",
-        "src/pages/ChooseOperationType/ChooseOperationTypePage.tsx",
-        "src/pages/ChooseOperationType/ChooseOperationTypeView.styled.ts",
-        "src/pages/ChooseOperationType/ChooseOperationTypeView.tsx",
-        "src/pages/PhoneInput/PhoneInputPage.tsx",
-        "src/pages/PhoneInput/PhoneInputView.styled.ts",
-        "src/pages/PhoneInput/PhoneInputView.tsx",
-        "src/pages/PrinterError/PrinterErrorPage.tsx",
-        "src/pages/PrinterError/PrinterErrorView.styled.ts",
-        "src/pages/PrinterError/PrinterErrorView.tsx",
-        "src/routes/router.tsx",
-        "src/styles/GlobalStyles.ts"
-    ]
+    root = Path('.')
+    output_file = 'atm.md'
     
-    with open('atm.md', 'w', encoding='utf-8') as outfile:
-        for file_path in files:
-            if os.path.exists(file_path):
-                outfile.write(f'=== {file_path} ===\n')
-                with open(file_path, 'r', encoding='utf-8') as infile:
-                    content = infile.read()
-                    outfile.write(content)
-                    if not content.endswith('\n'):
-                        outfile.write('\n')
-                outfile.write('\n')
-            else:
-                print(f"Warning: File not found: {file_path}")
+    # Збираємо всі файли рекурсивно
+    all_files = []
+    for file_path in root.rglob('*'):
+        if file_path.is_file() and should_include(file_path, root):
+            all_files.append(file_path)
     
-    print(f"Created atm.md with {len(files)} files")
+    # Сортуємо для консистентності
+    all_files.sort()
+    
+    with open(output_file, 'w', encoding='utf-8') as outfile:
+        for file_path in all_files:
+            outfile.write(f'=== {file_path} ===\n')
+            try:
+                content = file_path.read_text(encoding='utf-8')
+                outfile.write(content)
+                if not content.endswith('\n'):
+                    outfile.write('\n')
+            except Exception as e:
+                outfile.write(f'[Помилка читання: {e}]\n')
+            outfile.write('\n')
+    
+    print(f"✅ Створено {output_file} з {len(all_files)} файлів")
 
 if __name__ == "__main__":
     collect_files()

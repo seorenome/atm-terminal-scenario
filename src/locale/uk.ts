@@ -60,6 +60,14 @@ const uk = {
     delete: 'Стерти',
     emptyMask: '____ ____ ____ ____',
   },
+  ibanInputScreen: {
+    title: 'Введіть номер IBAN',
+    hint: 'Введіть IBAN, який містить 27 цифр у форматі UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    back: 'Назад',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: 'UA __ ______ ___________________',
+  },
 }
 
 export default uk
