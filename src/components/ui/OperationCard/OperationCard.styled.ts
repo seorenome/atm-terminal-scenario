@@ -19,6 +19,7 @@ export const Card = styled.button`
     0 20px 40px rgba(24, 180, 177, 0.1);
 
   text-align: left;
+  cursor: pointer;
 `
 
 export const Top = styled.div`

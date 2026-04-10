@@ -4,4 +4,5 @@ export const routePaths = {
   phoneInput: '/phone-input',
   cardInput: '/card-input',
   printerError: '/printer-error',
+  cardError: '/card-error',
 } as const
