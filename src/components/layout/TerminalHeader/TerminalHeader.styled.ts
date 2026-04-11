@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
 
 export const HeaderRoot = styled.header`
   display: flex;
@@ -12,11 +13,24 @@ export const HeaderRoot = styled.header`
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.1),
     0 4px 80px 0 rgba(0, 130, 155, 0.1);
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    height: 80px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
 `
 
 export const HeaderLogo = styled.img`
   width: 286px;
   height: 140px;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 225px;
+    height: 110px;
+  `}
 `
 
 export const HeaderInfo = styled.div`
@@ -27,6 +41,14 @@ export const HeaderInfo = styled.div`
   justify-content: center;
   align-items: center;
   align-self: stretch;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    padding-top: 0px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding-top: 0px;
+  `}
 `
 
 export const HeaderPhone = styled.div`
@@ -39,6 +61,10 @@ export const HeaderPhone = styled.div`
   font-style: normal;
   font-weight: 700;
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 46px;
+  `}
 `
 
 export const HeaderDescription = styled.div`
@@ -51,6 +77,10 @@ export const HeaderDescription = styled.div`
   font-style: normal;
   font-weight: 400;
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 24px;
+  `}
 `
 
 export const HeaderRight = styled.div`
@@ -59,6 +89,10 @@ export const HeaderRight = styled.div`
   justify-content: flex-end;
   align-items: center;
   align-self: stretch;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 225px;
+  `}
 `
 
 export const LanguageSwitcher = styled.div`
@@ -88,6 +122,10 @@ export const LanguageButton = styled.button<{ $active: boolean }>`
   font-style: normal;
   font-weight: ${({ $active }) => ($active ? 700 : 300)};
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 52px;
+  `}
 `
 
 export const LanguageDivider = styled.img`

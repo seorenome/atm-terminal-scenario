@@ -1,4 +1,47 @@
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '46px'
+}
+
+const getInfoCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '600px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '800px'
+  return '520px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getInfoTextLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getErrorIconSize = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '120px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '200px'
+  return '155px'
+}
 
 export const ContentWrapper = styled.div`
   width: 100%;
@@ -6,8 +49,8 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
-  gap: 60px;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
 `
 
 export const TitleWrapper = styled.div`
@@ -21,19 +64,19 @@ export const PageTitle = styled.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 46px;
+  font-size: ${getTitleFontSize()};
   font-weight: 600;
-  line-height: 46px;
+  line-height: ${getTitleLineHeight()};
   text-align: center;
 `
 
 export const ErrorIcon = styled.img`
-  width: 155px;
-  height: 155px;
+  width: ${getErrorIconSize()};
+  height: ${getErrorIconSize()};
 `
 
 export const InfoCard = styled.div`
-  width: 520px;
+  width: ${getInfoCardWidth()};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,8 +93,8 @@ export const InfoText = styled.p`
   width: 100%;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 24px;
+  font-size: ${getInfoTextFontSize()};
   font-weight: 500;
-  line-height: 32px;
+  line-height: ${getInfoTextLineHeight()};
   text-align: center;
 `

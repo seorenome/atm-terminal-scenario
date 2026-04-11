@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
 
 import type { ButtonVariant } from './Button.types'
 
@@ -25,9 +26,34 @@ const getVariantStyles = (variant: ButtonVariant) => {
   }
 }
 
+const getButtonWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '360px'
+  return '280px'
+}
+
+const getButtonHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'auto'
+  return '70px'
+}
+
+const getButtonPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '28px 0'
+  return '26px 0'
+}
+
+const getButtonFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '22px'
+}
+
+const getButtonLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '14px'
+}
+
 export const StyledButton = styled.button<StyledButtonProps>`
-  width: 280px;
-  height: 70px;
+  width: ${getButtonWidth()};
+  height: ${getButtonHeight()};
 
   display: flex;
   flex-direction: column;
@@ -35,7 +61,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
   gap: 10px;
 
-  padding: 10px;
+  padding: ${getButtonPadding()};
 
   border: none;
   border-radius: 15px;
@@ -43,9 +69,11 @@ export const StyledButton = styled.button<StyledButtonProps>`
   cursor: pointer;
 
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 22px;
+  font-size: ${getButtonFontSize()};
   font-weight: 600;
-  line-height: 24px;
+  line-height: ${getButtonLineHeight()};
+  letter-spacing: 0.56px;
+  text-transform: uppercase;
   text-align: center;
 
   ${({ $variant }) => getVariantStyles($variant)};

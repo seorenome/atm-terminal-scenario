@@ -3,6 +3,17 @@ import { ACTIVE_SCREEN_MODE, SCREEN_RESOLUTIONS } from '../../../config/screenCo
 
 const activeResolution = SCREEN_RESOLUTIONS[ACTIVE_SCREEN_MODE]
 
+const getHeaderHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getFooterHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '110px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '168px'
+  return '150px' // 1024p
+}
+
 export const TerminalFrame = styled.div<{
   $hasFooter: boolean
   $variant: 'default' | 'numeric-entry'
@@ -17,10 +28,10 @@ export const TerminalFrame = styled.div<{
   ${({ $hasFooter, $variant }) =>
     $variant === 'numeric-entry'
       ? css`
-          grid-template-rows: 100px 1fr;
+          grid-template-rows: ${getHeaderHeight()} 1fr;
         `
       : css`
-          grid-template-rows: ${$hasFooter ? '100px 1fr 150px' : '100px 1fr'};
+          grid-template-rows: ${$hasFooter ? `${getHeaderHeight()} 1fr ${getFooterHeight()}` : `${getHeaderHeight()} 1fr`};
         `}
 `
 
