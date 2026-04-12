@@ -68,6 +68,15 @@ const uk = {
     delete: 'Стерти',
     emptyMask: 'UA __ ______ ___________________',
   },
+  textInputScreen: {
+    title: 'Введіть призначення платежу',
+    placeholder: 'Введіть призначення платежу',
+    delete: 'Стерти',
+    back: 'Назад',
+    continue: 'Продовжити',
+    en: 'en',
+    ua: 'ua',
+  },
 }
 
 export default uk

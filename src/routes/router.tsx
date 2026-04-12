@@ -6,6 +6,7 @@ import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperatio
 import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
+import TextInputPage from '../pages/TextInput/TextInputPage'
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
   {
     path: routePaths.ibanInput,
     element: <IbanInputPage />,
+  },
+  {
+    path: routePaths.textInput,
+    element: <TextInputPage />,
   },
 ])

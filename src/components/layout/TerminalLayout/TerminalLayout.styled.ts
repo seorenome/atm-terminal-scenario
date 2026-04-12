@@ -11,17 +11,18 @@ const getHeaderHeight = () => {
 const getFooterHeight = () => {
   if (ACTIVE_SCREEN_MODE === '800p') return '110px'
   if (ACTIVE_SCREEN_MODE === '1080p') return '168px'
-  return '150px' // 1024p
+  return '150px'
 }
 
 export const TerminalFrame = styled.div<{
   $hasFooter: boolean
   $variant: 'default' | 'numeric-entry'
+  $backgroundColor?: string
 }>`
   width: ${activeResolution.width}px;
   height: ${activeResolution.height}px;
   display: grid;
-  background-color: #f4f5fa;
+  background-color: ${({ $backgroundColor }) => $backgroundColor || '#f4f5fa'};
   overflow: hidden;
   position: relative;
 

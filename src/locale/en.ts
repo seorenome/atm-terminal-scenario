@@ -68,6 +68,15 @@ const en = {
     delete: 'Delete',
     emptyMask: 'UA __ ______ ___________________',
   },
+  textInputScreen: {
+    title: 'Enter payment purpose',
+    placeholder: 'Enter payment purpose',
+    delete: 'Delete',
+    back: 'Back',
+    continue: 'Continue',
+    en: 'en',
+    ua: 'ua',
+  },
 }
 
 export default en

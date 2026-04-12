@@ -10,6 +10,7 @@ type TerminalLayoutProps = PropsWithChildren<{
   header: ReactNode
   footer?: ReactNode
   variant?: 'default' | 'numeric-entry'
+  backgroundColor?: string
 }>
 
 const TerminalLayout = ({
@@ -17,11 +18,12 @@ const TerminalLayout = ({
   footer,
   children,
   variant = 'default',
+  backgroundColor,
 }: TerminalLayoutProps) => {
   const hasFooter = Boolean(footer)
 
   return (
-    <TerminalFrame $hasFooter={hasFooter} $variant={variant}>
+    <TerminalFrame $hasFooter={hasFooter} $variant={variant} $backgroundColor={backgroundColor}>
       <TerminalHeader>{header}</TerminalHeader>
 
       <TerminalContent $variant={variant}>{children}</TerminalContent>
