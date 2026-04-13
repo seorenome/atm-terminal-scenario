@@ -32,7 +32,6 @@ const getInputFontSize = () => {
 }
 
 const getInputFontWeight = () => {
-  if (ACTIVE_SCREEN_MODE === '800p') return '400'
   return '600'
 }
 
@@ -44,7 +43,6 @@ export const ContentWrapper = styled.div`
   align-items: center;
   padding-top: ${getContentPaddingTop()};
   gap: ${getContentGap()};
-  background-color: rgba(38, 207, 200, 1);
 `
 
 export const TitleWrapper = styled.div`
