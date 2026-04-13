@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { routePaths } from '../constants/routePaths'
 import CardErrorPage from '../pages/CardError/CardErrorPage'
 import CardInputPage from '../pages/CardInput/CardInputPage'
+import CashAcceptancePage from '../pages/CashAcceptance/CashAcceptancePage'
 import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
 import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
@@ -40,5 +41,9 @@ export const router = createBrowserRouter([
   {
     path: routePaths.textInput,
     element: <TextInputPage />,
+  },
+  {
+    path: routePaths.cashAcceptance,
+    element: <CashAcceptancePage />,
   },
 ])

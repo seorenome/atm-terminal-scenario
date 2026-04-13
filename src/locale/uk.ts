@@ -77,6 +77,20 @@ const uk = {
     en: 'en',
     ua: 'ua',
   },
+    cashAcceptanceScreen: {
+    title: 'Внесення коштів',
+    instruction: 'Будь ласка, внесіть кошти по одній банкноті',
+    completeHint: 'Для завершення операції натисніть кнопку “Продовжити”',
+    notice: 'Зверніть увагу: термінал банкноти не повертає, решти не дає.',
+    maxAmount: 'Максимальна сума поповнення 5000 грн.',
+    commissionRate: 'Комісія 1% від суми поповнення',
+    willBeCredited: 'Буде зараховано на рахунок',
+    acceptedAmount: 'Прийнято коштів на суму',
+    commission: 'Комісія',
+    currency: 'грн.',
+    back: 'Назад',
+    continue: 'Продовжити',
+  },
 }
 
 export default uk

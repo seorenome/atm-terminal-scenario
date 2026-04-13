@@ -7,4 +7,5 @@ export const routePaths = {
   cardError: '/card-error',
   ibanInput: '/iban-input',
   textInput: '/text-input',
+  cashAcceptance: '/cash-acceptance',
 } as const

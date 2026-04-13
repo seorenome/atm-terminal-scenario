@@ -77,6 +77,20 @@ const en = {
     en: 'en',
     ua: 'ua',
   },
+    cashAcceptanceScreen: {
+    title: 'Cash deposit',
+    instruction: 'Please insert banknotes one by one',
+    completeHint: 'To complete the operation, press the “Continue” button',
+    notice: 'Please note: the terminal does not return banknotes, no change is given.',
+    maxAmount: 'Maximum deposit amount is 5000 UAH.',
+    commissionRate: 'Commission 1% of the deposit amount',
+    willBeCredited: 'Will be credited to account',
+    acceptedAmount: 'Amount accepted',
+    commission: 'Commission',
+    currency: 'UAH',
+    back: 'Back',
+    continue: 'Continue',
+  },
 }
 
 export default en
