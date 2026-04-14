@@ -33,6 +33,11 @@ const getCardHeight = () => {
   return '500px'
 }
 
+const getCardGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '0'
+  return '20px'
+}
+
 // Текст інструкції
 const getInstructionFontSize = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
@@ -67,6 +72,7 @@ const getLabelBoldFontSize = () => {
 }
 
 const getAmountMainFontSize = () => '46px'
+
 const getAmountCurrencyFontSize = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
   return '24px'
@@ -139,14 +145,13 @@ export const LeftCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: ${getCardGap()};
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
 `
 
 export const InstructionText = styled.div`
-  width: 100%;
   padding: 20px 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
@@ -192,18 +197,24 @@ export const RightCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: ${getCardGap()};
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
 `
 
-export const NoticeBlock = styled.div`
+export const UpBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 30px;
+  gap: 20px;
   padding: 20px 40px;
+  align-self: stretch;
+`
+
+export const NoticeWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
   align-self: stretch;
 `
 
@@ -214,9 +225,10 @@ export const NoticeText = styled.div`
   font-weight: 400;
   line-height: normal;
   text-align: left;
+  flex: 1;
 `
 
-export const EnrolledRow = styled.div`
+export const EnrolledWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -229,9 +241,10 @@ export const EnrolledLabel = styled.div`
   font-size: ${getLabelBoldFontSize()};
   font-weight: 700;
   text-align: left;
+  // width: 190px;
 `
 
-export const AmountWrapper = styled.div`
+export const SumWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -246,16 +259,26 @@ export const AmountMain = styled.span`
   text-align: right;
 `
 
-export const AmountCurrency = styled.span`
+export const FractionalText = styled.span`
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
   font-size: ${getAmountCurrencyFontSize()};
   font-weight: 500;
-  line-height: 46px;
+  line-height: ${ACTIVE_SCREEN_MODE === '1080p' ? '36px' : '32px'};
   text-align: right;
 `
 
-export const AcceptedBlock = styled.div`
+export const CurrencyText = styled.span`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getAmountCurrencyFontSize()};
+  font-weight: 500;
+  padding-left: 5px;
+  line-height: ${ACTIVE_SCREEN_MODE === '1080p' ? '36px' : '32px'};
+  text-align: right;
+`
+
+export const DownBlock = styled.div`
   background-color: rgba(229, 247, 251, 1);
   display: flex;
   flex-direction: column;
@@ -276,7 +299,7 @@ export const AcceptedLabel = styled.div`
   align-self: stretch;
 `
 
-export const AcceptedRow = styled.div`
+export const Frame47677 = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -287,6 +310,12 @@ export const AcceptedRow = styled.div`
 export const MoneyIcon = styled.img`
   width: ${getMoneyIconSize()};
   height: auto;
+`
+
+export const AcceptedRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 `
 
 export const CommissionRow = styled.div`

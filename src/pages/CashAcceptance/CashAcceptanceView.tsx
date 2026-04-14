@@ -3,31 +3,34 @@ import SvgAnimateIcon from '../../assets/icons/SVG_animate.svg'
 import InfoIconSvg from '../../assets/icons/infoicon.svg'
 import MoneyIconSvg from '../../assets/icons/iconmoney.svg'
 import {
-  AcceptedBlock,
   AcceptedLabel,
   AcceptedRow,
-  AmountCurrency,
   AmountMain,
-  AmountWrapper,
   CardsContainer,
   CommissionAmount,
   CommissionLabel,
   CommissionRow,
   ContentWrapper,
+  CurrencyText,
+  DownBlock,
   EnrolledLabel,
-  EnrolledRow,
+  EnrolledWrapper,
+  FractionalText,
+  Frame47677,
   InfoBlock,
   InfoIcon,
   InfoText,
   InstructionText,
   LeftCard,
   MoneyIcon,
-  NoticeBlock,
   NoticeText,
+  NoticeWrapper,
   PageTitle,
   RightCard,
+  SumWrapper,
   SvgAnimate,
   TitleWrapper,
+  UpBlock,
 } from './CashAcceptanceView.styled'
 
 type CashAcceptanceViewProps = {
@@ -37,11 +40,13 @@ type CashAcceptanceViewProps = {
   finalAmount: number
 }
 
-const formatAmount = (amount: number): string => {
-  return amount.toLocaleString('uk-UA', {
+const formatAmount = (amount: number): { main: string; fractional: string } => {
+  const formatted = amount.toLocaleString('uk-UA', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
+  const [main, fractional] = formatted.split(',')
+  return { main, fractional }
 }
 
 const CashAcceptanceView = ({
@@ -50,11 +55,12 @@ const CashAcceptanceView = ({
   commission,
   finalAmount,
 }: CashAcceptanceViewProps) => {
-  const formattedAccepted = formatAmount(acceptedAmount)
-  const formattedCommission = formatAmount(commission)
-  const formattedFinal = formatAmount(finalAmount)
-
-  const [mainPart, fractionalPart] = formattedAccepted.split('.')
+  const accepted = formatAmount(acceptedAmount)
+  const commissionFormatted = commission.toLocaleString('uk-UA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  const final = formatAmount(finalAmount)
 
   return (
     <ContentWrapper>
@@ -79,43 +85,52 @@ const CashAcceptanceView = ({
 
         {/* Права картка */}
         <RightCard>
-          <NoticeBlock>
-            <NoticeText>
-              {t.cashAcceptanceScreen.notice}
-              <br />
-              {t.cashAcceptanceScreen.maxAmount}
-              <br />
-              {t.cashAcceptanceScreen.commissionRate}
-            </NoticeText>
-          </NoticeBlock>
+          <UpBlock>
+            <NoticeWrapper>
+              <NoticeText>
+                {t.cashAcceptanceScreen.notice}
+                <br />
+                {t.cashAcceptanceScreen.maxAmount}
+                <br />
+                {t.cashAcceptanceScreen.commissionRate}
+              </NoticeText>
+            </NoticeWrapper>
 
-          <EnrolledRow>
-            <EnrolledLabel>
-              {t.cashAcceptanceScreen.willBeCredited}
-            </EnrolledLabel>
-            <AmountWrapper>
-              <AmountMain>{formattedFinal.split('.')[0]}</AmountMain>
-              <AmountCurrency>.{formattedFinal.split('.')[1]} {t.cashAcceptanceScreen.currency}</AmountCurrency>
-            </AmountWrapper>
-          </EnrolledRow>
+            <EnrolledWrapper>
+              <EnrolledLabel>
+                {t.cashAcceptanceScreen.willBeCredited}
+              </EnrolledLabel>
+              <SumWrapper>
+                <AmountMain>{final.main}</AmountMain>
+                <FractionalText>,{final.fractional}</FractionalText>
+                <CurrencyText> {t.cashAcceptanceScreen.currency}</CurrencyText>
+              </SumWrapper>
+            </EnrolledWrapper>
+          </UpBlock>
 
-          <AcceptedBlock>
+          <DownBlock>
             <AcceptedLabel>
               {t.cashAcceptanceScreen.acceptedAmount}
             </AcceptedLabel>
-            <AcceptedRow>
-              <MoneyIcon src={MoneyIconSvg} alt="money" />
-              <AmountWrapper>
-                <AmountMain>{mainPart}</AmountMain>
-                <AmountCurrency>.{fractionalPart} {t.cashAcceptanceScreen.currency}</AmountCurrency>
-              </AmountWrapper>
-            </AcceptedRow>
-          </AcceptedBlock>
 
-          <CommissionRow>
-            <CommissionLabel>{t.cashAcceptanceScreen.commission}</CommissionLabel>
-            <CommissionAmount>{formattedCommission} {t.cashAcceptanceScreen.currency}</CommissionAmount>
-          </CommissionRow>
+            <Frame47677>
+              <MoneyIcon src={MoneyIconSvg} alt="money" />
+              <AcceptedRow>
+                <AmountMain>{accepted.main}</AmountMain>
+                <FractionalText>,{accepted.fractional}</FractionalText>
+                <CurrencyText> {t.cashAcceptanceScreen.currency}</CurrencyText>
+              </AcceptedRow>
+            </Frame47677>
+
+            <CommissionRow>
+              <CommissionLabel>
+                {t.cashAcceptanceScreen.commission}
+              </CommissionLabel>
+              <CommissionAmount>
+                {commissionFormatted} {t.cashAcceptanceScreen.currency}
+              </CommissionAmount>
+            </CommissionRow>
+          </DownBlock>
         </RightCard>
       </CardsContainer>
     </ContentWrapper>
