@@ -1,5 +1,5 @@
 # ATM Terminal Project Export
-# Generated: Fri, Apr 10, 2026 10:29:53 PM
+# Generated: Tue, Apr 14, 2026 10:55:48 PM
 
 === src/App.tsx ===
 import { RouterProvider } from 'react-router-dom'
@@ -20,27 +20,41 @@ export default App
 
 === src/components/layout/TerminalFooter/TerminalFooter.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
+
+const getFooterGap = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '40px'
+  return '20px'
+}
+
+const getFooterPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '20px 60px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '40px 100px'
+  return '40px 60px' // 1024p
+}
 
 export const FooterRoot = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 40px 60px;
+  gap: ${getFooterGap()};
+  padding: ${getFooterPadding()};
 `
 
 export const FooterLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: ${getFooterGap()};
   flex-grow: 1;
 `
 
 export const FooterRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: ${getFooterGap()};
+  flex-grow: 1;
+  justify-content: flex-end;
 `
 
 === src/components/layout/TerminalFooter/TerminalFooter.tsx ===
@@ -102,6 +116,7 @@ export type TerminalFooterProps = {
 
 === src/components/layout/TerminalHeader/TerminalHeader.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
 
 export const HeaderRoot = styled.header`
   display: flex;
@@ -115,11 +130,24 @@ export const HeaderRoot = styled.header`
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.1),
     0 4px 80px 0 rgba(0, 130, 155, 0.1);
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    height: 80px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
 `
 
 export const HeaderLogo = styled.img`
   width: 286px;
   height: 140px;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 225px;
+    height: 110px;
+  `}
 `
 
 export const HeaderInfo = styled.div`
@@ -130,6 +158,14 @@ export const HeaderInfo = styled.div`
   justify-content: center;
   align-items: center;
   align-self: stretch;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    padding-top: 0px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding-top: 0px;
+  `}
 `
 
 export const HeaderPhone = styled.div`
@@ -142,6 +178,10 @@ export const HeaderPhone = styled.div`
   font-style: normal;
   font-weight: 700;
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 46px;
+  `}
 `
 
 export const HeaderDescription = styled.div`
@@ -154,6 +194,10 @@ export const HeaderDescription = styled.div`
   font-style: normal;
   font-weight: 400;
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 24px;
+  `}
 `
 
 export const HeaderRight = styled.div`
@@ -162,6 +206,10 @@ export const HeaderRight = styled.div`
   justify-content: flex-end;
   align-items: center;
   align-self: stretch;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 225px;
+  `}
 `
 
 export const LanguageSwitcher = styled.div`
@@ -191,6 +239,10 @@ export const LanguageButton = styled.button<{ $active: boolean }>`
   font-style: normal;
   font-weight: ${({ $active }) => ($active ? 700 : 300)};
   text-decoration: none;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 52px;
+  `}
 `
 
 export const LanguageDivider = styled.img`
@@ -329,24 +381,36 @@ import { ACTIVE_SCREEN_MODE, SCREEN_RESOLUTIONS } from '../../../config/screenCo
 
 const activeResolution = SCREEN_RESOLUTIONS[ACTIVE_SCREEN_MODE]
 
+const getHeaderHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getFooterHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '110px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '168px'
+  return '150px'
+}
+
 export const TerminalFrame = styled.div<{
   $hasFooter: boolean
   $variant: 'default' | 'numeric-entry'
+  $backgroundColor?: string
 }>`
   width: ${activeResolution.width}px;
   height: ${activeResolution.height}px;
   display: grid;
-  background-color: #f4f5fa;
+  background-color: ${({ $backgroundColor }) => $backgroundColor || '#f4f5fa'};
   overflow: hidden;
   position: relative;
 
   ${({ $hasFooter, $variant }) =>
     $variant === 'numeric-entry'
       ? css`
-          grid-template-rows: 100px 1fr;
+          grid-template-rows: ${getHeaderHeight()} 1fr;
         `
       : css`
-          grid-template-rows: ${$hasFooter ? '100px 1fr 150px' : '100px 1fr'};
+          grid-template-rows: ${$hasFooter ? `${getHeaderHeight()} 1fr ${getFooterHeight()}` : `${getHeaderHeight()} 1fr`};
         `}
 `
 
@@ -388,6 +452,7 @@ type TerminalLayoutProps = PropsWithChildren<{
   header: ReactNode
   footer?: ReactNode
   variant?: 'default' | 'numeric-entry'
+  backgroundColor?: string
 }>
 
 const TerminalLayout = ({
@@ -395,11 +460,12 @@ const TerminalLayout = ({
   footer,
   children,
   variant = 'default',
+  backgroundColor,
 }: TerminalLayoutProps) => {
   const hasFooter = Boolean(footer)
 
   return (
-    <TerminalFrame $hasFooter={hasFooter} $variant={variant}>
+    <TerminalFrame $hasFooter={hasFooter} $variant={variant} $backgroundColor={backgroundColor}>
       <TerminalHeader>{header}</TerminalHeader>
 
       <TerminalContent $variant={variant}>{children}</TerminalContent>
@@ -412,6 +478,17 @@ const TerminalLayout = ({
 }
 
 export default TerminalLayout
+
+=== src/components/layout/TerminalLayout/TerminalLayout.types.ts ===
+import type { ReactNode } from 'react'
+
+export type TerminalLayoutProps = {
+  header: ReactNode
+  footer?: ReactNode
+  children: ReactNode
+  variant?: 'default' | 'numeric-entry'
+  backgroundColor?: string
+}
 
 === src/components/layout/TerminalViewport/TerminalViewport.styled.ts ===
 import styled from 'styled-components'
@@ -446,8 +523,299 @@ const TerminalViewport = ({ children }: PropsWithChildren) => {
 
 export default TerminalViewport
 
+=== src/components/ui/AlphanumericKeypad/AlphanumericKeypad.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
+
+const getKeyWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '100px'
+  return '80px'
+}
+
+const getKeyHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '60px'
+  return '72px'
+}
+
+const getKeyGap = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '20px'
+  return '16px'
+}
+
+const getLngKeyWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '141px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '180px'
+  return '169px'
+}
+
+const getSpaceKeyWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '534px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '660px'
+  return '478px'
+}
+
+const getKeyFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '28px'
+}
+
+const getDeleteFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+const getDeleteFontWeight = () => {
+  return '400'
+}
+
+export const KeypadContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+`
+
+export const KeyRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: ${getKeyGap()};
+  flex-wrap: wrap;
+`
+
+export const KeyButton = styled.button`
+  width: ${getKeyWidth()};
+  height: ${getKeyHeight()};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 16px;
+  background: #f2f2f6;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  color: #111e29;
+  text-align: center;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getKeyFontSize()};
+  font-weight: 600;
+`
+
+export const SpecialKeyButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-radius: 16px;
+  background: #f2f2f6;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  color: #111e29;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getKeyFontSize()};
+  font-weight: 600;
+  
+  width: ${getKeyWidth()};
+  height: ${getKeyHeight()};
+`
+
+export const LngKeyButton = styled(SpecialKeyButton)`
+  width: ${getLngKeyWidth()};
+`
+
+export const SpaceKeyButton = styled(SpecialKeyButton)`
+  width: ${getSpaceKeyWidth()};
+`
+
+export const DeleteKeyButton = styled(SpecialKeyButton)`
+  width: ${getLngKeyWidth()};
+`
+
+export const DeleteIcon = styled.img`
+  width: 34px;
+  height: 29px;
+`
+
+export const DeleteLabel = styled.span`
+  font-size: ${getDeleteFontSize()};
+  font-weight: ${getDeleteFontWeight()};
+`
+
+export const KeyIcon = styled.img`
+  width: 32px;
+  height: 32px;
+`
+
+=== src/components/ui/AlphanumericKeypad/AlphanumericKeypad.tsx ===
+import { useState } from 'react'
+import deleteIcon from '../../../assets/icons/delete.svg'
+import shiftIcon from '../../../assets/icons/shift.svg'
+import lngIcon from '../../../assets/icons/lng.svg'
+import {
+  DeleteIcon,
+  DeleteKeyButton,
+  DeleteLabel,
+  KeyButton,
+  KeyIcon,
+  KeypadContainer,
+  KeyRow,
+  LngKeyButton,
+  SpaceKeyButton,
+  SpecialKeyButton,
+} from './AlphanumericKeypad.styled'
+
+type AlphanumericKeypadProps = {
+  onKeyPress: (key: string) => void
+  onDelete: () => void
+  deleteLabel: string
+  enLabel: string
+  uaLabel: string
+}
+
+// Українська розкладка (малі літери)
+const ukLayout = [
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '№', "'"],
+  ['й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ї'],
+  ['ф', 'і', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'є', 'ґ'],
+  ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '-', '@'],
+]
+
+// Українська розкладка (великі літери)
+const ukLayoutUpper = [
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '№', "'"],
+  ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ї'],
+  ['Ф', 'І', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Є', 'Ґ'],
+  ['Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', '-', '@'],
+]
+
+// Англійська розкладка (малі літери)
+const enLayout = [
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '№', "'"],
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']'],
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '(', ')'],
+  ['z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '-', '@'],
+]
+
+// Англійська розкладка (великі літери)
+const enLayoutUpper = [
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '№', "'"],
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '(', ')'],
+  ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '-', '@'],
+]
+
+// Функціональні кнопки (5-й рядок)
+const getFunctionalRow = (language: 'uk' | 'en', enLabel: string, uaLabel: string, deleteLabel: string) => [
+  { type: 'lng', label: language === 'uk' ? uaLabel : enLabel },
+  { type: 'comma', label: ',' },
+  { type: 'space', label: '' },
+  { type: 'slash', label: '/' },
+  { type: 'dot', label: '.' },
+  { type: 'delete', label: deleteLabel },
+]
+
+const AlphanumericKeypad = ({
+  onKeyPress,
+  onDelete,
+  deleteLabel,
+  enLabel,
+  uaLabel,
+}: AlphanumericKeypadProps) => {
+  const [isShiftActive, setIsShiftActive] = useState(false)
+  const [language, setLanguage] = useState<'uk' | 'en'>('uk')
+
+  const getCurrentLayout = () => {
+    if (language === 'uk') {
+      return isShiftActive ? ukLayoutUpper : ukLayout
+    }
+    return isShiftActive ? enLayoutUpper : enLayout
+  }
+
+  const handleShiftClick = () => {
+    setIsShiftActive(!isShiftActive)
+  }
+
+  const handleLanguageClick = () => {
+    setLanguage((prev) => (prev === 'uk' ? 'en' : 'uk'))
+    setIsShiftActive(false)
+  }
+
+  const handleSpaceClick = () => {
+    onKeyPress(' ')
+  }
+
+  const handleSpecialKey = (key: string) => {
+    if (key === ',') onKeyPress(',')
+    else if (key === '/') onKeyPress('/')
+    else if (key === '.') onKeyPress('.')
+  }
+
+  const currentLayout = getCurrentLayout()
+  const functionalRow = getFunctionalRow(language, enLabel, uaLabel, deleteLabel)
+
+  return (
+    <KeypadContainer>
+      {/* 4 рядки по 12 кнопок */}
+      {currentLayout.map((row, rowIndex) => (
+        <KeyRow key={rowIndex}>
+          {/* Перша кнопка 4-го рядка — Shift */}
+          {rowIndex === 3 && (
+            <SpecialKeyButton onClick={handleShiftClick}>
+              <KeyIcon src={shiftIcon} alt="shift" />
+            </SpecialKeyButton>
+          )}
+          {/* Інші кнопки рядка */}
+          {row.map((key) => (
+            <KeyButton key={key} onClick={() => onKeyPress(key)}>
+              {key}
+            </KeyButton>
+          ))}
+        </KeyRow>
+      ))}
+
+      {/* 5-й рядок: функціональні кнопки (без Shift) */}
+      <KeyRow>
+        {functionalRow.map((btn, idx) => {
+          if (btn.type === 'lng') {
+            return (
+              <LngKeyButton key={idx} onClick={handleLanguageClick}>
+                <KeyIcon src={lngIcon} alt="language" />
+                <span>{btn.label}</span>
+              </LngKeyButton>
+            )
+          }
+          if (btn.type === 'space') {
+            return (
+              <SpaceKeyButton key={idx} onClick={handleSpaceClick}>
+                <span> </span>
+              </SpaceKeyButton>
+            )
+          }
+          if (btn.type === 'delete') {
+            return (
+              <DeleteKeyButton onClick={onDelete}>
+                <DeleteIcon src={deleteIcon} alt="delete" />
+                <DeleteLabel>{deleteLabel}</DeleteLabel>
+              </DeleteKeyButton>
+            )
+          }
+          return (
+            <SpecialKeyButton key={idx} onClick={() => handleSpecialKey(btn.label)}>
+              <span>{btn.label}</span>
+            </SpecialKeyButton>
+          )
+        })}
+      </KeyRow>
+    </KeypadContainer>
+  )
+}
+
+export default AlphanumericKeypad
+
 === src/components/ui/Button/Button.styled.ts ===
 import styled, { css } from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
 
 import type { ButtonVariant } from './Button.types'
 
@@ -474,9 +842,34 @@ const getVariantStyles = (variant: ButtonVariant) => {
   }
 }
 
+const getButtonWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '360px'
+  return '280px'
+}
+
+const getButtonHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'auto'
+  return '70px'
+}
+
+const getButtonPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '28px 0'
+  return '26px 0'
+}
+
+const getButtonFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '22px'
+}
+
+const getButtonLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '14px'
+}
+
 export const StyledButton = styled.button<StyledButtonProps>`
-  width: 280px;
-  height: 70px;
+  width: ${getButtonWidth()};
+  height: ${getButtonHeight()};
 
   display: flex;
   flex-direction: column;
@@ -484,7 +877,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
   gap: 10px;
 
-  padding: 10px;
+  padding: ${getButtonPadding()};
 
   border: none;
   border-radius: 15px;
@@ -492,9 +885,11 @@ export const StyledButton = styled.button<StyledButtonProps>`
   cursor: pointer;
 
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 22px;
+  font-size: ${getButtonFontSize()};
   font-weight: 600;
-  line-height: 24px;
+  line-height: ${getButtonLineHeight()};
+  letter-spacing: 0.56px;
+  text-transform: uppercase;
   text-align: center;
 
   ${({ $variant }) => getVariantStyles($variant)};
@@ -668,6 +1063,304 @@ export type CardInputProps = {
   value: string
   placeholder: string
 }
+
+=== src/components/ui/IbanInput/IbanInput.styled.ts ===
+import styled from 'styled-components'
+
+export const Wrapper = styled.div`
+  width: 100%;
+`
+
+export const Field = styled.div`
+  width: 100%;
+  height: 80px;
+  padding: 8px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  border-radius: 15px;
+  border: 2px solid #00829b;
+  background: #ffffff;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  color: #111e29;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+export const StaticText = styled.span`
+  color: #111e29;
+  font-family: 'Oschad Sans';
+  font-size: 30px;
+  font-weight: 600;
+  white-space: pre;
+`
+
+export const EditableText = styled.span`
+  color: #111e29;
+  font-family: 'Oschad Sans';
+  font-size: 30px;
+  font-weight: 600;
+  white-space: pre;
+`
+
+export const PlaceholderText = styled.span`
+  color: rgba(17, 30, 41, 0.35);
+  font-family: 'Oschad Sans';
+  font-size: 30px;
+  font-weight: 600;
+  white-space: pre;
+`
+
+=== src/components/ui/IbanInput/IbanInput.tsx ===
+import { useRef, useEffect } from 'react'
+import type { IbanInputProps } from './IbanInput.types'
+import {
+  EditableText,
+  Field,
+  PlaceholderText,
+  StaticText,
+  Wrapper,
+} from './IbanInput.styled'
+
+
+const getMask = () => {
+  return 'UA __ ______ ___________________'
+}
+
+const getStaticPrefix = () => {
+  return 'UA '
+}
+
+const getEditableMask = () => {
+  return '__ ______ ___________________'
+}
+
+const IbanInput = ({ value, onChange, placeholder }: IbanInputProps) => {
+  const fieldRef = useRef<HTMLDivElement>(null)
+
+  // value зберігає ТІЛЬКИ цифри (без UA та пробілів)
+  const digits = value
+
+  const formatDisplay = () => {
+    const mask = getEditableMask()
+    let result = ''
+    let digitIndex = 0
+
+    for (let i = 0; i < mask.length; i++) {
+      if (mask[i] === '_' && digitIndex < digits.length) {
+        result += digits[digitIndex]
+        digitIndex++
+      } else if (mask[i] === '_') {
+        result += '_'
+      } else {
+        result += mask[i]
+      }
+    }
+
+    return result
+  }
+
+  const handleDigitClick = (digit: string) => {
+    if (digits.length < 27) {
+      onChange(digits + digit)
+    }
+  }
+
+  const handleDeleteClick = () => {
+    if (digits.length > 0) {
+      onChange(digits.slice(0, -1))
+    }
+  }
+
+  // Скрол до кінця при зміні
+  useEffect(() => {
+    if (fieldRef.current) {
+      fieldRef.current.scrollLeft = fieldRef.current.scrollWidth
+    }
+  }, [digits])
+
+  const displayValue = formatDisplay()
+  const isEmpty = digits.length === 0
+  const staticPrefix = getStaticPrefix()
+
+  return (
+    <Wrapper>
+      <Field ref={fieldRef}>
+        <StaticText>{staticPrefix}</StaticText>
+        {isEmpty ? (
+          <PlaceholderText>{getEditableMask()}</PlaceholderText>
+        ) : (
+          <EditableText>{displayValue}</EditableText>
+        )}
+      </Field>
+    </Wrapper>
+  )
+}
+
+export default IbanInput
+
+=== src/components/ui/IbanInput/IbanInput.types.ts ===
+export type IbanInputProps = {
+  value: string
+  onChange: (value: string) => void
+  placeholder: string
+}
+
+=== src/components/ui/InactivityPopup/InactivityPopup.styled.ts ===
+import styled from 'styled-components'
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`
+
+export const Popup = styled.div`
+  background-color: rgba(99, 209, 203, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 60px 120px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+`
+
+export const Icon = styled.img`
+  width: 200px;
+  height: 216px;
+`
+
+export const Title = styled.h2`
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 46px;
+  text-align: center;
+`
+
+export const TimerText = styled.div`
+  color: #00829b;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+`
+
+export const ContinueButton = styled.button`
+  width: 280px;
+  height: 70px;
+  background-color: rgba(220, 225, 35, 1);
+  border: none;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  
+  span {
+    color: rgba(17, 30, 41, 1);
+    font-family: 'Oschad Sans', Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+`
+
+export const ArrowNextIcon = styled.img`
+  width: 20px;
+  height: 19px;
+`
+
+=== src/components/ui/InactivityPopup/InactivityPopup.tsx ===
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ArrowNextIcon from '../../../assets/icons/arrow-next.svg'
+import TimerIcon from '../../../assets/icons/icontimer.png'
+import {
+  ArrowNextIcon as ArrowNextIconStyled,
+  ContinueButton,
+  Icon,
+  Overlay,
+  Popup,
+  TimerText,
+  Title,
+} from './InactivityPopup.styled'
+
+type InactivityPopupProps = {
+  timeoutSeconds: number
+  onContinue: () => void
+  onTimeout: () => void
+}
+
+const InactivityPopup = ({ timeoutSeconds, onContinue, onTimeout }: InactivityPopupProps) => {
+  const [countdown, setCountdown] = useState(timeoutSeconds)
+  const countdownRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    setCountdown(timeoutSeconds)
+    countdownRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current)
+          onTimeout()
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current)
+    }
+  }, [timeoutSeconds, onTimeout])
+
+  const handleContinue = () => {
+    if (countdownRef.current) clearInterval(countdownRef.current)
+    onContinue()
+  }
+
+  return (
+    <Overlay>
+      <Popup>
+        <Icon src={TimerIcon} alt="" />
+        <Title>Вам потрібно більше часу?</Title>
+        <TimerText>0:{countdown.toString().padStart(2, '0')}</TimerText>
+        <ContinueButton onClick={handleContinue}>
+          <span>Продовжити</span>
+          <ArrowNextIconStyled src={ArrowNextIcon} alt="" />
+        </ContinueButton>
+      </Popup>
+    </Overlay>
+  )
+}
+
+export default InactivityPopup
 
 === src/components/ui/InputField/InputField.styled.ts ===
 import styled from 'styled-components'
@@ -920,27 +1613,41 @@ export type NumericKeypadProps = {
 
 === src/components/ui/OperationCard/OperationCard.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
 
 export const Card = styled.button`
-  width: 520px;
-  height: 280px;
-  padding: 40px;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 40px;
-
   border: none;
   border-radius: 20px;
   background: #ffffff;
-
   box-shadow:
     0 0 4px rgba(0, 0, 0, 0.1),
     0 20px 40px rgba(24, 180, 177, 0.1);
-
   text-align: left;
   cursor: pointer;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 520px;
+    height: 220px;
+    padding: 20px 40px;
+    gap: 20px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    width: 520px;
+    height: 280px;
+    padding: 40px;
+    gap: 40px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    width: 520px;
+    height: 280px;
+    padding: 40px;
+    gap: 40px;
+  `}
 `
 
 export const Top = styled.div`
@@ -952,21 +1659,41 @@ export const Top = styled.div`
 
 export const Title = styled.h3`
   margin: 0;
-
   color: #111e29;
-  font-family: 'Oschad Sans';
-  font-size: 32px;
+  font-family: 'Oschad Sans', Arial, sans-serif;
   font-weight: 600;
-  line-height: 36px;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    font-size: 32px;
+    line-height: 36px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    font-size: 32px;
+    line-height: 36px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 42px;
+    line-height: normal;
+  `}
 `
 
 export const ArrowWrap = styled.div`
   width: 62px;
   height: 62px;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    display: flex; // в 1080p стрілка є
+  `}
+  
+  // Якщо в 800p немає стрілки — приховати
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    display: none;
+  `}
 `
 
 export const Arrow = styled.img`
@@ -981,13 +1708,28 @@ export const Bottom = styled.div`
 `
 
 export const Description = styled.p`
-  width: 310px;
   margin: 0;
-
   color: rgba(17, 30, 41, 0.8);
-  font-family: 'Oschad Sans';
-  font-size: 24px;
+  font-family: 'Oschad Sans', Arial, sans-serif;
   font-weight: 400;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    width: 310px;
+    font-size: 24px;
+    line-height: normal;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    width: 310px;
+    font-size: 24px;
+    line-height: normal;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    width: 310px;
+    font-size: 30px;
+    line-height: normal;
+  `}
 `
 
 export const Icon = styled.img`
@@ -1150,7 +1892,10 @@ export const SCREEN_RESOLUTIONS: Record<ScreenMode, ScreenResolution> = {
   },
 }
 
-export const ACTIVE_SCREEN_MODE: ScreenMode = '1024p'
+export const ACTIVE_SCREEN_MODE: ScreenMode = '800p'
+
+
+export const INACTIVITY_TIMEOUT_SECONDS = 30
 
 === src/constants/routePaths.ts ===
 export const routePaths = {
@@ -1160,7 +1905,80 @@ export const routePaths = {
   cardInput: '/card-input',
   printerError: '/printer-error',
   cardError: '/card-error',
+  ibanInput: '/iban-input',
+  textInput: '/text-input',
+  cashAcceptance: '/cash-acceptance',
 } as const
+
+=== src/hoc/withInactivity.tsx ===
+import { useEffect, useRef, useState, ComponentType } from 'react'
+import { useNavigate } from 'react-router-dom'
+import InactivityPopup from '../components/ui/InactivityPopup/InactivityPopup'
+import { INACTIVITY_TIMEOUT_SECONDS } from '../config/screenConfig'
+
+export const withInactivity = <P extends object>(
+  WrappedComponent: ComponentType<P>,
+  timeoutSeconds: number = INACTIVITY_TIMEOUT_SECONDS
+) => {
+  return (props: P) => {
+    const navigate = useNavigate()
+    const [showPopup, setShowPopup] = useState(false)
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const resetTimer = () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      setShowPopup(false)
+
+      timerRef.current = setTimeout(() => {
+        setShowPopup(true)
+      }, timeoutSeconds * 1000)
+    }
+
+    const handleUserActivity = () => {
+      if (showPopup) {
+        return
+      }
+      resetTimer()
+    }
+
+    const handleContinue = () => {
+      resetTimer()
+    }
+
+    const handleTimeout = () => {
+      navigate('/choose-operation-type')
+    }
+
+    useEffect(() => {
+      const events = ['click', 'keydown', 'touchstart']
+      events.forEach((event) => {
+        document.addEventListener(event, handleUserActivity)
+      })
+
+      resetTimer()
+
+      return () => {
+        events.forEach((event) => {
+          document.removeEventListener(event, handleUserActivity)
+        })
+        if (timerRef.current) clearTimeout(timerRef.current)
+      }
+    }, [])
+
+    return (
+      <>
+        <WrappedComponent {...props} />
+        {showPopup && (
+          <InactivityPopup
+            timeoutSeconds={timeoutSeconds}
+            onContinue={handleContinue}
+            onTimeout={handleTimeout}
+          />
+        )}
+      </>
+    )
+  }
+}
 
 === src/locale/en.ts ===
 const en = {
@@ -1224,6 +2042,37 @@ const en = {
     continue: 'Continue',
     delete: 'Delete',
     emptyMask: '____ ____ ____ ____',
+  },
+  ibanInputScreen: {
+    title: 'Enter IBAN number',
+    hint: 'Enter IBAN containing 27 digits in the format UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    back: 'Back',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: 'UA __ ______ ___________________',
+  },
+  textInputScreen: {
+    title: 'Enter payment purpose',
+    placeholder: 'Enter payment purpose',
+    delete: 'Delete',
+    back: 'Back',
+    continue: 'Continue',
+    en: 'en',
+    ua: 'ua',
+  },
+    cashAcceptanceScreen: {
+    title: 'Cash deposit',
+    instruction: 'Please insert banknotes one by one',
+    completeHint: 'To complete the operation, press the “Continue” button',
+    notice: 'Please note: the terminal does not return banknotes, no change is given.',
+    maxAmount: 'Maximum deposit amount is 5000 UAH.',
+    commissionRate: 'Commission 1% of the deposit amount',
+    willBeCredited: 'Will be credited to account',
+    acceptedAmount: 'Amount accepted',
+    commission: 'Commission',
+    currency: 'UAH',
+    back: 'Back',
+    continue: 'Continue',
   },
 }
 
@@ -1307,6 +2156,37 @@ const uk = {
     delete: 'Стерти',
     emptyMask: '____ ____ ____ ____',
   },
+  ibanInputScreen: {
+    title: 'Введіть номер IBAN',
+    hint: 'Введіть IBAN, який містить 27 цифр у форматі UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    back: 'Назад',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: 'UA __ ______ ___________________',
+  },
+  textInputScreen: {
+    title: 'Введіть призначення платежу',
+    placeholder: 'Введіть призначення платежу',
+    delete: 'Стерти',
+    back: 'Назад',
+    continue: 'Продовжити',
+    en: 'en',
+    ua: 'ua',
+  },
+    cashAcceptanceScreen: {
+    title: 'Внесення коштів',
+    instruction: 'Будь ласка, внесіть кошти по одній банкноті',
+    completeHint: 'Для завершення операції натисніть кнопку “Продовжити”',
+    notice: 'Зверніть увагу: термінал банкноти не повертає, решти не дає.',
+    maxAmount: 'Максимальна сума поповнення 5000 грн.',
+    commissionRate: 'Комісія 1% від суми поповнення',
+    willBeCredited: 'Буде зараховано на рахунок',
+    acceptedAmount: 'Прийнято коштів на суму',
+    commission: 'Комісія',
+    currency: 'грн.',
+    back: 'Назад',
+    continue: 'Продовжити',
+  },
 }
 
 export default uk
@@ -1387,6 +2267,49 @@ export default CardErrorPage
 
 === src/pages/CardError/CardErrorView.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '46px'
+}
+
+const getInfoCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '600px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '800px'
+  return '520px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getInfoTextLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getErrorIconSize = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '120px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '200px'
+  return '155px'
+}
 
 export const ContentWrapper = styled.div`
   width: 100%;
@@ -1394,8 +2317,8 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
-  gap: 60px;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
 `
 
 export const TitleWrapper = styled.div`
@@ -1409,19 +2332,19 @@ export const PageTitle = styled.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 46px;
+  font-size: ${getTitleFontSize()};
   font-weight: 600;
-  line-height: 46px;
+  line-height: ${getTitleLineHeight()};
   text-align: center;
 `
 
 export const ErrorIcon = styled.img`
-  width: 155px;
-  height: 155px;
+  width: ${getErrorIconSize()};
+  height: ${getErrorIconSize()};
 `
 
 export const InfoCard = styled.div`
-  width: 520px;
+  width: ${getInfoCardWidth()};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1438,9 +2361,9 @@ export const InfoText = styled.p`
   width: 100%;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 24px;
+  font-size: ${getInfoTextFontSize()};
   font-weight: 500;
-  line-height: 32px;
+  line-height: ${getInfoTextLineHeight()};
   text-align: center;
 `
 
@@ -1495,6 +2418,7 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import CardInput from '../../components/ui/CardInput/CardInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import { withInactivity } from '../../hoc/withInactivity'
 
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
@@ -1579,7 +2503,7 @@ const CardInputPage = () => {
   )
 }
 
-export default CardInputPage
+export default withInactivity(CardInputPage)
 
 === src/pages/CardInput/CardInputView.styled.ts ===
 import styled from 'styled-components'
@@ -1711,6 +2635,585 @@ const CardInputView = ({ t, input, keypad }: CardInputViewProps) => {
 
 export default CardInputView
 
+=== src/pages/CashAcceptance/CashAcceptancePage.tsx ===
+import { useState, useEffect } from 'react'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import CashAcceptanceView from './CashAcceptanceView'
+
+const CashAcceptancePage = () => {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const [acceptedAmount, setAcceptedAmount] = useState(0)
+  const [isInserting, setIsInserting] = useState(true)
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  // Розрахунок комісії (1%)
+  const commission = acceptedAmount * 0.01
+  const finalAmount = acceptedAmount - commission
+
+  // Симуляція внесення коштів
+  useEffect(() => {
+    if (!isInserting) return
+
+    const interval = setInterval(() => {
+      setAcceptedAmount((prev) => {
+        const next = prev + 100
+        if (next >= 1200) {
+          setIsInserting(false)
+          return 1200
+        }
+        return next
+      })
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [isInserting])
+
+  const isValid = acceptedAmount > 0
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        header={
+          <TerminalHeader
+            variant="language-switcher"
+            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.cashAcceptanceScreen.back,
+                variant: 'cancel',
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.cashAcceptanceScreen.continue,
+                variant: 'continue',
+                disabled: !isValid,
+              },
+            ]}
+          />
+        }
+      >
+        <CashAcceptanceView
+          t={t}
+          acceptedAmount={acceptedAmount}
+          commission={commission}
+          finalAmount={finalAmount}
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default CashAcceptancePage
+
+=== src/pages/CashAcceptance/CashAcceptanceView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+// Відступи та гапи
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getCardsGap = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '120px'
+  return '60px'
+}
+
+const getCardsPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '0 100px'
+  return '0 60px'
+}
+
+const getCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '686px'
+  return '560px'
+}
+
+const getCardHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '460px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '574px'
+  return '500px'
+}
+
+const getCardGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '0'
+  return '20px'
+}
+
+// Текст інструкції
+const getInstructionFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+// Іконка info
+const getInfoIconSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '46px'
+  return '32px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+// Права частина
+const getNoticeFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+const getLabelFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+const getLabelBoldFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+const getAmountMainFontSize = () => '46px'
+
+const getAmountCurrencyFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '24px'
+}
+
+const getMoneyIconSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '85px'
+  return '69px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    display: none;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    padding: 0 40px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-weight: 600;
+  line-height: 46px;
+  text-align: center;
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    font-size: 46px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 62px;
+  `}
+`
+
+export const CardsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: ${getCardsGap()};
+  padding: ${getCardsPadding()};
+  align-self: stretch;
+`
+
+export const LeftCard = styled.div`
+  background-color: #ffffff;
+  width: ${getCardWidth()};
+  height: ${getCardHeight()};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: ${getCardGap()};
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+`
+
+export const InstructionText = styled.div`
+  padding: 20px 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInstructionFontSize()};
+  font-weight: 600;
+  text-align: left;
+`
+
+export const SvgAnimate = styled.img`
+  width: 212px;
+  height: 259px;
+`
+
+export const InfoBlock = styled.div`
+  background-color: rgba(244, 245, 250, 1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 30px;
+  align-self: stretch;
+  border-radius: 10px;
+`
+
+export const InfoIcon = styled.img`
+  width: ${getInfoIconSize()};
+  height: ${getInfoIconSize()};
+`
+
+export const InfoText = styled.div`
+  color: rgba(110, 116, 123, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInfoTextFontSize()};
+  font-weight: 500;
+  line-height: 28px;
+  text-align: left;
+  flex: 1;
+`
+
+export const RightCard = styled.div`
+  background-color: #ffffff;
+  width: ${getCardWidth()};
+  height: ${getCardHeight()};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: ${getCardGap()};
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+`
+
+export const UpBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 40px;
+  align-self: stretch;
+`
+
+export const NoticeWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+`
+
+export const NoticeText = styled.div`
+  color: rgba(110, 116, 123, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getNoticeFontSize()};
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
+  flex: 1;
+`
+
+export const EnrolledWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+`
+
+export const EnrolledLabel = styled.div`
+  color: rgba(110, 116, 123, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getLabelBoldFontSize()};
+  font-weight: 700;
+  text-align: left;
+  // width: 190px;
+`
+
+export const SumWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+`
+
+export const AmountMain = styled.span`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getAmountMainFontSize()};
+  font-weight: 600;
+  line-height: 46px;
+  text-align: right;
+`
+
+export const FractionalText = styled.span`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getAmountCurrencyFontSize()};
+  font-weight: 500;
+  line-height: ${ACTIVE_SCREEN_MODE === '1080p' ? '36px' : '32px'};
+  text-align: right;
+`
+
+export const CurrencyText = styled.span`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getAmountCurrencyFontSize()};
+  font-weight: 500;
+  padding-left: 5px;
+  line-height: ${ACTIVE_SCREEN_MODE === '1080p' ? '36px' : '32px'};
+  text-align: right;
+`
+
+export const DownBlock = styled.div`
+  background-color: rgba(229, 247, 251, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px 40px;
+  align-self: stretch;
+  border-radius: 10px;
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.1);
+`
+
+export const AcceptedLabel = styled.div`
+  color: rgba(17, 30, 41, 0.8);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getLabelFontSize()};
+  font-weight: 400;
+  text-align: right;
+  align-self: stretch;
+`
+
+export const Frame47677 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+  align-self: stretch;
+`
+
+export const MoneyIcon = styled.img`
+  width: ${getMoneyIconSize()};
+  height: auto;
+`
+
+export const AcceptedRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+`
+
+export const CommissionRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  align-self: stretch;
+`
+
+export const CommissionLabel = styled.div`
+  color: rgba(17, 30, 41, 0.8);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getLabelFontSize()};
+  font-weight: 400;
+  text-align: left;
+`
+
+export const CommissionAmount = styled.div`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getLabelFontSize()};
+  font-weight: 500;
+  text-align: left;
+`
+
+=== src/pages/CashAcceptance/CashAcceptanceView.tsx ===
+import type { Translations } from '../../locale/types'
+import SvgAnimateIcon from '../../assets/icons/SVG_animate.svg'
+import InfoIconSvg from '../../assets/icons/infoicon.svg'
+import MoneyIconSvg from '../../assets/icons/iconmoney.svg'
+import {
+  AcceptedLabel,
+  AcceptedRow,
+  AmountMain,
+  CardsContainer,
+  CommissionAmount,
+  CommissionLabel,
+  CommissionRow,
+  ContentWrapper,
+  CurrencyText,
+  DownBlock,
+  EnrolledLabel,
+  EnrolledWrapper,
+  FractionalText,
+  Frame47677,
+  InfoBlock,
+  InfoIcon,
+  InfoText,
+  InstructionText,
+  LeftCard,
+  MoneyIcon,
+  NoticeText,
+  NoticeWrapper,
+  PageTitle,
+  RightCard,
+  SumWrapper,
+  SvgAnimate,
+  TitleWrapper,
+  UpBlock,
+} from './CashAcceptanceView.styled'
+
+type CashAcceptanceViewProps = {
+  t: Translations
+  acceptedAmount: number
+  commission: number
+  finalAmount: number
+}
+
+const formatAmount = (amount: number): { main: string; fractional: string } => {
+  const formatted = amount.toLocaleString('uk-UA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  const [main, fractional] = formatted.split(',')
+  return { main, fractional }
+}
+
+const CashAcceptanceView = ({
+  t,
+  acceptedAmount,
+  commission,
+  finalAmount,
+}: CashAcceptanceViewProps) => {
+  const accepted = formatAmount(acceptedAmount)
+  const commissionFormatted = commission.toLocaleString('uk-UA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  const final = formatAmount(finalAmount)
+
+  return (
+    <ContentWrapper>
+      <TitleWrapper>
+        <PageTitle>{t.cashAcceptanceScreen.title}</PageTitle>
+      </TitleWrapper>
+
+      <CardsContainer>
+        {/* Ліва картка */}
+        <LeftCard>
+          <InstructionText>
+            {t.cashAcceptanceScreen.instruction}
+          </InstructionText>
+
+          <SvgAnimate src={SvgAnimateIcon} alt="animation" />
+
+          <InfoBlock>
+            <InfoIcon src={InfoIconSvg} alt="info" />
+            <InfoText>{t.cashAcceptanceScreen.completeHint}</InfoText>
+          </InfoBlock>
+        </LeftCard>
+
+        {/* Права картка */}
+        <RightCard>
+          <UpBlock>
+            <NoticeWrapper>
+              <NoticeText>
+                {t.cashAcceptanceScreen.notice}
+                <br />
+                {t.cashAcceptanceScreen.maxAmount}
+                <br />
+                {t.cashAcceptanceScreen.commissionRate}
+              </NoticeText>
+            </NoticeWrapper>
+
+            <EnrolledWrapper>
+              <EnrolledLabel>
+                {t.cashAcceptanceScreen.willBeCredited}
+              </EnrolledLabel>
+              <SumWrapper>
+                <AmountMain>{final.main}</AmountMain>
+                <FractionalText>,{final.fractional}</FractionalText>
+                <CurrencyText> {t.cashAcceptanceScreen.currency}</CurrencyText>
+              </SumWrapper>
+            </EnrolledWrapper>
+          </UpBlock>
+
+          <DownBlock>
+            <AcceptedLabel>
+              {t.cashAcceptanceScreen.acceptedAmount}
+            </AcceptedLabel>
+
+            <Frame47677>
+              <MoneyIcon src={MoneyIconSvg} alt="money" />
+              <AcceptedRow>
+                <AmountMain>{accepted.main}</AmountMain>
+                <FractionalText>,{accepted.fractional}</FractionalText>
+                <CurrencyText> {t.cashAcceptanceScreen.currency}</CurrencyText>
+              </AcceptedRow>
+            </Frame47677>
+
+            <CommissionRow>
+              <CommissionLabel>
+                {t.cashAcceptanceScreen.commission}
+              </CommissionLabel>
+              <CommissionAmount>
+                {commissionFormatted} {t.cashAcceptanceScreen.currency}
+              </CommissionAmount>
+            </CommissionRow>
+          </DownBlock>
+        </RightCard>
+      </CardsContainer>
+    </ContentWrapper>
+  )
+}
+
+export default CashAcceptanceView
+
 === src/pages/ChooseOperationType/ChooseOperationTypePage.tsx ===
 import { useState } from 'react'
 
@@ -1754,43 +3257,94 @@ export default ChooseOperationTypePage
 
 === src/pages/ChooseOperationType/ChooseOperationTypeView.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
 
 export const Content = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 60px;
-
-  padding-top: 100px;
-
   flex: 1 0 auto;
   width: 100%;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    gap: 40px;
+    padding-top: 80px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    gap: 60px;
+    padding-top: 100px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    gap: 60px;
+    padding-top: 100px;
+  `}
 `
 
 export const TitleWrap = styled.div`
   width: 100%;
-  padding: 0 60px;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    padding: 0 60px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    padding: 0 60px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
 `
 
 export const Title = styled.h1`
   margin: 0;
-
   color: #111e29;
-  font-family: 'Oschad Sans';
-  font-size: 46px;
+  font-family: 'Oschad Sans', Arial, sans-serif;
   font-weight: 600;
   line-height: 46px;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    font-size: 46px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    font-size: 46px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    font-size: 62px;
+  `}
 `
 
 export const Cards = styled.div`
   display: flex;
-  padding: 0 60px;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: flex-start;
-  row-gap: 60px;
   align-self: stretch;
   flex-wrap: wrap;
+  
+  ${ACTIVE_SCREEN_MODE === '800p' && `
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    row-gap: 40px;
+    padding: 0 60px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1024p' && `
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 0 60px;
+  `}
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 0 100px;
+  `}
 `
 
 === src/pages/ChooseOperationType/ChooseOperationTypeView.tsx ===
@@ -1848,6 +3402,234 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
 }
 
 export default ChooseOperationTypeView
+
+=== src/pages/IbanInput/IbanInputPage.tsx ===
+import { useState } from 'react'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import IbanInput from '../../components/ui/IbanInput/IbanInput'
+import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import IbanInputView from './IbanInputView'
+
+const IbanInputPage = () => {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const [digits, setDigits] = useState('')
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (_language: HeaderLanguage) => {
+    setLocale((prev) => prev)
+  }
+
+  const handleDigitClick = (digit: string) => {
+    if (digits.length < 27) {
+      setDigits((prev) => prev + digit)
+    }
+  }
+
+  const handleDeleteClick = () => {
+    setDigits((prev) => prev.slice(0, -1))
+  }
+
+  const handleChange = (newDigits: string) => {
+    setDigits(newDigits)
+  }
+
+  const isValid = digits.length === 27
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="numeric-entry"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.ibanInputScreen.back,
+                variant: 'cancel',
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.ibanInputScreen.continue,
+                variant: 'continue',
+                disabled: !isValid,
+              },
+            ]}
+          />
+        }
+      >
+        <IbanInputView
+          t={t}
+          input={
+            <IbanInput
+              value={digits}
+              onChange={handleChange}
+              placeholder={t.ibanInputScreen.emptyMask}
+            />
+          }
+          keypad={
+            <NumericKeypad
+              onDigitClick={handleDigitClick}
+              onDeleteClick={handleDeleteClick}
+              deleteLabel={t.ibanInputScreen.delete}
+            />
+          }
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default IbanInputPage
+
+=== src/pages/IbanInput/IbanInputView.styled.ts ===
+import styled from 'styled-components'
+
+export const Content = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex: 1 0 auto;
+  align-self: stretch;
+  min-height: 100%;
+  overflow: hidden;
+`
+
+export const Left = styled.section`
+  display: flex;
+  width: 735px;
+  min-width: 735px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 64px;
+  padding: 100px 60px;
+  flex-shrink: 0;
+  align-self: stretch;
+`
+
+export const TitleBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`
+
+export const TitleRow = styled.div`
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-shrink: 0;
+`
+
+export const Title = styled.h1`
+  margin: 0;
+  flex: 1 0 0;
+
+  color: #111e29;
+  font-family: 'Oschad Sans';
+  font-size: 46px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 46px;
+`
+
+export const HintCard = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px 40px;
+  flex-shrink: 0;
+
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+export const HintText = styled.p`
+  margin: 0;
+  width: 100%;
+
+  color: #111e29;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+`
+
+export const Right = styled.aside`
+  width: 545px;
+  min-width: 545px;
+  flex-shrink: 0;
+  align-self: stretch;
+  min-height: 100%;
+  display: flex;
+`
+
+=== src/pages/IbanInput/IbanInputView.tsx ===
+import type { ReactNode } from 'react'
+import type { Translations } from '../../locale/types'
+import {
+  Content,
+  HintCard,
+  HintText,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './IbanInputView.styled'
+
+type IbanInputViewProps = {
+  t: Translations
+  input: ReactNode
+  keypad: ReactNode
+}
+
+const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
+  return (
+    <Content>
+      <Left>
+        <TitleBlock>
+          <TitleRow>
+            <Title>{t.ibanInputScreen.title}</Title>
+          </TitleRow>
+        </TitleBlock>
+
+        {input}
+
+        <HintCard>
+          <HintText>{t.ibanInputScreen.hint}</HintText>
+        </HintCard>
+      </Left>
+
+      <Right>{keypad}</Right>
+    </Content>
+  )
+}
+
+export default IbanInputView
 
 === src/pages/PhoneInput/PhoneInputPage.tsx ===
 import { useState } from 'react'
@@ -2128,6 +3910,49 @@ export default PrinterErrorPage
 
 === src/pages/PrinterError/PrinterErrorView.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '46px'
+}
+
+const getInfoCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '600px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '800px'
+  return '520px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getInfoTextLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getErrorIconSize = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '120px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '200px'
+  return '155px'
+}
 
 export const ContentWrapper = styled.div`
   width: 100%;
@@ -2135,8 +3960,8 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
-  gap: 60px;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
 `
 
 export const TitleWrapper = styled.div`
@@ -2150,19 +3975,19 @@ export const PageTitle = styled.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 46px;
+  font-size: ${getTitleFontSize()};
   font-weight: 600;
-  line-height: 46px;
+  line-height: ${getTitleLineHeight()};
   text-align: center;
 `
 
 export const ErrorIcon = styled.img`
-  width: 155px;
-  height: 155px;
+  width: ${getErrorIconSize()};
+  height: ${getErrorIconSize()};
 `
 
 export const InfoCard = styled.div`
-  width: 520px;
+  width: ${getInfoCardWidth()};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2179,9 +4004,9 @@ export const InfoText = styled.p`
   width: 100%;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: 24px;
+  font-size: ${getInfoTextFontSize()};
   font-weight: 500;
-  line-height: 32px;
+  line-height: ${getInfoTextLineHeight()};
   text-align: center;
 `
 
@@ -2226,14 +4051,237 @@ const PrinterErrorView = ({
 
 export default PrinterErrorView
 
+=== src/pages/TextInput/TextInputPage.tsx ===
+import { useState } from 'react'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import AlphanumericKeypad from '../../components/ui/AlphanumericKeypad/AlphanumericKeypad'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import TextInputView from './TextInputView'
+
+const TextInputPage = () => {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const [value, setValue] = useState('')
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleKeyPress = (key: string) => {
+    if (value.length < 100) {
+      setValue((prev) => prev + key)
+    }
+  }
+
+  const handleDelete = () => {
+    setValue((prev) => prev.slice(0, -1))
+  }
+
+  const isValid = value.length > 0 && value.length <= 100
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        backgroundColor="rgba(38, 207, 200, 1)"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.textInputScreen.back,
+                variant: 'cancel',
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.textInputScreen.continue,
+                variant: 'continue',
+                disabled: !isValid,
+              },
+            ]}
+          />
+        }
+      >
+        <TextInputView
+          t={t}
+          value={value}
+          onChange={setValue}
+          keypad={
+            <AlphanumericKeypad
+              onKeyPress={handleKeyPress}
+              onDelete={handleDelete}
+              deleteLabel={t.textInputScreen.delete}
+              enLabel={t.textInputScreen.en}
+              uaLabel={t.textInputScreen.ua}
+            />
+          }
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default TextInputPage
+
+=== src/pages/TextInput/TextInputView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleDisplay = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return 'none'
+  return 'block'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '1420px'
+  return '1140px'
+}
+
+const getInputFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '30px'
+}
+
+const getInputFontWeight = () => {
+  return '600'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+  display: ${getTitleDisplay()};
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: 46px;
+  text-align: center;
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
+`
+
+export const InputField = styled.input`
+  width: 100%;
+  height: 80px;
+  padding: 0 28px;
+  border-radius: 20px;
+  border: 2px solid #0b8db0;
+  background: #ffffff;
+  outline: none;
+  color: #111e29;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInputFontSize()};
+  font-weight: ${getInputFontWeight()};
+  text-align: left;
+  caret-color: #111e29;
+  
+  &::placeholder {
+    color: rgba(17, 30, 41, 0.35);
+  }
+`
+
+=== src/pages/TextInput/TextInputView.tsx ===
+import type { ReactNode } from 'react'
+import type { Translations } from '../../locale/types'
+import {
+  ContentWrapper,
+  InputField,
+  InputWrapper,
+  PageTitle,
+  TitleWrapper,
+} from './TextInputView.styled'
+
+type TextInputViewProps = {
+  t: Translations
+  value: string
+  onChange: (value: string) => void
+  keypad: ReactNode
+}
+
+const TextInputView = ({ t, value, onChange, keypad }: TextInputViewProps) => {
+  return (
+    <ContentWrapper>
+      <TitleWrapper>
+        <PageTitle>{t.textInputScreen.title}</PageTitle>
+      </TitleWrapper>
+
+      <InputWrapper>
+        <InputField
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={t.textInputScreen.placeholder}
+          maxLength={100}
+        />
+      </InputWrapper>
+
+      {keypad}
+    </ContentWrapper>
+  )
+}
+
+export default TextInputView
+
 === src/routes/router.tsx ===
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { routePaths } from '../constants/routePaths'
 import CardErrorPage from '../pages/CardError/CardErrorPage'
 import CardInputPage from '../pages/CardInput/CardInputPage'
+import CashAcceptancePage from '../pages/CashAcceptance/CashAcceptancePage'
 import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
+import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
+import TextInputPage from '../pages/TextInput/TextInputPage'
 
 export const router = createBrowserRouter([
   {
@@ -2259,6 +4307,18 @@ export const router = createBrowserRouter([
   {
     path: routePaths.cardError,
     element: <CardErrorPage />,
+  },
+  {
+    path: routePaths.ibanInput,
+    element: <IbanInputPage />,
+  },
+  {
+    path: routePaths.textInput,
+    element: <TextInputPage />,
+  },
+  {
+    path: routePaths.cashAcceptance,
+    element: <CashAcceptancePage />,
   },
 ])
 
