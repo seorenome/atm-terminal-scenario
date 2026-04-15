@@ -8,4 +8,5 @@ export const routePaths = {
   ibanInput: '/iban-input',
   textInput: '/text-input',
   cashAcceptance: '/cash-acceptance',
+  smsInput: '/sms-input',
 } as const

@@ -8,6 +8,7 @@ import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 import TextInputPage from '../pages/TextInput/TextInputPage'
+import SmsInputPage from '../pages/SmsInput/SmsInputPage'
 
 export const router = createBrowserRouter([
   {
@@ -45,5 +46,9 @@ export const router = createBrowserRouter([
   {
     path: routePaths.cashAcceptance,
     element: <CashAcceptancePage />,
+  },
+  {
+    path: routePaths.smsInput,
+    element: <SmsInputPage />,
   },
 ])

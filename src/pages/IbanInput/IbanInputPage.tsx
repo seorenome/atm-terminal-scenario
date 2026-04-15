@@ -9,6 +9,7 @@ import IbanInput from '../../components/ui/IbanInput/IbanInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
+
 import IbanInputView from './IbanInputView'
 
 const IbanInputPage = () => {
@@ -17,8 +18,8 @@ const IbanInputPage = () => {
 
   const t = translations[locale]
 
-  const handleLanguageChange = (_language: HeaderLanguage) => {
-    setLocale((prev) => prev)
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
   const handleDigitClick = (digit: string) => {

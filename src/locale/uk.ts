@@ -62,7 +62,8 @@ const uk = {
   },
   ibanInputScreen: {
     title: 'Введіть номер IBAN',
-    hint: 'Введіть IBAN, який містить 27 цифр у форматі UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hint: 'Введіть IBAN, який містить 27 цифр у форматі',
+    hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
     back: 'Назад',
     continue: 'Продовжити',
     delete: 'Стерти',
@@ -90,6 +91,14 @@ const uk = {
     currency: 'грн.',
     back: 'Назад',
     continue: 'Продовжити',
+  },
+  smsInputScreen: {
+    title: 'Введіть отриманий код підтвердження з СМС',
+    hint: 'Час дії паролю:',
+    back: 'Назад',
+    continue: 'Далі',
+    delete: 'Стерти',
+    emptyMask: '____',
   },
 }
 

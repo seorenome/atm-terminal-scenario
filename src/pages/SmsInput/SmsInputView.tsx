@@ -10,21 +10,25 @@ import {
   Title,
   TitleBlock,
   TitleRow,
-} from './IbanInputView.styled'
+} from './SmsInputView.styled'
 
-type IbanInputViewProps = {
+type SmsInputViewProps = {
   t: Translations
+  minutes: number
+  seconds: number
   input: ReactNode
   keypad: ReactNode
 }
 
-const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
+const SmsInputView = ({ t, minutes, seconds, input, keypad }: SmsInputViewProps) => {
+  const timerValue = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+
   return (
     <Content>
       <Left>
         <TitleBlock>
           <TitleRow>
-            <Title>{t.ibanInputScreen.title}</Title>
+            <Title>{t.smsInputScreen.title}</Title>
           </TitleRow>
         </TitleBlock>
 
@@ -33,8 +37,9 @@ const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
         </InputWrapper>
 
         <HintCard>
-          <HintText>{t.ibanInputScreen.hint}</HintText>
-          <HintText>{t.ibanInputScreen.hintFormat}</HintText>
+          <HintText>
+            {t.smsInputScreen.hint} {timerValue}
+          </HintText>
         </HintCard>
       </Left>
 
@@ -43,4 +48,4 @@ const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
   )
 }
 
-export default IbanInputView
+export default SmsInputView

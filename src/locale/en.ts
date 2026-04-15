@@ -62,7 +62,8 @@ const en = {
   },
   ibanInputScreen: {
     title: 'Enter IBAN number',
-    hint: 'Enter IBAN containing 27 digits in the format UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hint: 'Enter IBAN containing 27 digits in the format',
+    hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',
@@ -90,6 +91,14 @@ const en = {
     currency: 'UAH',
     back: 'Back',
     continue: 'Continue',
+  },
+  smsInputScreen: {
+    title: 'Enter the confirmation code from SMS',
+    hint: 'Password validity period:',
+    back: 'Back',
+    continue: 'Next',
+    delete: 'Delete',
+    emptyMask: '____',
   },
 }
 

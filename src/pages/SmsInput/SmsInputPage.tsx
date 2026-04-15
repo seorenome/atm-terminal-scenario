@@ -1,51 +1,57 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import CardInput from '../../components/ui/CardInput/CardInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
-import { withInactivity } from '../../hoc/withInactivity'
-
+import SmsInput from '../../components/ui/SmsInput/SmsInput'
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
+import { routePaths } from '../../constants/routePaths'
 
-import {
-  Content,
-  HintCard,
-  HintText,
-  InputWrapper,
-  Left,
-  Right,
-  Title,
-  TitleBlock,
-  TitleRow,
-} from './CardInputView.styled'
+import SmsInputView from './SmsInputView'
 
-const CardInputPage = () => {
+const SmsInputPage = () => {
+  const navigate = useNavigate()
   const [locale, setLocale] = useState<Locale>(defaultLocale)
-  const [value, setValue] = useState('')
+  const [digits, setDigits] = useState('')
+  const [timeLeft, setTimeLeft] = useState(180)
 
   const t = translations[locale]
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      navigate(routePaths.phoneInput)
+      return
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1)
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [timeLeft, navigate])
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
   const handleDigitClick = (digit: string) => {
-    setValue((prev) => {
-      if (prev.length >= 16) return prev
+    setDigits((prev) => {
+      if (prev.length >= 4) return prev
       return prev + digit
     })
   }
 
   const handleDeleteClick = () => {
-    setValue((prev) => prev.slice(0, -1))
+    setDigits((prev) => prev.slice(0, -1))
   }
 
-  const isValid = value.length === 16
+  const isValid = digits.length === 4
+
+  const minutes = Math.floor(timeLeft / 60)
+  const seconds = timeLeft % 60
 
   return (
     <TerminalViewport>
@@ -64,13 +70,13 @@ const CardInputPage = () => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.cardInputScreen.back,
+                label: t.smsInputScreen.back,
                 variant: 'cancel',
               },
             ]}
             rightButtons={[
               {
-                label: t.cardInputScreen.continue,
+                label: t.smsInputScreen.continue,
                 variant: 'continue',
                 disabled: !isValid,
               },
@@ -78,37 +84,27 @@ const CardInputPage = () => {
           />
         }
       >
-        <Content>
-          <Left>
-            <TitleBlock>
-              <TitleRow>
-                <Title>{t.cardInputScreen.title}</Title>
-              </TitleRow>
-            </TitleBlock>
-
-            <InputWrapper>
-              <CardInput
-                value={value}
-                placeholder={t.cardInputScreen.emptyMask}
-              />
-            </InputWrapper>
-
-            <HintCard>
-              <HintText>{t.cardInputScreen.hint}</HintText>
-            </HintCard>
-          </Left>
-
-          <Right>
+        <SmsInputView
+          t={t}
+          minutes={minutes}
+          seconds={seconds}
+          input={
+            <SmsInput
+              value={digits}
+              placeholder={t.smsInputScreen.emptyMask}
+            />
+          }
+          keypad={
             <NumericKeypad
               onDigitClick={handleDigitClick}
               onDeleteClick={handleDeleteClick}
-              deleteLabel={t.cardInputScreen.delete}
+              deleteLabel={t.smsInputScreen.delete}
             />
-          </Right>
-        </Content>
+          }
+        />
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default withInactivity(CardInputPage)
+export default SmsInputPage
