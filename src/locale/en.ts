@@ -100,6 +100,21 @@ const en = {
     delete: 'Delete',
     emptyMask: '____',
   },
+  paymentInfoScreen: {
+  title: 'Card top-up',
+  subtitle: 'Please check the data before depositing',
+  cardNumber: 'Card number',
+  phoneNumber: 'Phone number',
+  payerName: "Payer's full name",
+  recipientName: "Recipient's full name",
+  paymentPurpose: 'Payment purpose',
+  amount: 'Payment amount',
+  commission: 'Commission',
+  acceptedBills: 'Banknotes accepted',
+  cancel: 'Cancel',
+  continue: 'Continue',
+  currency: 'UAH',
+},
 }
 
 export default en

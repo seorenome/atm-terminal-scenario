@@ -9,4 +9,5 @@ export const routePaths = {
   textInput: '/text-input',
   cashAcceptance: '/cash-acceptance',
   smsInput: '/sms-input',
+  paymentInfo: '/payment-info',
 } as const

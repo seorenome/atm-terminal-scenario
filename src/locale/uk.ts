@@ -100,6 +100,21 @@ const uk = {
     delete: 'Стерти',
     emptyMask: '____',
   },
+  paymentInfoScreen: {
+  title: 'Поповнення картки',
+  subtitle: 'Будь ласка, перевірте дані перед внесенням',
+  cardNumber: 'Номер картки',
+  phoneNumber: 'Номер телефону',
+  payerName: 'ПІБ Платника',
+  recipientName: 'ПІБ Отримувача',
+  paymentPurpose: 'Призначення платежу',
+  amount: 'Сума платежу',
+  commission: 'Комісія',
+  acceptedBills: 'Приймаються купюри',
+  cancel: 'Скасувати',
+  continue: 'Продовжити',
+  currency: 'грн.',
+},
 }
 
 export default uk

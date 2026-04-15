@@ -9,6 +9,7 @@ import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 import TextInputPage from '../pages/TextInput/TextInputPage'
 import SmsInputPage from '../pages/SmsInput/SmsInputPage'
+import PaymentInfoPage from '../pages/PaymentInfo/PaymentInfoPage'
 
 export const router = createBrowserRouter([
   {
@@ -50,5 +51,9 @@ export const router = createBrowserRouter([
   {
     path: routePaths.smsInput,
     element: <SmsInputPage />,
+  },
+  {
+    path: routePaths.paymentInfo,
+    element: <PaymentInfoPage />,
   },
 ])
