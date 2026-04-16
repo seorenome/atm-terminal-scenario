@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
@@ -6,9 +7,10 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
 import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
 import {
   Content,
   HintCard,
@@ -30,7 +32,8 @@ type PhoneInputPageProps = {
 }
 
 const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [phoneDigits, setPhoneDigits] = useState('')
 
   const t = translations[locale]
@@ -54,7 +57,8 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
 
   const handleContinue = () => {
     if (isValid) {
-      navigation.goToNext(currentStepId, { phoneNumber: phoneDigits })
+      updateData({ phoneNumber: phoneDigits })
+      navigation.goToNext(currentStepId)
     }
   }
 
@@ -81,6 +85,7 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
               {
                 label: t.phoneInputScreen.back,
                 variant: 'cancel',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -88,6 +93,7 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
               {
                 label: t.phoneInputScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
                 onClick: handleContinue,
               },

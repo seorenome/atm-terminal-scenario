@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -12,6 +12,8 @@ import { withInactivity } from '../../hoc/withInactivity'
 import { withScenario } from '../../hoc/withScenario'
 import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
 import {
   Content,
   HintCard,
@@ -33,7 +35,9 @@ type CardInputPageProps = {
 }
 
 const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
+  const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [value, setValue] = useState('')
 
   const t = translations[locale]
@@ -55,14 +59,19 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
 
   const isValid = value.length === 16
 
-  const handleContinue = () => {
-    if (isValid) {
-      navigation.goToNext(currentStepId, { cardNumber: value })
-    }
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
   }
 
   const handleBack = () => {
-    navigation.goToError(currentStepId)
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ cardNumber: value })
+      navigation.goToNext(currentStepId)
+    }
   }
 
   return (
@@ -76,6 +85,7 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
@@ -84,6 +94,7 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
               {
                 label: t.cardInputScreen.back,
                 variant: 'cancel',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -91,6 +102,7 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
               {
                 label: t.cardInputScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
                 onClick: handleContinue,
               },

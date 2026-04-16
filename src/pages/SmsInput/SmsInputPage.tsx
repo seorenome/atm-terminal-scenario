@@ -8,15 +8,26 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import SmsInput from '../../components/ui/SmsInput/SmsInput'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
 import { routePaths } from '../../constants/routePaths'
 
 import SmsInputView from './SmsInputView'
 
-const SmsInputPage = () => {
+type SmsInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
   const navigate = useNavigate()
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [digits, setDigits] = useState('')
   const [timeLeft, setTimeLeft] = useState(180)
 
@@ -50,6 +61,17 @@ const SmsInputPage = () => {
 
   const isValid = digits.length === 4
 
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ smsCode: digits })
+      navigation.goToNext(currentStepId)
+    }
+  }
+
+  const handleBack = () => {
+    navigation.goToError(currentStepId)
+  }
+
   const minutes = Math.floor(timeLeft / 60)
   const seconds = timeLeft % 60
 
@@ -72,13 +94,17 @@ const SmsInputPage = () => {
               {
                 label: t.smsInputScreen.back,
                 variant: 'cancel',
+                icon: 'arrow-back',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
               {
                 label: t.smsInputScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
@@ -107,4 +133,4 @@ const SmsInputPage = () => {
   )
 }
 
-export default SmsInputPage
+export default withScenario(SmsInputPage, 'smsInput')

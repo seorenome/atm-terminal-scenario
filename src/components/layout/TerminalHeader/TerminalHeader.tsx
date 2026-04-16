@@ -24,12 +24,17 @@ const TerminalHeader = ({
   supportPhone,
   supportDescription,
   onLanguageChange,
+  onExit,
 }: TerminalHeaderProps) => {
   const isUaActive = activeLanguage === 'UA'
   const isEnActive = activeLanguage === 'EN'
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     onLanguageChange?.(language)
+  }
+
+  const handleExitClick = () => {
+    onExit?.()
   }
 
   return (
@@ -63,7 +68,7 @@ const TerminalHeader = ({
             </LanguageButton>
           </LanguageSwitcher>
         ) : (
-          <ActionButton type="button">
+          <ActionButton type="button" onClick={handleExitClick}>
             <ActionIcon src={ExitIcon} alt="" />
             <ActionLabel>{actionLabel}</ActionLabel>
           </ActionButton>

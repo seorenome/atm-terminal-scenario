@@ -9,4 +9,5 @@ export type TerminalHeaderProps = {
   supportPhone: string
   supportDescription: string
   onLanguageChange?: (language: HeaderLanguage) => void
+  onExit?: () => void
 }

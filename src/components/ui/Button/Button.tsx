@@ -22,7 +22,7 @@ const Button = ({
   onClick,
   type = 'button',
 }: ButtonProps) => {
-  const isIconBeforeLabel = variant === 'back'
+  const isIconBeforeLabel = variant === 'back' || variant === 'cancel'
   const iconSrc = icon ? iconMap[icon] : null
 
   return (
