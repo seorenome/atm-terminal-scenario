@@ -20,7 +20,7 @@ export const SCREEN_RESOLUTIONS: Record<ScreenMode, ScreenResolution> = {
   },
 }
 
-export const ACTIVE_SCREEN_MODE: ScreenMode = '800p'
+export const ACTIVE_SCREEN_MODE: ScreenMode = '1024p'
 
 
 export const INACTIVITY_TIMEOUT_SECONDS = 30

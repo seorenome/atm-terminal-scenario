@@ -10,6 +10,8 @@ import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 import TextInputPage from '../pages/TextInput/TextInputPage'
 import SmsInputPage from '../pages/SmsInput/SmsInputPage'
 import PaymentInfoPage from '../pages/PaymentInfo/PaymentInfoPage'
+import PaymentResultPage from '../pages/PaymentResult/PaymentResultPage'
+import ReceiptPage from '../pages/Receipt/ReceiptPage'
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +21,22 @@ export const router = createBrowserRouter([
   {
     path: routePaths.chooseOperationType,
     element: <ChooseOperationTypePage />,
+  },
+  {
+    path: '/cardTopUp',
+    element: <Navigate to={routePaths.cardInput} replace />,
+  },
+  {
+    path: '/mobileTopUp',
+    element: <Navigate to={routePaths.phoneInput} replace />,
+  },
+  {
+    path: '/billsPayment',
+    element: <Navigate to={routePaths.ibanInput} replace />,
+  },
+  {
+    path: '/utilities',
+    element: <Navigate to={routePaths.textInput} replace />,
   },
   {
     path: routePaths.phoneInput,
@@ -55,5 +73,13 @@ export const router = createBrowserRouter([
   {
     path: routePaths.paymentInfo,
     element: <PaymentInfoPage />,
+  },
+  {
+    path: routePaths.paymentResult,
+    element: <PaymentResultPage />,
+  },
+  {
+    path: routePaths.receipt,
+    element: <ReceiptPage />,
   },
 ])

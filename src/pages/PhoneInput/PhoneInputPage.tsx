@@ -8,6 +8,7 @@ import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
+import { withScenario } from '../../hoc/withScenario'
 import {
   Content,
   HintCard,
@@ -20,7 +21,15 @@ import {
   TitleRow,
 } from './PhoneInputView.styled'
 
-const PhoneInputPage = () => {
+type PhoneInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
   const [locale, setLocale] = useState<Locale>(defaultLocale)
   const [phoneDigits, setPhoneDigits] = useState('')
 
@@ -43,6 +52,16 @@ const PhoneInputPage = () => {
 
   const isValid = phoneDigits.length === 10
 
+  const handleContinue = () => {
+    if (isValid) {
+      navigation.goToNext(currentStepId, { phoneNumber: phoneDigits })
+    }
+  }
+
+  const handleBack = () => {
+    navigation.goToError(currentStepId)
+  }
+
   return (
     <TerminalViewport>
       <TerminalLayout
@@ -62,6 +81,7 @@ const PhoneInputPage = () => {
               {
                 label: t.phoneInputScreen.back,
                 variant: 'cancel',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
@@ -69,6 +89,7 @@ const PhoneInputPage = () => {
                 label: t.phoneInputScreen.continue,
                 variant: 'continue',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
@@ -108,4 +129,4 @@ const PhoneInputPage = () => {
   )
 }
 
-export default PhoneInputPage
+export default withScenario(PhoneInputPage, 'phoneInput')

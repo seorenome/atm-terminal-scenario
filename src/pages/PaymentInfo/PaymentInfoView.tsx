@@ -68,10 +68,6 @@ const PaymentInfoView = ({
                 <Data>{recipientName}</Data>
               </InfoRow>
 
-              <InfoRow>
-                <Label>{t.paymentInfoScreen.paymentPurpose}</Label>
-                <Data>{paymentPurpose}</Data>
-              </InfoRow>
             </Column>
 
             <Column>
@@ -88,6 +84,11 @@ const PaymentInfoView = ({
               <InfoRow>
                 <Label>{t.paymentInfoScreen.acceptedBills}</Label>
                 <Data>{acceptedBills}</Data>
+              </InfoRow>
+              
+              <InfoRow>
+                <Label>{t.paymentInfoScreen.paymentPurpose}</Label>
+                <Data>{paymentPurpose}</Data>
               </InfoRow>
             </Column>
           </ColumnsContainer>

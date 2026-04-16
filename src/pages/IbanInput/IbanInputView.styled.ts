@@ -23,12 +23,12 @@ const getTitleLineHeight = () => {
 
 const getInputWidth = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
-  return '580px'
+  return '615px'
 }
 
 const getHintMaxWidth = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
-  return '580px'
+  return '615px'
 }
 
 const getHintFontSize = () => {

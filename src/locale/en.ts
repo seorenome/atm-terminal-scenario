@@ -115,6 +115,15 @@ const en = {
   continue: 'Continue',
   currency: 'UAH',
 },
+paymentResultScreen: {
+  title: 'Payment successful',
+  receipt: 'Receipt',
+  complete: 'Complete',
+},
+receiptScreen: {
+  title: 'Receipt',
+  back: 'Back to home',
+},
 }
 
 export default en

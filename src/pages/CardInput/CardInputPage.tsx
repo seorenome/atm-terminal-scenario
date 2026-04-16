@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -8,10 +9,9 @@ import TerminalViewport from '../../components/layout/TerminalViewport/TerminalV
 import CardInput from '../../components/ui/CardInput/CardInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import { withInactivity } from '../../hoc/withInactivity'
-
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
-
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
 import {
   Content,
   HintCard,
@@ -24,8 +24,16 @@ import {
   TitleRow,
 } from './CardInputView.styled'
 
-const CardInputPage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+type CardInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
+  const { locale, setLocale } = useLocale()
   const [value, setValue] = useState('')
 
   const t = translations[locale]
@@ -47,6 +55,16 @@ const CardInputPage = () => {
 
   const isValid = value.length === 16
 
+  const handleContinue = () => {
+    if (isValid) {
+      navigation.goToNext(currentStepId, { cardNumber: value })
+    }
+  }
+
+  const handleBack = () => {
+    navigation.goToError(currentStepId)
+  }
+
   return (
     <TerminalViewport>
       <TerminalLayout
@@ -66,6 +84,7 @@ const CardInputPage = () => {
               {
                 label: t.cardInputScreen.back,
                 variant: 'cancel',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
@@ -73,6 +92,7 @@ const CardInputPage = () => {
                 label: t.cardInputScreen.continue,
                 variant: 'continue',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
@@ -111,4 +131,4 @@ const CardInputPage = () => {
   )
 }
 
-export default withInactivity(CardInputPage)
+export default withInactivity(withScenario(CardInputPage, 'cardInput'))

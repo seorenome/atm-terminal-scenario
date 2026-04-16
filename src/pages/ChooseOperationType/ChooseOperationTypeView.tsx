@@ -5,13 +5,15 @@ import cardIcon3 from '../../assets/icons/cardicon-3.svg'
 import cardIcon4 from '../../assets/icons/cardicon-4.svg'
 import OperationCard from '../../components/ui/OperationCard/OperationCard'
 import type { Translations } from '../../locale/types'
+import type { ScenarioId } from '../../config/scenarioConfig'
 import { Cards, Content, Title, TitleWrap } from './ChooseOperationTypeView.styled'
 
 type ChooseOperationTypeViewProps = {
   t: Translations
+  onCardClick: (scenarioId: ScenarioId) => void
 }
 
-const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
+const ChooseOperationTypeView = ({ t, onCardClick }: ChooseOperationTypeViewProps) => {
   return (
     <Content>
       <TitleWrap>
@@ -24,6 +26,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.billsPayment.description}
           iconSrc={cardIcon1}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('billsPayment')}
         />
 
         <OperationCard
@@ -31,6 +34,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.mobileTopUp.description}
           iconSrc={cardIcon2}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('mobileTopUp')}
         />
 
         <OperationCard
@@ -38,6 +42,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.cardTopUp.description}
           iconSrc={cardIcon3}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('cardTopUp')}
         />
 
         <OperationCard
@@ -45,6 +50,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.utilities.description}
           iconSrc={cardIcon4}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('utilities')}
         />
       </Cards>
     </Content>

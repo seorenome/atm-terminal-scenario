@@ -10,4 +10,11 @@ export const routePaths = {
   cashAcceptance: '/cash-acceptance',
   smsInput: '/sms-input',
   paymentInfo: '/payment-info',
+  paymentResult: '/payment-result',
+  receipt: '/receipt',
+  phoneError: '/phone-error',
+  smsError: '/sms-error',
+  ibanError: '/iban-error',
+  textError: '/text-error',
+  cashError: '/cash-error',
 } as const

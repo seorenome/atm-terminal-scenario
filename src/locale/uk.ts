@@ -115,6 +115,15 @@ const uk = {
   continue: 'Продовжити',
   currency: 'грн.',
 },
+paymentResultScreen: {
+  title: 'Платіж успішний',
+  receipt: 'Квитанція',
+  complete: 'Завершити',
+},
+receiptScreen: {
+  title: 'Квитанція',
+  back: 'На головну',
+},
 }
 
 export default uk
