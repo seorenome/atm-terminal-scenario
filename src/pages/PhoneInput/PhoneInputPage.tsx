@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -11,10 +12,12 @@ import { withScenario } from '../../hoc/withScenario'
 import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
 import {
   Content,
   HintCard,
   HintText,
+  ErrorText,
   InputWrapper,
   Left,
   Right,
@@ -31,7 +34,15 @@ type PhoneInputPageProps = {
   currentStepId: string
 }
 
+const isValidPrefix = (digits: string): boolean => {
+  if (digits.length < 2) return false
+  const prefix = digits.slice(0, 2)
+  const validPrefixes = ['05', '06', '07', '08', '09']
+  return validPrefixes.includes(prefix)
+}
+
 const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
+  const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
   const { updateData } = useTransaction()
   const [phoneDigits, setPhoneDigits] = useState('')
@@ -53,17 +64,24 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
     setPhoneDigits((prev) => prev.slice(0, -1))
   }
 
-  const isValid = phoneDigits.length === 10
+  const isFullLength = phoneDigits.length === 10
+  const isPrefixValid = isValidPrefix(phoneDigits)
+  const isValid = isFullLength && isPrefixValid
+  const showError = isFullLength && !isPrefixValid
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.cardInput)
+  }
 
   const handleContinue = () => {
     if (isValid) {
       updateData({ phoneNumber: phoneDigits })
       navigation.goToNext(currentStepId)
     }
-  }
-
-  const handleBack = () => {
-    navigation.goToError(currentStepId)
   }
 
   return (
@@ -77,6 +95,7 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
@@ -119,6 +138,9 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
 
             <HintCard>
               <HintText>{t.phoneInputScreen.hint}</HintText>
+              {showError && (
+                <ErrorText>{t.phoneInputScreen.errorMessage}</ErrorText>
+              )}
             </HintCard>
           </Left>
 

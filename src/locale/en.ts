@@ -47,6 +47,7 @@ const en = {
   phoneInputScreen: {
     title: 'Enter the phone number for top-up',
     hint: 'Please enter your phone number in the format +38 (0XX) XXX XX XX',
+    errorMessage: 'The entered number is not valid!',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',
@@ -96,15 +97,19 @@ const en = {
     title: 'Enter the confirmation code from SMS',
     hint: 'Password validity period:',
     back: 'Back',
-    continue: 'Next',
+    continue: 'Continue',
     delete: 'Delete',
     emptyMask: '____',
   },
-  paymentInfoScreen: {
+paymentInfoScreen: {
   title: 'Card top-up',
+  titleMobile: 'Mobile top-up',
   subtitle: 'Please check the data before depositing',
   cardNumber: 'Card number',
   phoneNumber: 'Phone number',
+  operator: 'Mobile operator',
+  edrpou: 'EDRPOU',
+  iban: 'IBAN',
   payerName: "Payer's full name",
   recipientName: "Recipient's full name",
   paymentPurpose: 'Payment purpose',
@@ -122,7 +127,8 @@ paymentResultScreen: {
 },
 receiptScreen: {
   title: 'Receipt',
-  back: 'Back to home',
+  print: 'Print',
+  complete: 'Complete',
 },
 }
 

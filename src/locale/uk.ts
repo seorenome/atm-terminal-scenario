@@ -47,6 +47,7 @@ const uk = {
   phoneInputScreen: {
     title: 'Введіть номер телефону для поповнення',
     hint: 'Будь ласка, введіть свій номер телефону у форматі +38 (0XX) XXX XX XX',
+    errorMessage: 'Введений номер не є дійсним!',
     back: 'Назад',
     continue: 'Продовжити',
     delete: 'Стерти',
@@ -96,15 +97,19 @@ const uk = {
     title: 'Введіть отриманий код підтвердження з СМС',
     hint: 'Час дії паролю:',
     back: 'Назад',
-    continue: 'Далі',
+    continue: 'Продовжити',
     delete: 'Стерти',
     emptyMask: '____',
   },
-  paymentInfoScreen: {
+paymentInfoScreen: {
   title: 'Поповнення картки',
+  titleMobile: 'Поповнення мобільного зв\'язку',
   subtitle: 'Будь ласка, перевірте дані перед внесенням',
   cardNumber: 'Номер картки',
   phoneNumber: 'Номер телефону',
+  operator: 'Оператор зв\'язку',
+  edrpou: 'ЄДРПОУ',
+  iban: 'IBAN',
   payerName: 'ПІБ Платника',
   recipientName: 'ПІБ Отримувача',
   paymentPurpose: 'Призначення платежу',
@@ -122,7 +127,8 @@ paymentResultScreen: {
 },
 receiptScreen: {
   title: 'Квитанція',
-  back: 'На головну',
+  print: 'Друкувати',
+  complete: 'Завершити',
 },
 }
 

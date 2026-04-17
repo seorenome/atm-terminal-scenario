@@ -41,6 +41,11 @@ const getHintLineHeight = () => {
   return '32px'
 }
 
+const getErrorFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '20px'
+}
+
 const getRightWidth = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '820px'
   return '545px'
@@ -117,6 +122,18 @@ export const HintText = styled.p`
   text-align: left;
   font-family: 'Oschad Sans';
   font-size: ${getHintFontSize()};
+  font-style: normal;
+  font-weight: 500;
+  line-height: ${getHintLineHeight()};
+`
+
+export const ErrorText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: #e74c3c;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: ${getErrorFontSize()};
   font-style: normal;
   font-weight: 500;
   line-height: ${getHintLineHeight()};

@@ -59,8 +59,7 @@ const PaymentResultPage = () => {
             rightButtons={[
               {
                 label: t.paymentResultScreen.complete,
-                variant: 'continue',
-                icon: 'arrow-next',
+                variant: 'repeat',
                 onClick: handleComplete,
               },
             ]}

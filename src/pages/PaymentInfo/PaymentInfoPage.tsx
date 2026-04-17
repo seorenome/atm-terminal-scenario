@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -11,6 +11,8 @@ import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
 import { paymentConfig } from '../../config/paymentConfig'
+import { routePaths } from '../../constants/routePaths'
+import type { ScenarioId } from '../../config/scenarioConfig'
 
 import PaymentInfoView from './PaymentInfoView'
 
@@ -24,15 +26,30 @@ type PaymentInfoPageProps = {
 
 const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { locale, setLocale } = useLocale()
   const { data } = useTransaction()
 
   const t = translations[locale]
+  const scenarioId = location.state?.scenarioId as ScenarioId
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigation.goToError(currentStepId)
+  }
+
+  const handleContinue = () => {
+    navigation.goToNext(currentStepId)
+  }
+
+  // Дані для сценарію "Поповнення картки"
   const cardNumber = data.cardNumber || '5167 **** **** 4826'
   const phoneNumber = data.phoneNumber || '+38 (096) 834 - 70-01'
   const amount = 'від 1 до 5000 грн.'
@@ -42,13 +59,12 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   const paymentPurpose = data.paymentPurpose || paymentConfig.paymentPurpose
   const recipientName = 'Сергій П.'
 
-  const handleCancel = () => {
-    navigation.goToError(currentStepId)
-  }
+  // Дані для сценарію "Мобільний зв'язок"
+  const operator = 'ПрАТ "Київстар"'
+  const edrpou = '21673832'
+  const iban = 'UA983005280000026004000003072'
 
-  const handleContinue = () => {
-    navigation.goToNext(currentStepId)
-  }
+  const isCardTopUp = scenarioId === 'cardTopUp'
 
   return (
     <TerminalViewport>
@@ -61,6 +77,7 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
@@ -70,7 +87,7 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
                 label: t.paymentInfoScreen.cancel,
                 variant: 'cancel',
                 icon: 'arrow-back',
-                onClick: handleCancel,
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
@@ -86,14 +103,19 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
       >
         <PaymentInfoView
           t={t}
+          scenarioId={scenarioId}
+          isCardTopUp={isCardTopUp}
           cardNumber={cardNumber}
           phoneNumber={phoneNumber}
-          payerName={payerName}
-          recipientName={recipientName}
-          paymentPurpose={paymentPurpose}
           amount={amount}
           commission={commission}
           acceptedBills={acceptedBills}
+          payerName={payerName}
+          paymentPurpose={paymentPurpose}
+          recipientName={recipientName}
+          operator={operator}
+          edrpou={edrpou}
+          iban={iban}
         />
       </TerminalLayout>
     </TerminalViewport>

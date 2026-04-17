@@ -61,15 +61,19 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
 
   const isValid = digits.length === 4
 
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.phoneInput)
+  }
+
   const handleContinue = () => {
     if (isValid) {
       updateData({ smsCode: digits })
       navigation.goToNext(currentStepId)
     }
-  }
-
-  const handleBack = () => {
-    navigation.goToError(currentStepId)
   }
 
   const minutes = Math.floor(timeLeft / 60)
@@ -86,6 +90,7 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={

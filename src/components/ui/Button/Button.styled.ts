@@ -74,6 +74,8 @@ export const StyledButton = styled.button<StyledButtonProps>`
   line-height: ${getButtonLineHeight()};
   letter-spacing: 0.56px;
   text-transform: uppercase;
+  leading-trim: both;
+  text-edge: cap;
   text-align: center;
 
   ${({ $variant }) => getVariantStyles($variant)};
@@ -89,9 +91,9 @@ export const StyledButton = styled.button<StyledButtonProps>`
 
 export const ButtonContent = styled.span<{ $disabled?: boolean }>`
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   opacity: ${({ $disabled }) => ($disabled ? 0.3 : 1)};
 `

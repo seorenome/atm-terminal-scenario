@@ -1,4 +1,5 @@
 import type { Translations } from '../../locale/types'
+import type { ScenarioId } from '../../config/scenarioConfig'
 import {
   Column,
   ColumnsContainer,
@@ -15,31 +16,42 @@ import {
 
 type PaymentInfoViewProps = {
   t: Translations
+  scenarioId: ScenarioId
+  isCardTopUp: boolean
   cardNumber: string
   phoneNumber: string
-  payerName: string
-  recipientName: string
-  paymentPurpose: string
   amount: string
   commission: string
   acceptedBills: string
+  payerName: string
+  paymentPurpose: string
+  recipientName: string
+  operator: string
+  edrpou: string
+  iban: string
 }
 
 const PaymentInfoView = ({
   t,
+  isCardTopUp,
   cardNumber,
   phoneNumber,
-  payerName,
-  recipientName,
-  paymentPurpose,
   amount,
   commission,
   acceptedBills,
+  payerName,
+  paymentPurpose,
+  recipientName,
+  operator,
+  edrpou,
+  iban,
 }: PaymentInfoViewProps) => {
+  const title = isCardTopUp ? t.paymentInfoScreen.title : t.paymentInfoScreen.titleMobile
+
   return (
     <ContentWrapper>
       <TitleWrapper>
-        <PageTitle>{t.paymentInfoScreen.title}</PageTitle>
+        <PageTitle>{title}</PageTitle>
       </TitleWrapper>
 
       <InfoBlock>
@@ -48,26 +60,45 @@ const PaymentInfoView = ({
 
           <ColumnsContainer>
             <Column>
-              <InfoRow>
-                <Label>{t.paymentInfoScreen.cardNumber}</Label>
-                <Data>{cardNumber}</Data>
-              </InfoRow>
-
-              <InfoRow>
-                <Label>{t.paymentInfoScreen.phoneNumber}</Label>
-                <Data>{phoneNumber}</Data>
-              </InfoRow>
-
-              <InfoRow>
-                <Label>{t.paymentInfoScreen.payerName}</Label>
-                <Data>{payerName}</Data>
-              </InfoRow>
-
-              <InfoRow>
-                <Label>{t.paymentInfoScreen.recipientName}</Label>
-                <Data>{recipientName}</Data>
-              </InfoRow>
-
+              {isCardTopUp ? (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.cardNumber}</Label>
+                    <Data>{cardNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.payerName}</Label>
+                    <Data>{payerName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.recipientName}</Label>
+                    <Data>{recipientName}</Data>
+                  </InfoRow>
+                </>
+              ) : (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.operator}</Label>
+                    <Data>{operator}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.edrpou}</Label>
+                    <Data>{edrpou}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.iban}</Label>
+                    <Data>{iban}</Data>
+                  </InfoRow>
+                </>
+              )}
             </Column>
 
             <Column>
@@ -85,7 +116,7 @@ const PaymentInfoView = ({
                 <Label>{t.paymentInfoScreen.acceptedBills}</Label>
                 <Data>{acceptedBills}</Data>
               </InfoRow>
-              
+
               <InfoRow>
                 <Label>{t.paymentInfoScreen.paymentPurpose}</Label>
                 <Data>{paymentPurpose}</Data>

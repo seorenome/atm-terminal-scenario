@@ -1,16 +1,30 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
 import CashAcceptanceView from './CashAcceptanceView'
 
-const CashAcceptancePage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+type CashAcceptancePageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData, data } = useTransaction()
   const [acceptedAmount, setAcceptedAmount] = useState(0)
   const [isInserting, setIsInserting] = useState(true)
 
@@ -20,11 +34,6 @@ const CashAcceptancePage = () => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
-  // Розрахунок комісії (1%)
-  const commission = acceptedAmount * 0.01
-  const finalAmount = acceptedAmount - commission
-
-  // Симуляція внесення коштів
   useEffect(() => {
     if (!isInserting) return
 
@@ -33,6 +42,7 @@ const CashAcceptancePage = () => {
         const next = prev + 100
         if (next >= 1200) {
           setIsInserting(false)
+          updateData({ amount: 1200 })
           return 1200
         }
         return next
@@ -40,9 +50,25 @@ const CashAcceptancePage = () => {
     }, 500)
 
     return () => clearInterval(interval)
-  }, [isInserting])
+  }, [isInserting, updateData])
 
+  const commission = acceptedAmount * 0.01
+  const finalAmount = acceptedAmount - commission
   const isValid = acceptedAmount > 0
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.paymentInfo)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      navigation.goToNext(currentStepId)
+    }
+  }
 
   return (
     <TerminalViewport>
@@ -50,11 +76,12 @@ const CashAcceptancePage = () => {
         variant="default"
         header={
           <TerminalHeader
-            variant="language-switcher"
-            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            variant="action-button"
+            actionLabel={t.header.exit}
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
@@ -63,13 +90,17 @@ const CashAcceptancePage = () => {
               {
                 label: t.cashAcceptanceScreen.back,
                 variant: 'cancel',
+                icon: 'arrow-back',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
               {
                 label: t.cashAcceptanceScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
@@ -86,4 +117,4 @@ const CashAcceptancePage = () => {
   )
 }
 
-export default CashAcceptancePage
+export default withScenario(CashAcceptancePage, 'cashAcceptance')
