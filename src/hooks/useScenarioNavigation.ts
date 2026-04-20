@@ -9,7 +9,7 @@ export const useScenarioNavigation = (scenarioId: ScenarioId) => {
   const goToStep = (stepId: string, state?: unknown) => {
     const step = scenario.steps[stepId]
     if (step) {
-      navigate(step.path, { state: { ...state, scenarioId } })
+      navigate(step.path, { state: { ...(state as object), scenarioId } })
     } else {
       console.error(`Step ${stepId} not found in scenario ${scenarioId}`)
     }

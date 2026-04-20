@@ -23,22 +23,6 @@ export const router = createBrowserRouter([
     element: <ChooseOperationTypePage />,
   },
   {
-    path: '/cardTopUp',
-    element: <Navigate to={routePaths.cardInput} replace />,
-  },
-  {
-    path: '/mobileTopUp',
-    element: <Navigate to={routePaths.phoneInput} replace />,
-  },
-  {
-    path: '/billsPayment',
-    element: <Navigate to={routePaths.ibanInput} replace />,
-  },
-  {
-    path: '/utilities',
-    element: <Navigate to={routePaths.textInput} replace />,
-  },
-  {
     path: routePaths.phoneInput,
     element: <PhoneInputPage />,
   },

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ComponentType } from 'react'
+import { useEffect, useRef, useState, type ComponentType } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InactivityPopup from '../components/ui/InactivityPopup/InactivityPopup'
 import { INACTIVITY_TIMEOUT_SECONDS } from '../config/screenConfig'
