@@ -12,6 +12,7 @@ import SmsInputPage from '../pages/SmsInput/SmsInputPage'
 import PaymentInfoPage from '../pages/PaymentInfo/PaymentInfoPage'
 import PaymentResultPage from '../pages/PaymentResult/PaymentResultPage'
 import ReceiptPage from '../pages/Receipt/ReceiptPage'
+import PaymentPurposePage from '../pages/PaymentPurpose/PaymentPurposePage'
 
 export const router = createBrowserRouter([
   {
@@ -66,4 +67,8 @@ export const router = createBrowserRouter([
     path: routePaths.receipt,
     element: <ReceiptPage />,
   },
+  {
+  path: routePaths.paymentPurpose,
+  element: <PaymentPurposePage />,
+},
 ])

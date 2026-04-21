@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
@@ -42,29 +41,39 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   }
 
   const handleBack = () => {
-    navigation.goToError(currentStepId)
+    navigate(routePaths.chooseOperationType)
   }
 
   const handleContinue = () => {
     navigation.goToNext(currentStepId)
   }
 
-  // Дані для сценарію "Поповнення картки"
-  const cardNumber = data.cardNumber || '5167 **** **** 4826'
+  // Спільні дані для всіх сценаріїв
   const phoneNumber = data.phoneNumber || '+38 (096) 834 - 70-01'
   const amount = 'від 1 до 5000 грн.'
   const commission = `${paymentConfig.commissionPercent}%`
   const acceptedBills = paymentConfig.acceptedBills
   const payerName = paymentConfig.payerName
-  const paymentPurpose = data.paymentPurpose || paymentConfig.paymentPurpose
+
+  // Дані для cardTopUp
+  const cardNumber = data.cardNumber || '5167 **** **** 4826'
+  const paymentPurposeCard = data.paymentPurpose || paymentConfig.paymentPurpose
   const recipientName = 'Сергій П.'
 
-  // Дані для сценарію "Мобільний зв'язок"
+  // Дані для mobileTopUp
   const operator = 'ПрАТ "Київстар"'
   const edrpou = '21673832'
-  const iban = 'UA983005280000026004000003072'
+  const ibanMobile = 'UA983005280000026004000003072'
+  const paymentPurposeMobile = 'За послуги мобільного зв\'язку'
+
+  // Дані для billsPayment
+  const iban = data.iban || 'UA983005280000026004000003072'
+  const paymentPurposeBills = data.paymentPurpose || 'Оплата за послуги водопостачання'
+  const recipientBills = 'РОВКП ВКГ «Рівнеоблводоканал»'
 
   const isCardTopUp = scenarioId === 'cardTopUp'
+  const isMobileTopUp = scenarioId === 'mobileTopUp'
+  const isBillsPayment = scenarioId === 'billsPayment'
 
   return (
     <TerminalViewport>
@@ -84,9 +93,8 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           <TerminalFooter
             leftButtons={[
               {
-                label: t.paymentInfoScreen.cancel,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -105,17 +113,23 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           t={t}
           scenarioId={scenarioId}
           isCardTopUp={isCardTopUp}
+          isMobileTopUp={isMobileTopUp}
+          isBillsPayment={isBillsPayment}
           cardNumber={cardNumber}
           phoneNumber={phoneNumber}
           amount={amount}
           commission={commission}
           acceptedBills={acceptedBills}
           payerName={payerName}
-          paymentPurpose={paymentPurpose}
+          paymentPurposeCard={paymentPurposeCard}
           recipientName={recipientName}
           operator={operator}
           edrpou={edrpou}
+          ibanMobile={ibanMobile}
+          paymentPurposeMobile={paymentPurposeMobile}
           iban={iban}
+          paymentPurposeBills={paymentPurposeBills}
+          recipientBills={recipientBills}
         />
       </TerminalLayout>
     </TerminalViewport>

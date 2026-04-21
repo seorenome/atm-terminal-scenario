@@ -66,7 +66,7 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
   }
 
   const handleBack = () => {
-    navigate(routePaths.phoneInput)
+    navigate(routePaths.chooseOperationType)
   }
 
   const handleContinue = () => {
@@ -97,9 +97,8 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.smsInputScreen.back,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}

@@ -85,7 +85,6 @@ const PhoneInputPage = () => {
             <InputWrapper>
               <PhoneInput
                 value={phoneDigits}
-                onChange={setPhoneDigits}
                 placeholder={t.phoneInputScreen.emptyMask}
               />
             </InputWrapper>

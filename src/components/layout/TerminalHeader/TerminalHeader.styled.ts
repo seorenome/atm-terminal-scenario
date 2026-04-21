@@ -134,7 +134,7 @@ export const LanguageDivider = styled.img`
   box-sizing: content-box;
 `
 
-export const ActionButton = styled.button`
+export const ActionButton = styled.button<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,8 +142,9 @@ export const ActionButton = styled.button`
   padding: 21px 32px;
   border: none;
   border-radius: 15px;
-  background: rgba(235, 246, 250, 1);
-  cursor: pointer;
+  background: ${({ disabled }) => (disabled ? 'rgba(222, 222, 222, 1)' : 'rgba(235, 246, 250, 1)')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `
 
 export const ActionIcon = styled.img`

@@ -18,35 +18,51 @@ type PaymentInfoViewProps = {
   t: Translations
   scenarioId: ScenarioId
   isCardTopUp: boolean
+  isMobileTopUp: boolean
+  isBillsPayment: boolean
   cardNumber: string
   phoneNumber: string
   amount: string
   commission: string
   acceptedBills: string
   payerName: string
-  paymentPurpose: string
+  paymentPurposeCard: string
   recipientName: string
   operator: string
   edrpou: string
+  ibanMobile: string
+  paymentPurposeMobile: string
   iban: string
+  paymentPurposeBills: string
+  recipientBills: string
 }
 
 const PaymentInfoView = ({
   t,
   isCardTopUp,
+  isMobileTopUp,
+  isBillsPayment,
   cardNumber,
   phoneNumber,
   amount,
   commission,
   acceptedBills,
   payerName,
-  paymentPurpose,
+  paymentPurposeCard,
   recipientName,
   operator,
   edrpou,
+  ibanMobile,
+  paymentPurposeMobile,
   iban,
+  paymentPurposeBills,
+  recipientBills,
 }: PaymentInfoViewProps) => {
-  const title = isCardTopUp ? t.paymentInfoScreen.title : t.paymentInfoScreen.titleMobile
+  const title = isCardTopUp
+    ? t.paymentInfoScreen.title
+    : isMobileTopUp
+    ? t.paymentInfoScreen.titleMobile
+    : t.paymentInfoScreen.titleBills
 
   return (
     <ContentWrapper>
@@ -60,7 +76,7 @@ const PaymentInfoView = ({
 
           <ColumnsContainer>
             <Column>
-              {isCardTopUp ? (
+              {isCardTopUp && (
                 <>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.cardNumber}</Label>
@@ -79,7 +95,9 @@ const PaymentInfoView = ({
                     <Data>{recipientName}</Data>
                   </InfoRow>
                 </>
-              ) : (
+              )}
+
+              {isMobileTopUp && (
                 <>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.phoneNumber}</Label>
@@ -95,7 +113,28 @@ const PaymentInfoView = ({
                   </InfoRow>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.iban}</Label>
+                    <Data>{ibanMobile}</Data>
+                  </InfoRow>
+                </>
+              )}
+
+              {isBillsPayment && (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.iban}</Label>
                     <Data>{iban}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.payerName}</Label>
+                    <Data>{payerName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.recipientName}</Label>
+                    <Data>{recipientBills}</Data>
                   </InfoRow>
                 </>
               )}
@@ -119,7 +158,13 @@ const PaymentInfoView = ({
 
               <InfoRow>
                 <Label>{t.paymentInfoScreen.paymentPurpose}</Label>
-                <Data>{paymentPurpose}</Data>
+                <Data>
+                  {isCardTopUp
+                    ? paymentPurposeCard
+                    : isMobileTopUp
+                    ? paymentPurposeMobile
+                    : paymentPurposeBills}
+                </Data>
               </InfoRow>
             </Column>
           </ColumnsContainer>

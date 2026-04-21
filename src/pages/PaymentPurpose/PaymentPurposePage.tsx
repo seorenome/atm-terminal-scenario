@@ -6,27 +6,21 @@ import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeade
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import IbanInput from '../../components/ui/IbanInput/IbanInput'
-import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import AlphanumericKeypad from '../../components/ui/AlphanumericKeypad/AlphanumericKeypad'
 import { withScenario } from '../../hoc/withScenario'
 import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
 import { routePaths } from '../../constants/routePaths'
-
 import {
-  Content,
-  HintCard,
-  HintText,
+  ContentWrapper,
+  InputField,
   InputWrapper,
-  Left,
-  Right,
-  Title,
-  TitleBlock,
-  TitleRow,
-} from './IbanInputView.styled'
+  PageTitle,
+  TitleWrapper,
+} from './PaymentPurposeView.styled'
 
-type IbanInputPageProps = {
+type PaymentPurposePageProps = {
   navigation: {
     goToNext: (stepId: string, state?: unknown) => void
     goToError: (stepId: string, state?: unknown) => void
@@ -34,11 +28,11 @@ type IbanInputPageProps = {
   currentStepId: string
 }
 
-const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
+const PaymentPurposePage = ({ navigation, currentStepId }: PaymentPurposePageProps) => {
   const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
-  const { updateData } = useTransaction()
-  const [digits, setDigits] = useState('')
+  const { updateData, data } = useTransaction()
+  const [value, setValue] = useState(data.paymentPurpose || '')
 
   const t = translations[locale]
 
@@ -46,17 +40,17 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
-  const handleDigitClick = (digit: string) => {
-    if (digits.length < 27) {
-      setDigits((prev) => prev + digit)
+  const handleKeyPress = (key: string) => {
+    if (value.length < 100) {
+      setValue((prev) => prev + key)
     }
   }
 
-  const handleDeleteClick = () => {
-    setDigits((prev) => prev.slice(0, -1))
+  const handleDelete = () => {
+    setValue((prev) => prev.slice(0, -1))
   }
 
-  const isValid = digits.length === 27
+  const isValid = value.length > 0 && value.length <= 100
 
   const handleExit = () => {
     navigate(routePaths.chooseOperationType)
@@ -68,7 +62,7 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
 
   const handleContinue = () => {
     if (isValid) {
-      updateData({ iban: digits })
+      updateData({ paymentPurpose: value })
       navigation.goToNext(currentStepId)
     }
   }
@@ -76,7 +70,8 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
   return (
     <TerminalViewport>
       <TerminalLayout
-        variant="numeric-entry"
+        variant="default"
+        backgroundColor="rgba(38, 207, 200, 1)"
         header={
           <TerminalHeader
             variant="action-button"
@@ -98,7 +93,7 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
             ]}
             rightButtons={[
               {
-                label: t.ibanInputScreen.continue,
+                label: t.paymentPurposeScreen.continue,
                 variant: 'continue',
                 icon: 'arrow-next',
                 disabled: !isValid,
@@ -108,35 +103,32 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
           />
         }
       >
-        <Content>
-          <Left>
-            <TitleBlock>
-              <TitleRow>
-                <Title>{t.ibanInputScreen.title}</Title>
-              </TitleRow>
-            </TitleBlock>
+        <ContentWrapper>
+          <TitleWrapper>
+            <PageTitle>{t.paymentPurposeScreen.title}</PageTitle>
+          </TitleWrapper>
 
-            <InputWrapper>
-              <IbanInput value={digits} />
-            </InputWrapper>
-
-            <HintCard>
-              <HintText>{t.ibanInputScreen.hint}</HintText>
-              <HintText>{t.ibanInputScreen.hintFormat}</HintText>
-            </HintCard>
-          </Left>
-
-          <Right>
-            <NumericKeypad
-              onDigitClick={handleDigitClick}
-              onDeleteClick={handleDeleteClick}
-              deleteLabel={t.ibanInputScreen.delete}
+          <InputWrapper>
+            <InputField
+              type="text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder={t.paymentPurposeScreen.placeholder}
+              maxLength={100}
             />
-          </Right>
-        </Content>
+          </InputWrapper>
+
+          <AlphanumericKeypad
+            onKeyPress={handleKeyPress}
+            onDelete={handleDelete}
+            deleteLabel={t.paymentPurposeScreen.delete}
+            enLabel={t.paymentPurposeScreen.en}
+            uaLabel={t.paymentPurposeScreen.ua}
+          />
+        </ContentWrapper>
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default withScenario(IbanInputPage, 'ibanInput')
+export default withScenario(PaymentPurposePage, 'paymentPurpose')

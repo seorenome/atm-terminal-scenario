@@ -104,6 +104,7 @@ const uk = {
 paymentInfoScreen: {
   title: 'Поповнення картки',
   titleMobile: 'Поповнення мобільного зв\'язку',
+  titleBills: 'Оплата рахунку по IBAN',
   subtitle: 'Будь ласка, перевірте дані перед внесенням',
   cardNumber: 'Номер картки',
   phoneNumber: 'Номер телефону',
@@ -129,6 +130,15 @@ receiptScreen: {
   title: 'Квитанція',
   print: 'Друкувати',
   complete: 'Завершити',
+},
+paymentPurposeScreen: {
+  title: 'Введіть призначення платежу',
+  placeholder: 'Оплата за послуги водопостачання',
+  delete: 'Стерти',
+  back: 'Назад',
+  continue: 'Продовжити',
+  en: 'en',
+  ua: 'ua',
 },
 }
 

@@ -8,11 +8,6 @@ import {
   Wrapper,
 } from './IbanInput.styled'
 
-
-const getMask = () => {
-  return 'UA __ ______ ___________________'
-}
-
 const getStaticPrefix = () => {
   return 'UA '
 }
@@ -21,10 +16,9 @@ const getEditableMask = () => {
   return '__ ______ ___________________'
 }
 
-const IbanInput = ({ value, onChange, placeholder }: IbanInputProps) => {
+const IbanInput = ({ value }: IbanInputProps) => {
   const fieldRef = useRef<HTMLDivElement>(null)
 
-  // value зберігає ТІЛЬКИ цифри (без UA та пробілів)
   const digits = value
 
   const formatDisplay = () => {
@@ -46,19 +40,6 @@ const IbanInput = ({ value, onChange, placeholder }: IbanInputProps) => {
     return result
   }
 
-  const handleDigitClick = (digit: string) => {
-    if (digits.length < 27) {
-      onChange(digits + digit)
-    }
-  }
-
-  const handleDeleteClick = () => {
-    if (digits.length > 0) {
-      onChange(digits.slice(0, -1))
-    }
-  }
-
-  // Скрол до кінця при зміні
   useEffect(() => {
     if (fieldRef.current) {
       fieldRef.current.scrollLeft = fieldRef.current.scrollWidth

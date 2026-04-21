@@ -226,4 +226,81 @@ export const scenarios: Record<ScenarioId, Scenario> = {
       },
     },
   },
+  billsPayment: {
+  id: 'billsPayment',
+  name: 'Оплата рахунків',
+  startStep: 'ibanInput',
+  steps: {
+    ibanInput: {
+      id: 'ibanInput',
+      path: routePaths.ibanInput,
+      nextStep: 'phoneInput',
+      errorStep: 'ibanError',
+    },
+    phoneInput: {
+      id: 'phoneInput',
+      path: routePaths.phoneInput,
+      nextStep: 'smsInput',
+      errorStep: 'phoneError',
+    },
+    smsInput: {
+      id: 'smsInput',
+      path: routePaths.smsInput,
+      nextStep: 'paymentPurpose',
+      errorStep: 'smsError',
+    },
+    paymentPurpose: {
+      id: 'paymentPurpose',
+      path: routePaths.paymentPurpose,
+      nextStep: 'paymentInfo',
+      errorStep: 'purposeError',
+    },
+    paymentInfo: {
+      id: 'paymentInfo',
+      path: routePaths.paymentInfo,
+      nextStep: 'cashAcceptance',
+      errorStep: 'printerError',
+    },
+    cashAcceptance: {
+      id: 'cashAcceptance',
+      path: routePaths.cashAcceptance,
+      nextStep: 'paymentResult',
+      errorStep: 'cashError',
+    },
+    paymentResult: {
+      id: 'paymentResult',
+      path: routePaths.paymentResult,
+    },
+    ibanError: {
+      id: 'ibanError',
+      path: routePaths.ibanError,
+      nextStep: 'ibanInput',
+    },
+    phoneError: {
+      id: 'phoneError',
+      path: routePaths.phoneError,
+      nextStep: 'phoneInput',
+    },
+    smsError: {
+      id: 'smsError',
+      path: routePaths.smsError,
+      nextStep: 'smsInput',
+    },
+    purposeError: {
+      id: 'purposeError',
+      path: routePaths.purposeError,
+      nextStep: 'paymentPurpose',
+    },
+    printerError: {
+      id: 'printerError',
+      path: routePaths.printerError,
+      nextStep: 'paymentResult',
+    },
+    cashError: {
+      id: 'cashError',
+      path: routePaths.cashError,
+      nextStep: 'cashAcceptance',
+    },
+  },
+},
 }

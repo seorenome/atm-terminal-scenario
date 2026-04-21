@@ -104,6 +104,7 @@ const en = {
 paymentInfoScreen: {
   title: 'Card top-up',
   titleMobile: 'Mobile top-up',
+  titleBills: 'Bill payment by IBAN',
   subtitle: 'Please check the data before depositing',
   cardNumber: 'Card number',
   phoneNumber: 'Phone number',
@@ -129,6 +130,15 @@ receiptScreen: {
   title: 'Receipt',
   print: 'Print',
   complete: 'Complete',
+},
+paymentPurposeScreen: {
+  title: 'Enter payment purpose',
+  placeholder: 'Payment for water supply services',
+  delete: 'Delete',
+  back: 'Back',
+  continue: 'Continue',
+  en: 'en',
+  ua: 'ua',
 },
 }
 

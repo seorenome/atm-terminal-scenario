@@ -2,7 +2,7 @@ import type { PhoneInputProps } from './PhoneInput.types'
 import { Field, Placeholder, Wrapper } from './PhoneInput.styled'
 
 const formatPhone = (digits: string) => {
-  const d = digits.slice(0, 10) // 0XXXXXXXXX
+  const d = digits.slice(0, 10)
 
   let result = '+38 '
 
@@ -26,7 +26,7 @@ const formatPhone = (digits: string) => {
   return result
 }
 
-const PhoneInput = ({ value, onChange, placeholder }: PhoneInputProps) => {
+const PhoneInput = ({ value, placeholder }: PhoneInputProps) => {
   const isEmpty = value.length === 0
 
   return (

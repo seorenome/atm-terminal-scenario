@@ -10,4 +10,5 @@ export type TerminalHeaderProps = {
   supportDescription: string
   onLanguageChange?: (language: HeaderLanguage) => void
   onExit?: () => void
+  disabled?: boolean
 }

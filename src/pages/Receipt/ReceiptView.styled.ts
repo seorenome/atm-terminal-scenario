@@ -6,16 +6,6 @@ const getContentPaddingTop = () => {
   return '100px'
 }
 
-const getTitleFontSize = () => {
-  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
-  return '46px'
-}
-
-const getTitleLineHeight = () => {
-  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
-  return '46px'
-}
-
 const getInfoBlockPadding = () => {
   if (ACTIVE_SCREEN_MODE === '1080p') return '0 100px'
   return '0 60px'

@@ -17,4 +17,6 @@ export const routePaths = {
   ibanError: '/iban-error',
   textError: '/text-error',
   cashError: '/cash-error',
+  paymentPurpose: '/payment-purpose',
+  purposeError: '/purpose-error',
 } as const

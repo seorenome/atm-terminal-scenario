@@ -24,7 +24,7 @@ type CashAcceptancePageProps = {
 const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePageProps) => {
   const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
-  const { updateData, data } = useTransaction()
+  const { updateData } = useTransaction()
   const [acceptedAmount, setAcceptedAmount] = useState(0)
   const [isInserting, setIsInserting] = useState(true)
 
@@ -55,13 +55,14 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
   const commission = acceptedAmount * 0.01
   const finalAmount = acceptedAmount - commission
   const isValid = acceptedAmount > 0
+  const isCancelDisabled = acceptedAmount > 0
 
   const handleExit = () => {
     navigate(routePaths.chooseOperationType)
   }
 
   const handleBack = () => {
-    navigate(routePaths.paymentInfo)
+    navigate(routePaths.chooseOperationType)
   }
 
   const handleContinue = () => {
@@ -82,15 +83,16 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
             onExit={handleExit}
+            disabled={isCancelDisabled}
           />
         }
         footer={
           <TerminalFooter
             leftButtons={[
               {
-                label: t.cashAcceptanceScreen.back,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                icon: 'arrow-back',
+                disabled: isCancelDisabled,
                 onClick: handleBack,
               },
             ]}

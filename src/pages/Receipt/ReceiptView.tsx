@@ -1,4 +1,3 @@
-import type { Translations } from '../../locale/types'
 import {
   BankTitle,
   Column,
@@ -10,7 +9,6 @@ import {
 } from './ReceiptView.styled'
 
 type ReceiptViewProps = {
-  t: Translations
   bankName: string
   leftColumnTop: string
   leftColumnBottom: string
@@ -19,7 +17,6 @@ type ReceiptViewProps = {
 }
 
 const ReceiptView = ({
-  t,
   bankName,
   leftColumnTop,
   leftColumnBottom,

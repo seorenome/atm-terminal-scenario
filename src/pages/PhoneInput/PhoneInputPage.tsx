@@ -74,7 +74,7 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
   }
 
   const handleBack = () => {
-    navigate(routePaths.cardInput)
+    navigate(routePaths.chooseOperationType)
   }
 
   const handleContinue = () => {
@@ -102,9 +102,8 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.phoneInputScreen.back,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -131,7 +130,6 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
             <InputWrapper>
               <PhoneInput
                 value={phoneDigits}
-                onChange={setPhoneDigits}
                 placeholder={t.phoneInputScreen.emptyMask}
               />
             </InputWrapper>
