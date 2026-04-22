@@ -23,7 +23,22 @@ export const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: ${getContentPaddingTop()};
-  gap: 60px;
+  gap: 40px;
+`
+
+export const OperatorsGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 32px;
+  padding: 0 60px;
+  width: 100%;
+  flex-grow: 1;
+
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
 `
 
 export const TitleRow = styled.div`

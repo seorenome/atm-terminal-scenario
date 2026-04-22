@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
@@ -11,6 +10,7 @@ import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { routePaths } from '../../constants/routePaths'
 import UtilitiesView from './UtilitiesView'
+import { utilitiesData, type UtilityOperator } from '../../config/utilitiesData'
 
 type UtilitiesPageProps = {
   navigation: {
@@ -20,11 +20,20 @@ type UtilitiesPageProps = {
   currentStepId: string
 }
 
+const ITEMS_PER_PAGE = 8
+
 const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
   const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
+  const [currentPage, setCurrentPage] = useState(1)
 
   const t = translations[locale]
+
+  const totalPages = Math.ceil(utilitiesData.length / ITEMS_PER_PAGE)
+  const currentOperators = utilitiesData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
@@ -35,10 +44,12 @@ const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
   }
 
   const handleIbanClick = () => {
-    navigate(routePaths.ibanInput)
+    navigate(routePaths.ibanInput, { state: { scenarioId: 'billsPayment' } })
   }
 
-  const handleCardClick = () => {
+  const handleOperatorClick = (_operator: UtilityOperator) => {
+    // In current scenario, any operator leads to error as per requirements "empty but working header"
+    // But we should probably navigate to paymentInfo if configured
     navigation.goToError(currentStepId)
   }
 
@@ -60,8 +71,12 @@ const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
       >
         <UtilitiesView
           t={t}
+          operators={currentOperators}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
           onIbanClick={handleIbanClick}
-          onCardClick={handleCardClick}
+          onOperatorClick={handleOperatorClick}
         />
       </TerminalLayout>
     </TerminalViewport>
