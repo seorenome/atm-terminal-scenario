@@ -31,7 +31,7 @@ const ChooseOperationTypePage = () => {
         path = routePaths.ibanInput
         break
       case 'utilities':
-        path = routePaths.textInput
+        path = routePaths.utilities
         break
       default:
         path = routePaths.chooseOperationType

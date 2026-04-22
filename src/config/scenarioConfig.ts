@@ -146,8 +146,26 @@ export const scenarios: Record<ScenarioId, Scenario> = {
       ibanInput: {
         id: 'ibanInput',
         path: routePaths.ibanInput,
-        nextStep: 'paymentInfo',
+        nextStep: 'phoneInput',
         errorStep: 'ibanError',
+      },
+      phoneInput: {
+        id: 'phoneInput',
+        path: routePaths.phoneInput,
+        nextStep: 'smsInput',
+        errorStep: 'phoneError',
+      },
+      smsInput: {
+        id: 'smsInput',
+        path: routePaths.smsInput,
+        nextStep: 'paymentPurpose',
+        errorStep: 'smsError',
+      },
+      paymentPurpose: {
+        id: 'paymentPurpose',
+        path: routePaths.paymentPurpose,
+        nextStep: 'paymentInfo',
+        errorStep: 'purposeError',
       },
       paymentInfo: {
         id: 'paymentInfo',
@@ -170,6 +188,21 @@ export const scenarios: Record<ScenarioId, Scenario> = {
         path: routePaths.ibanError,
         nextStep: 'ibanInput',
       },
+      phoneError: {
+        id: 'phoneError',
+        path: routePaths.phoneError,
+        nextStep: 'phoneInput',
+      },
+      smsError: {
+        id: 'smsError',
+        path: routePaths.smsError,
+        nextStep: 'smsInput',
+      },
+      purposeError: {
+        id: 'purposeError',
+        path: routePaths.purposeError,
+        nextStep: 'paymentPurpose',
+      },
       printerError: {
         id: 'printerError',
         path: routePaths.printerError,
@@ -185,13 +218,13 @@ export const scenarios: Record<ScenarioId, Scenario> = {
   utilities: {
     id: 'utilities',
     name: 'Комунальні послуги',
-    startStep: 'textInput',
+    startStep: 'utilities',
     steps: {
-      textInput: {
-        id: 'textInput',
-        path: routePaths.textInput,
+      utilities: {
+        id: 'utilities',
+        path: routePaths.utilities,
         nextStep: 'paymentInfo',
-        errorStep: 'textError',
+        errorStep: 'utilitiesError',
       },
       paymentInfo: {
         id: 'paymentInfo',
@@ -209,10 +242,10 @@ export const scenarios: Record<ScenarioId, Scenario> = {
         id: 'paymentResult',
         path: routePaths.paymentResult,
       },
-      textError: {
-        id: 'textError',
-        path: routePaths.textError,
-        nextStep: 'textInput',
+      utilitiesError: {
+        id: 'utilitiesError',
+        path: routePaths.utilitiesError,
+        nextStep: 'utilities',
       },
       printerError: {
         id: 'printerError',
@@ -226,81 +259,4 @@ export const scenarios: Record<ScenarioId, Scenario> = {
       },
     },
   },
-  billsPayment: {
-  id: 'billsPayment',
-  name: 'Оплата рахунків',
-  startStep: 'ibanInput',
-  steps: {
-    ibanInput: {
-      id: 'ibanInput',
-      path: routePaths.ibanInput,
-      nextStep: 'phoneInput',
-      errorStep: 'ibanError',
-    },
-    phoneInput: {
-      id: 'phoneInput',
-      path: routePaths.phoneInput,
-      nextStep: 'smsInput',
-      errorStep: 'phoneError',
-    },
-    smsInput: {
-      id: 'smsInput',
-      path: routePaths.smsInput,
-      nextStep: 'paymentPurpose',
-      errorStep: 'smsError',
-    },
-    paymentPurpose: {
-      id: 'paymentPurpose',
-      path: routePaths.paymentPurpose,
-      nextStep: 'paymentInfo',
-      errorStep: 'purposeError',
-    },
-    paymentInfo: {
-      id: 'paymentInfo',
-      path: routePaths.paymentInfo,
-      nextStep: 'cashAcceptance',
-      errorStep: 'printerError',
-    },
-    cashAcceptance: {
-      id: 'cashAcceptance',
-      path: routePaths.cashAcceptance,
-      nextStep: 'paymentResult',
-      errorStep: 'cashError',
-    },
-    paymentResult: {
-      id: 'paymentResult',
-      path: routePaths.paymentResult,
-    },
-    ibanError: {
-      id: 'ibanError',
-      path: routePaths.ibanError,
-      nextStep: 'ibanInput',
-    },
-    phoneError: {
-      id: 'phoneError',
-      path: routePaths.phoneError,
-      nextStep: 'phoneInput',
-    },
-    smsError: {
-      id: 'smsError',
-      path: routePaths.smsError,
-      nextStep: 'smsInput',
-    },
-    purposeError: {
-      id: 'purposeError',
-      path: routePaths.purposeError,
-      nextStep: 'paymentPurpose',
-    },
-    printerError: {
-      id: 'printerError',
-      path: routePaths.printerError,
-      nextStep: 'paymentResult',
-    },
-    cashError: {
-      id: 'cashError',
-      path: routePaths.cashError,
-      nextStep: 'cashAcceptance',
-    },
-  },
-},
 }

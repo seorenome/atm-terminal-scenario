@@ -13,6 +13,8 @@ import PaymentInfoPage from '../pages/PaymentInfo/PaymentInfoPage'
 import PaymentResultPage from '../pages/PaymentResult/PaymentResultPage'
 import ReceiptPage from '../pages/Receipt/ReceiptPage'
 import PaymentPurposePage from '../pages/PaymentPurpose/PaymentPurposePage'
+import UtilitiesPage from '../pages/Utilities/UtilitiesPage'
+import UtilitiesErrorPage from '../pages/UtilitiesError/UtilitiesErrorPage'
 
 export const router = createBrowserRouter([
   {
@@ -70,5 +72,13 @@ export const router = createBrowserRouter([
   {
   path: routePaths.paymentPurpose,
   element: <PaymentPurposePage />,
+},
+{
+  path: routePaths.utilities,
+  element: <UtilitiesPage />,
+},
+{
+  path: routePaths.utilitiesError,
+  element: <UtilitiesErrorPage />,
 },
 ])

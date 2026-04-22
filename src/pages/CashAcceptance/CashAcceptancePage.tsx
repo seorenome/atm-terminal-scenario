@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
@@ -27,6 +27,7 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
   const { updateData } = useTransaction()
   const [acceptedAmount, setAcceptedAmount] = useState(0)
   const [isInserting, setIsInserting] = useState(true)
+  const hasUpdated = useRef(false)
 
   const t = translations[locale]
 
@@ -42,7 +43,6 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
         const next = prev + 100
         if (next >= 1200) {
           setIsInserting(false)
-          updateData({ amount: 1200 })
           return 1200
         }
         return next
@@ -50,7 +50,15 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
     }, 500)
 
     return () => clearInterval(interval)
-  }, [isInserting, updateData])
+  }, [isInserting])
+
+  // Окремий useEffect для збереження amount після завершення внесення
+  useEffect(() => {
+    if (!isInserting && acceptedAmount >= 1200 && !hasUpdated.current) {
+      hasUpdated.current = true
+      updateData({ amount: acceptedAmount })
+    }
+  }, [isInserting, acceptedAmount, updateData])
 
   const commission = acceptedAmount * 0.01
   const finalAmount = acceptedAmount - commission

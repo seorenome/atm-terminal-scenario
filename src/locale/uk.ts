@@ -140,6 +140,14 @@ paymentPurposeScreen: {
   en: 'en',
   ua: 'ua',
 },
+utilitiesErrorScreen: {
+  title: 'Послуга тимчасово недоступна',
+  message: 'Спробуйте пізніше',
+},
+utilitiesScreen: {
+  title: 'Оплата за комунальні послуги',
+  ibanButton: 'Оплатити по IBAN',
+},
 }
 
 export default uk

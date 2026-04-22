@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -9,40 +9,30 @@ import TerminalViewport from '../../components/layout/TerminalViewport/TerminalV
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
 import { routePaths } from '../../constants/routePaths'
+import UtilitiesErrorView from './UtilitiesErrorView'
 
-import PaymentResultView from './PaymentResultView'
-
-const PaymentResultPage = () => {
+const UtilitiesErrorPage = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const [locale, setLocale] = useState<Locale>(defaultLocale)
 
   const t = translations[locale]
-
-  const message = location.state?.message || 'Інформаційний блок про успішність операції з довільним текстом.'
-  const scenarioId = location.state?.scenarioId
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
-  const handleReceipt = () => {
-    navigate(routePaths.receipt, { state: { scenarioId } })
-  }
-
-  const handleComplete = () => {
-    navigate(routePaths.chooseOperationType)
+  const handleBack = () => {
+    navigate(routePaths.utilities)
   }
 
   return (
     <TerminalViewport>
       <TerminalLayout
         variant="default"
-        backgroundColor="rgba(99, 209, 203, 1)"
         header={
           <TerminalHeader
-            variant="language-switcher"
-            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            variant="action-button"
+            actionLabel={t.header.exit}
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
@@ -52,25 +42,19 @@ const PaymentResultPage = () => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.paymentResultScreen.receipt,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                onClick: handleReceipt,
+                onClick: handleBack,
               },
             ]}
-            rightButtons={[
-              {
-                label: t.paymentResultScreen.complete,
-                variant: 'repeat',
-                onClick: handleComplete,
-              },
-            ]}
+            rightButtons={[]}
           />
         }
       >
-        <PaymentResultView t={t} message={message} />
+        <UtilitiesErrorView t={t} />
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default PaymentResultPage
+export default UtilitiesErrorPage

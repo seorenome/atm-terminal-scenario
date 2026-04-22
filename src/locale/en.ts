@@ -140,6 +140,14 @@ paymentPurposeScreen: {
   en: 'en',
   ua: 'ua',
 },
+utilitiesErrorScreen: {
+  title: 'Service temporarily unavailable',
+  message: 'Please try again later',
+},
+utilitiesScreen: {
+  title: 'Payment for utilities',
+  ibanButton: 'Pay by IBAN',
+},
 }
 
 export default en

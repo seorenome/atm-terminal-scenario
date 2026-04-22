@@ -19,4 +19,6 @@ export const routePaths = {
   cashError: '/cash-error',
   paymentPurpose: '/payment-purpose',
   purposeError: '/purpose-error',
+  utilities: '/utilities',
+  utilitiesError: '/utilities-error',
 } as const
