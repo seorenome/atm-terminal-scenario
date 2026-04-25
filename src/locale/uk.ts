@@ -18,6 +18,12 @@ const uk = {
     secondaryMessage:
       'Щоб виправити дані та подовжити операцію поповнення картки, натисніть кнопку “ПОВТОРИТИ”',
   },
+  ibanErrorScreen: {
+    title: 'Ви вказали невірний номер IBAN!',
+    primaryMessage: 'Операцію буде скасовано.',
+    secondaryMessage:
+      'Щоб виправити дані та продовжити операцію оплати рахунку, натисніть кнопку “ПОВТОРИТИ”',
+  },
   printerErrorScreen: {
     title: 'Неможливо надрукувати квитанцію після завершення операції',
     primaryMessage: 'Принтер чеків тимчасово не працює.',
@@ -66,6 +72,7 @@ const uk = {
     title: 'Введіть номер IBAN',
     hint: 'Введіть IBAN, який містить 27 цифр у форматі',
     hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hintExample: '(Введіть 623333680000026204506225422)',
     back: 'Назад',
     continue: 'Продовжити',
     delete: 'Стерти',

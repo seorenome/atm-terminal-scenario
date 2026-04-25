@@ -92,6 +92,12 @@ export const KeyButton = styled.button`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
 `
 
 export const DeleteButton = styled.button`
@@ -108,6 +114,12 @@ export const DeleteButton = styled.button`
   background: #f2f2f6;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
 `
 
 export const DeleteIcon = styled.img`

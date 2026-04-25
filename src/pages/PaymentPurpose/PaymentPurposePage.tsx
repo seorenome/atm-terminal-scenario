@@ -12,6 +12,7 @@ import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
 import { routePaths } from '../../constants/routePaths'
+import { withInactivity } from '../../hoc/withInactivity'
 import {
   ContentWrapper,
   InputField,
@@ -131,4 +132,4 @@ const PaymentPurposePage = ({ navigation, currentStepId }: PaymentPurposePagePro
   )
 }
 
-export default withScenario(PaymentPurposePage, 'paymentPurpose')
+export default withInactivity(withScenario(PaymentPurposePage, 'paymentPurpose'))

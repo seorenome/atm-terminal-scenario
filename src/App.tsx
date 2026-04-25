@@ -3,13 +3,16 @@ import { router } from './routes/router'
 import { GlobalStyles } from './styles/GlobalStyles'
 import { LocaleProvider } from './context/LocaleContext'
 import { TransactionProvider } from './context/TransactionContext'
+import { LoaderProvider } from './context/LoaderContext'
 
 function App() {
   return (
     <LocaleProvider>
       <TransactionProvider>
-        <GlobalStyles />
-        <RouterProvider router={router} />
+        <LoaderProvider>
+          <GlobalStyles />
+          <RouterProvider router={router} />
+        </LoaderProvider>
       </TransactionProvider>
     </LocaleProvider>
   )

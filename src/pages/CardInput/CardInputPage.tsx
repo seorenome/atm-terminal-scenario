@@ -34,6 +34,28 @@ type CardInputPageProps = {
   currentStepId: string
 }
 
+// Алгоритм Луна для перевірки номера картки
+const validateCardNumber = (cardNumber: string): boolean => {
+  if (!/^\d{16}$/.test(cardNumber)) return false
+  
+  let sum = 0
+  let isEven = false
+  
+  for (let i = cardNumber.length - 1; i >= 0; i--) {
+    let digit = parseInt(cardNumber[i], 10)
+    
+    if (isEven) {
+      digit *= 2
+      if (digit > 9) digit -= 9
+    }
+    
+    sum += digit
+    isEven = !isEven
+  }
+  
+  return sum % 10 === 0
+}
+
 const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
   const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
@@ -47,17 +69,16 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
   }
 
   const handleDigitClick = (digit: string) => {
-    setValue((prev) => {
-      if (prev.length >= 16) return prev
-      return prev + digit
-    })
+    if (value.length < 16) {
+      setValue((prev) => prev + digit)
+    }
   }
 
   const handleDeleteClick = () => {
     setValue((prev) => prev.slice(0, -1))
   }
 
-  const isValid = value.length === 16
+  const isButtonActive = value.length === 16
 
   const handleExit = () => {
     navigate(routePaths.chooseOperationType)
@@ -68,9 +89,11 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
   }
 
   const handleContinue = () => {
-    if (isValid) {
+    if (validateCardNumber(value)) {
       updateData({ cardNumber: value })
       navigation.goToNext(currentStepId)
+    } else {
+      navigation.goToError(currentStepId)
     }
   }
 
@@ -93,7 +116,7 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
             leftButtons={[
               {
                 label: t.cardInputScreen.back,
-                variant: 'cancel',
+                variant: 'back',
                 icon: 'arrow-back',
                 onClick: handleBack,
               },
@@ -103,7 +126,7 @@ const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
                 label: t.cardInputScreen.continue,
                 variant: 'continue',
                 icon: 'arrow-next',
-                disabled: !isValid,
+                disabled: !isButtonActive,
                 onClick: handleContinue,
               },
             ]}

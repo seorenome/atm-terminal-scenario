@@ -13,13 +13,14 @@ import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
 import { routePaths } from '../../constants/routePaths'
-
 import SmsInputView from './SmsInputView'
+import { withInactivity } from '../../hoc/withInactivity'
 
 type SmsInputPageProps = {
   navigation: {
     goToNext: (stepId: string, state?: unknown) => void
     goToError: (stepId: string, state?: unknown) => void
+    goToStep: (stepId: string, state?: unknown) => void
   }
   currentStepId: string
 }
@@ -66,7 +67,7 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
   }
 
   const handleBack = () => {
-    navigate(routePaths.chooseOperationType)
+    navigation.goToStep('phoneInput')
   }
 
   const handleContinue = () => {
@@ -97,8 +98,9 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.footer.cancel,
-                variant: 'cancel',
+                label: t.footer.back,
+                variant: 'back',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -137,4 +139,4 @@ const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
   )
 }
 
-export default withScenario(SmsInputPage, 'smsInput')
+export default withInactivity(withScenario(SmsInputPage, 'smsInput'))

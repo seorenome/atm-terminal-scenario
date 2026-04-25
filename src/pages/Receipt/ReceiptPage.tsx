@@ -11,6 +11,8 @@ import type { Locale } from '../../locale/types'
 import { routePaths } from '../../constants/routePaths'
 import { useTransaction } from '../../context/TransactionContext'
 import { paymentConfig } from '../../config/paymentConfig'
+import { getReceiptConfig } from '../../config/receiptConfig'
+import type { ScenarioId } from '../../config/scenarioConfig'
 
 import ReceiptView from './ReceiptView'
 
@@ -21,60 +23,29 @@ const ReceiptPage = () => {
   const { data } = useTransaction()
 
   const t = translations[locale]
-  const scenarioId = location.state?.scenarioId
+  const scenarioId = location.state?.scenarioId as ScenarioId
 
-  // Дані з контексту (введені користувачем)
-  const iban = data.iban || 'UA273333680000026201000390748'
-  const paymentPurpose = data.paymentPurpose || 'поповнення карткового рахунку'
-  const phoneNumber = data.phoneNumber || '+38 (096) 834 - 70-01'
-  const payerName = data.payerName || paymentConfig.payerName
-
-  // Статичні дані
   const bankName = 'АТ «ОЩАДБАНК»'
-  const date = '15.04.2026 18:21:06'
-  const cardNumberMasked = '5167 **** **** 9476'
-  const bankCode = '300465'
-  const receiptNumber = 'E1XM-K3PL-6JFG-OR3E'
-  const ptks = '9065007'
-  const address = 'Рівне, Льонокомбінатівська вул., 9'
-  const operationCode = '30256028782'
-  const paymentSystem = 'Mastercard'
-  const recipientBank = 'АТ «ОЩАДБАНК»'
-  const recipientCode = '325833352'
 
-  // Ліва колонка (верх) - однакова для всіх
-  const leftColumnTop = `Внесено: 1200,00 грн.\nСума операції: 1200,00 грн.\nЗараховано отримувачу: 1188,00 грн.\nКомісія банку: 12,00 грн.\nДата та час: ${date}`
+  // Дані з контексту
+  const iban = data.iban
+  const paymentPurpose = data.paymentPurpose
+  const phoneNumber = data.phoneNumber
+  const cardNumber = data.cardNumber
+  const payerName = paymentConfig.payerName
 
-  // Ліва колонка (низ) - залежить від сценарію
-  let leftColumnBottom = ''
+  const receiptConfig = getReceiptConfig(scenarioId, {
+    iban,
+    paymentPurpose,
+    phoneNumber,
+    payerName,
+    cardNumber,
+  })
 
-  if (scenarioId === 'cardTopUp') {
-    leftColumnBottom = `Послуга: поповнення карткового рахунку, ПЕКАРСЬКИЙ С. П.\nНомер картки: ${cardNumberMasked}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
-  } else if (scenarioId === 'mobileTopUp') {
-    leftColumnBottom = `Послуга: Поповнення мобільного рахунку\nНомер телефону: ${phoneNumber}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
-  } else if (scenarioId === 'billsPayment') {
-    leftColumnBottom = `Послуга: Оплата рахунків по номеру IBAN\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
-  } else {
-    // Фолбек для невизначеного сценарію
-    leftColumnBottom = `Послуга: ${paymentPurpose}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
-  }
-
-  // Права колонка (верх) - однакова для всіх
-  const rightColumnTop = `Квитанція №№: ${receiptNumber}\nПТКС: ${ptks}\nАдреса: ${address}\nКод операції: ${operationCode}`
-
-  // Права колонка (низ) - залежить від сценарію
-  let rightColumnBottom = ''
-
-  if (scenarioId === 'cardTopUp') {
-    rightColumnBottom = `Отримувач: Пекарський Сергій Петрович\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: ${recipientCode}`
-  } else if (scenarioId === 'mobileTopUp') {
-    rightColumnBottom = `Отримувач: ПрАТ "Київстар"\nРахунок отримувача: UA983005280000026004000003072\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: 21673832`
-  } else if (scenarioId === 'billsPayment') {
-    rightColumnBottom = `Отримувач: РОВКП ВКГ «Рівнеоблводоканал»\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: ${recipientCode}`
-  } else {
-    // Фолбек для невизначеного сценарію
-    rightColumnBottom = `Отримувач: ${recipientBank}\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}`
-  }
+  const leftColumnTopText = receiptConfig.leftColumnTop.join('\n')
+  const leftColumnBottomText = receiptConfig.leftColumnBottom.join('\n')
+  const rightColumnTopText = receiptConfig.rightColumnTop.join('\n')
+  const rightColumnBottomText = receiptConfig.rightColumnBottom.join('\n')
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
@@ -123,10 +94,10 @@ const ReceiptPage = () => {
       >
         <ReceiptView
           bankName={bankName}
-          leftColumnTop={leftColumnTop}
-          leftColumnBottom={leftColumnBottom}
-          rightColumnTop={rightColumnTop}
-          rightColumnBottom={rightColumnBottom}
+          leftColumnTop={leftColumnTopText}
+          leftColumnBottom={leftColumnBottomText}
+          rightColumnTop={rightColumnTopText}
+          rightColumnBottom={rightColumnBottomText}
         />
       </TerminalLayout>
     </TerminalViewport>

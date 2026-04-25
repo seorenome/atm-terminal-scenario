@@ -13,18 +13,8 @@ import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
 import { routePaths } from '../../constants/routePaths'
-
-import {
-  Content,
-  HintCard,
-  HintText,
-  InputWrapper,
-  Left,
-  Right,
-  Title,
-  TitleBlock,
-  TitleRow,
-} from './IbanInputView.styled'
+import IbanInputView from './IbanInputView'
+import { withInactivity } from '../../hoc/withInactivity'
 
 type IbanInputPageProps = {
   navigation: {
@@ -32,6 +22,24 @@ type IbanInputPageProps = {
     goToError: (stepId: string, state?: unknown) => void
   }
   currentStepId: string
+}
+
+const validateIbanFull = (digits: string): boolean => {
+  if (digits.length !== 27) return false
+
+  const iban = 'UA' + digits
+  const rearranged = iban.slice(4) + iban.slice(0, 4)
+  const numeric = rearranged.split('').map(char => {
+    const code = char.charCodeAt(0)
+    if (code >= 65 && code <= 90) return (code - 55).toString()
+    return char
+  }).join('')
+
+  let remainder = 0
+  for (let i = 0; i < numeric.length; i++) {
+    remainder = (remainder * 10 + parseInt(numeric[i], 10)) % 97
+  }
+  return remainder === 1
 }
 
 const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
@@ -56,7 +64,7 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
     setDigits((prev) => prev.slice(0, -1))
   }
 
-  const isValid = digits.length === 27
+  const isButtonActive = digits.length === 27
 
   const handleExit = () => {
     navigate(routePaths.chooseOperationType)
@@ -67,9 +75,11 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
   }
 
   const handleContinue = () => {
-    if (isValid) {
+    if (validateIbanFull(digits)) {
       updateData({ iban: digits })
       navigation.goToNext(currentStepId)
+    } else {
+      navigation.goToError(currentStepId)
     }
   }
 
@@ -91,8 +101,9 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.footer.cancel,
-                variant: 'cancel',
+                label: t.footer.back,
+                variant: 'back',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -101,42 +112,27 @@ const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
                 label: t.ibanInputScreen.continue,
                 variant: 'continue',
                 icon: 'arrow-next',
-                disabled: !isValid,
+                disabled: !isButtonActive,
                 onClick: handleContinue,
               },
             ]}
           />
         }
       >
-        <Content>
-          <Left>
-            <TitleBlock>
-              <TitleRow>
-                <Title>{t.ibanInputScreen.title}</Title>
-              </TitleRow>
-            </TitleBlock>
-
-            <InputWrapper>
-              <IbanInput value={digits} />
-            </InputWrapper>
-
-            <HintCard>
-              <HintText>{t.ibanInputScreen.hint}</HintText>
-              <HintText>{t.ibanInputScreen.hintFormat}</HintText>
-            </HintCard>
-          </Left>
-
-          <Right>
+        <IbanInputView
+          t={t}
+          input={<IbanInput value={digits} />}
+          keypad={
             <NumericKeypad
               onDigitClick={handleDigitClick}
               onDeleteClick={handleDeleteClick}
               deleteLabel={t.ibanInputScreen.delete}
             />
-          </Right>
-        </Content>
+          }
+        />
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default withScenario(IbanInputPage, 'ibanInput')
+export default withInactivity(withScenario(IbanInputPage, 'ibanInput'))

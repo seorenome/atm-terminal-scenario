@@ -12,6 +12,7 @@ import { useTransaction } from '../../context/TransactionContext'
 import { paymentConfig } from '../../config/paymentConfig'
 import { routePaths } from '../../constants/routePaths'
 import type { ScenarioId } from '../../config/scenarioConfig'
+import { withInactivity } from '../../hoc/withInactivity'
 
 import PaymentInfoView from './PaymentInfoView'
 
@@ -19,6 +20,7 @@ type PaymentInfoPageProps = {
   navigation: {
     goToNext: (stepId: string, state?: unknown) => void
     goToError: (stepId: string, state?: unknown) => void
+    goToStep: (stepId: string, state?: unknown) => void
   }
   currentStepId: string
 }
@@ -41,7 +43,11 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   }
 
   const handleBack = () => {
-    navigate(routePaths.chooseOperationType)
+    if (scenarioId === 'billsPayment') {
+      navigation.goToStep('paymentPurpose')
+    } else {
+      navigation.goToStep('smsInput')
+    }
   }
 
   const handleContinue = () => {
@@ -93,8 +99,9 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           <TerminalFooter
             leftButtons={[
               {
-                label: t.footer.cancel,
-                variant: 'cancel',
+                label: t.footer.back,
+                variant: 'back',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -136,4 +143,4 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   )
 }
 
-export default withScenario(PaymentInfoPage, 'paymentInfo')
+export default withInactivity(withScenario(PaymentInfoPage, 'paymentInfo'))

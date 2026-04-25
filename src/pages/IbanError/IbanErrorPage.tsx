@@ -1,45 +1,38 @@
-import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
 import { routePaths } from '../../constants/routePaths'
-import { withInactivity } from '../../hoc/withInactivity'
+import IbanErrorView from './IbanErrorView'
 
-import PaymentResultView from './PaymentResultView'
-
-const PaymentResultPage = () => {
+const IbanErrorPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const { locale, setLocale } = useLocale()
 
   const t = translations[locale]
-
-  const message = location.state?.message || 'Інформаційний блок про успішність операції з довільним текстом.'
-  const scenarioId = location.state?.scenarioId
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
-  const handleReceipt = () => {
-    navigate(routePaths.receipt, { state: { scenarioId } })
+  const handleCancel = () => {
+    navigate(routePaths.chooseOperationType)
   }
 
-  const handleComplete = () => {
-    navigate(routePaths.chooseOperationType)
+  const handleRepeat = () => {
+    navigate(routePaths.ibanInput, { state: location.state })
   }
 
   return (
     <TerminalViewport>
       <TerminalLayout
         variant="default"
-        backgroundColor="rgba(99, 209, 203, 1)"
         header={
           <TerminalHeader
             variant="language-switcher"
@@ -53,25 +46,30 @@ const PaymentResultPage = () => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.paymentResultScreen.receipt,
+                label: t.footer.cancel,
                 variant: 'cancel',
-                onClick: handleReceipt,
+                onClick: handleCancel,
               },
             ]}
             rightButtons={[
               {
-                label: t.paymentResultScreen.complete,
+                label: t.footer.repeat,
                 variant: 'repeat',
-                onClick: handleComplete,
+                icon: 'arrow-next',
+                onClick: handleRepeat,
               },
             ]}
           />
         }
       >
-        <PaymentResultView t={t} message={message} />
+        <IbanErrorView
+          title={t.ibanErrorScreen.title}
+          primaryMessage={t.ibanErrorScreen.primaryMessage}
+          secondaryMessage={t.ibanErrorScreen.secondaryMessage}
+        />
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default withInactivity(PaymentResultPage)
+export default IbanErrorPage

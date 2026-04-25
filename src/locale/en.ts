@@ -18,6 +18,12 @@ const en = {
     secondaryMessage:
       'To correct the data and continue the card top-up operation, press the “REPEAT” button',
   },
+  ibanErrorScreen: {
+    title: 'You entered an incorrect IBAN number!',
+    primaryMessage: 'The operation will be cancelled.',
+    secondaryMessage:
+      'To correct the data and continue the bill payment operation, press the “REPEAT” button',
+  },
   printerErrorScreen: {
     title: 'It is impossible to print a receipt after the operation is completed',
     primaryMessage: 'The receipt printer is temporarily unavailable.',
@@ -66,6 +72,7 @@ const en = {
     title: 'Enter IBAN number',
     hint: 'Enter IBAN containing 27 digits in the format',
     hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hintExample: '(Enter 623333680000026204506225422)',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',

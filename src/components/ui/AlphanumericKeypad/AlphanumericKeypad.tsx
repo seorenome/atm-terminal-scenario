@@ -111,7 +111,7 @@ const AlphanumericKeypad = ({
         <KeyRow key={rowIndex}>
           {/* Перша кнопка 4-го рядка — Shift */}
           {rowIndex === 3 && (
-            <SpecialKeyButton onClick={handleShiftClick}>
+            <SpecialKeyButton $isShiftActive={isShiftActive} onClick={handleShiftClick}>
               <KeyIcon src={shiftIcon} alt="shift" />
             </SpecialKeyButton>
           )}

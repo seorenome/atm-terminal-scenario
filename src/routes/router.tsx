@@ -5,6 +5,7 @@ import CardInputPage from '../pages/CardInput/CardInputPage'
 import CashAcceptancePage from '../pages/CashAcceptance/CashAcceptancePage'
 import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
 import IbanInputPage from '../pages/IbanInput/IbanInputPage'
+import IbanErrorPage from '../pages/IbanError/IbanErrorPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 import TextInputPage from '../pages/TextInput/TextInputPage'
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
     element: <IbanInputPage />,
   },
   {
+    path: routePaths.ibanError,
+    element: <IbanErrorPage />,
+  },
+  {
     path: routePaths.textInput,
     element: <TextInputPage />,
   },
@@ -70,15 +75,15 @@ export const router = createBrowserRouter([
     element: <ReceiptPage />,
   },
   {
-  path: routePaths.paymentPurpose,
-  element: <PaymentPurposePage />,
-},
-{
-  path: routePaths.utilities,
-  element: <UtilitiesPage />,
-},
-{
-  path: routePaths.utilitiesError,
-  element: <UtilitiesErrorPage />,
-},
+    path: routePaths.paymentPurpose,
+    element: <PaymentPurposePage />,
+  },
+  {
+    path: routePaths.utilities,
+    element: <UtilitiesPage />,
+  },
+  {
+    path: routePaths.utilitiesError,
+    element: <UtilitiesErrorPage />,
+  },
 ])

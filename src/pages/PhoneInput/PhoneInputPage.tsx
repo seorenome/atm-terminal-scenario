@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -8,11 +8,14 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
+import { withInactivity } from '../../hoc/withInactivity'
 import { withScenario } from '../../hoc/withScenario'
 import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
+import { useLoader } from '../../context/LoaderContext'
 import { routePaths } from '../../constants/routePaths'
+import type { ScenarioId } from '../../config/scenarioConfig'
 import {
   Content,
   HintCard,
@@ -30,6 +33,7 @@ type PhoneInputPageProps = {
   navigation: {
     goToNext: (stepId: string, state?: unknown) => void
     goToError: (stepId: string, state?: unknown) => void
+    goToStep: (stepId: string, state?: unknown) => void
   }
   currentStepId: string
 }
@@ -43,11 +47,14 @@ const isValidPrefix = (digits: string): boolean => {
 
 const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { locale, setLocale } = useLocale()
   const { updateData } = useTransaction()
+  const { withLoader } = useLoader()
   const [phoneDigits, setPhoneDigits] = useState('')
 
   const t = translations[locale]
+  const scenarioId = location.state?.scenarioId as ScenarioId
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
@@ -74,13 +81,23 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
   }
 
   const handleBack = () => {
-    navigate(routePaths.chooseOperationType)
+    if (scenarioId === 'cardTopUp') {
+      navigation.goToStep('cardInput')
+    } else if (scenarioId === 'billsPayment') {
+      navigation.goToStep('ibanInput')
+    } else if (scenarioId === 'mobileTopUp') {
+      navigate(routePaths.chooseOperationType)
+    } else {
+      navigate(routePaths.chooseOperationType)
+    }
   }
 
   const handleContinue = () => {
     if (isValid) {
       updateData({ phoneNumber: phoneDigits })
-      navigation.goToNext(currentStepId)
+      withLoader(() => {
+        navigation.goToNext(currentStepId)
+      })
     }
   }
 
@@ -102,8 +119,9 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
           <TerminalFooter
             leftButtons={[
               {
-                label: t.footer.cancel,
-                variant: 'cancel',
+                label: t.footer.back,
+                variant: 'back',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}
@@ -155,4 +173,4 @@ const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
   )
 }
 
-export default withScenario(PhoneInputPage, 'phoneInput')
+export default withInactivity(withScenario(PhoneInputPage, 'phoneInput'))

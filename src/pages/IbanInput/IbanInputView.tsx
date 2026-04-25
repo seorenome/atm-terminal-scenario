@@ -35,6 +35,7 @@ const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
         <HintCard>
           <HintText>{t.ibanInputScreen.hint}</HintText>
           <HintText>{t.ibanInputScreen.hintFormat}</HintText>
+          <HintText>{t.ibanInputScreen.hintExample}</HintText>
         </HintCard>
       </Left>
 

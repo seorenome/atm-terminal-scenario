@@ -19,6 +19,11 @@ export type Translations = {
     primaryMessage: string
     secondaryMessage: string
   }
+  ibanErrorScreen: {
+    title: string
+    primaryMessage: string
+    secondaryMessage: string
+  }
   printerErrorScreen: {
     title: string
     primaryMessage: string
@@ -54,6 +59,7 @@ export type Translations = {
     title: string
     hint: string
     hintFormat: string
+    hintExample: string
     back: string
     continue: string
     delete: string

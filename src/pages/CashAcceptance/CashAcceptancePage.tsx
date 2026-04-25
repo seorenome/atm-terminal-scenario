@@ -10,6 +10,7 @@ import { withScenario } from '../../hoc/withScenario'
 import { translations } from '../../locale'
 import { useLocale } from '../../context/LocaleContext'
 import { useTransaction } from '../../context/TransactionContext'
+import { useLoader } from '../../context/LoaderContext'
 import { routePaths } from '../../constants/routePaths'
 import CashAcceptanceView from './CashAcceptanceView'
 
@@ -25,6 +26,7 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
   const navigate = useNavigate()
   const { locale, setLocale } = useLocale()
   const { updateData } = useTransaction()
+  const { withLoader } = useLoader()
   const [acceptedAmount, setAcceptedAmount] = useState(0)
   const [isInserting, setIsInserting] = useState(true)
   const hasUpdated = useRef(false)
@@ -75,7 +77,9 @@ const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePagePro
 
   const handleContinue = () => {
     if (isValid) {
-      navigation.goToNext(currentStepId)
+      withLoader(() => {
+        navigation.goToNext(currentStepId)
+      })
     }
   }
 

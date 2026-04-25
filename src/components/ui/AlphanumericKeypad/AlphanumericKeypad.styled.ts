@@ -73,22 +73,34 @@ export const KeyButton = styled.button`
   font-family: 'Oschad Sans', Arial, sans-serif;
   font-size: ${getKeyFontSize()};
   font-weight: 600;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
 `
 
-export const SpecialKeyButton = styled.button`
+export const SpecialKeyButton = styled.button<{ $isShiftActive?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border: none;
   border-radius: 16px;
-  background: #f2f2f6;
+  background: ${({ $isShiftActive }) => ($isShiftActive ? '#1ec0bf' : '#f2f2f6')};
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  color: #111e29;
+  color: ${({ $isShiftActive }) => ($isShiftActive ? '#ffffff' : '#111e29')};
   font-family: 'Oschad Sans', Arial, sans-serif;
   font-size: ${getKeyFontSize()};
   font-weight: 600;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out, background 0.1s ease-in-out;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
   
   width: ${getKeyWidth()};
   height: ${getKeyHeight()};
