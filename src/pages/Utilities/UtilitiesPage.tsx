@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
@@ -24,8 +24,10 @@ const ITEMS_PER_PAGE = 8
 
 const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { locale, setLocale } = useLocale()
   const [currentPage, setCurrentPage] = useState(1)
+
 
   const t = translations[locale]
 
@@ -48,8 +50,6 @@ const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
   }
 
   const handleOperatorClick = (_operator: UtilityOperator) => {
-    // In current scenario, any operator leads to error as per requirements "empty but working header"
-    // But we should probably navigate to paymentInfo if configured
     navigation.goToError(currentStepId)
   }
 

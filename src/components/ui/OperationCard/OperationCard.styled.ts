@@ -13,6 +13,12 @@ export const Card = styled.button`
     0 20px 40px rgba(24, 180, 177, 0.1);
   text-align: left;
   cursor: pointer;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
   
   ${ACTIVE_SCREEN_MODE === '800p' && `
     width: 520px;
@@ -73,10 +79,9 @@ export const ArrowWrap = styled.div`
   justify-content: center;
   
   ${ACTIVE_SCREEN_MODE === '1080p' && `
-    display: flex; // в 1080p стрілка є
+    display: flex;
   `}
   
-  // Якщо в 800p немає стрілки — приховати
   ${ACTIVE_SCREEN_MODE === '800p' && `
     display: none;
   `}

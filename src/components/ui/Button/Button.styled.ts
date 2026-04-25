@@ -87,6 +87,13 @@ export const StyledButton = styled.button<StyledButtonProps>`
       color: rgba(17, 30, 41, 1);
       cursor: not-allowed;
     `}
+  
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
 `
 
 export const ButtonContent = styled.span<{ $disabled?: boolean }>`

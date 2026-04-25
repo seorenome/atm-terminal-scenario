@@ -7,6 +7,7 @@ const en = {
     exit: 'Exit',
   },
   footer: {
+    back: 'Back',
     cancel: 'Cancel',
     repeat: 'Repeat',
     continue: 'Continue',

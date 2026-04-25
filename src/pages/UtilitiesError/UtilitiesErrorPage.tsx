@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
 import { routePaths } from '../../constants/routePaths'
 import UtilitiesErrorView from './UtilitiesErrorView'
 
 const UtilitiesErrorPage = () => {
   const navigate = useNavigate()
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const location = useLocation()
+  const { locale, setLocale } = useLocale()
 
   const t = translations[locale]
 
@@ -21,8 +21,12 @@ const UtilitiesErrorPage = () => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
   const handleBack = () => {
-    navigate(routePaths.utilities)
+    navigate(routePaths.utilities, { state: location.state })
   }
 
   return (
@@ -36,14 +40,16 @@ const UtilitiesErrorPage = () => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
           <TerminalFooter
             leftButtons={[
               {
-                label: t.footer.cancel,
-                variant: 'cancel',
+                label: t.footer.back,
+                variant: 'back',
+                icon: 'arrow-back',
                 onClick: handleBack,
               },
             ]}

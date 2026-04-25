@@ -74,6 +74,12 @@ export const IbanButton = styled.button`
   border-radius: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
   
   span {
     color: rgba(17, 30, 41, 1);

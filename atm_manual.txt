@@ -1,18 +1,21 @@
 # ATM Terminal Project Export
-# Generated: Tue, Apr 14, 2026 10:55:48 PM
+# Generated: Sat, Apr 25, 2026  3:08:13 PM
 
 === src/App.tsx ===
 import { RouterProvider } from 'react-router-dom'
-
 import { router } from './routes/router'
 import { GlobalStyles } from './styles/GlobalStyles'
+import { LocaleProvider } from './context/LocaleContext'
+import { TransactionProvider } from './context/TransactionContext'
 
 function App() {
   return (
-    <>
-      <GlobalStyles />
-      <RouterProvider router={router} />
-    </>
+    <LocaleProvider>
+      <TransactionProvider>
+        <GlobalStyles />
+        <RouterProvider router={router} />
+      </TransactionProvider>
+    </LocaleProvider>
   )
 }
 
@@ -251,7 +254,7 @@ export const LanguageDivider = styled.img`
   box-sizing: content-box;
 `
 
-export const ActionButton = styled.button`
+export const ActionButton = styled.button<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -259,8 +262,9 @@ export const ActionButton = styled.button`
   padding: 21px 32px;
   border: none;
   border-radius: 15px;
-  background: rgba(235, 246, 250, 1);
-  cursor: pointer;
+  background: ${({ disabled }) => (disabled ? 'rgba(222, 222, 222, 1)' : 'rgba(235, 246, 250, 1)')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `
 
 export const ActionIcon = styled.img`
@@ -310,12 +314,20 @@ const TerminalHeader = ({
   supportPhone,
   supportDescription,
   onLanguageChange,
+  onExit,
+  disabled = false,
 }: TerminalHeaderProps) => {
   const isUaActive = activeLanguage === 'UA'
   const isEnActive = activeLanguage === 'EN'
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     onLanguageChange?.(language)
+  }
+
+  const handleExitClick = () => {
+    if (!disabled) {
+      onExit?.()
+    }
   }
 
   return (
@@ -349,7 +361,7 @@ const TerminalHeader = ({
             </LanguageButton>
           </LanguageSwitcher>
         ) : (
-          <ActionButton type="button">
+          <ActionButton type="button" onClick={handleExitClick} disabled={disabled}>
             <ActionIcon src={ExitIcon} alt="" />
             <ActionLabel>{actionLabel}</ActionLabel>
           </ActionButton>
@@ -373,6 +385,8 @@ export type TerminalHeaderProps = {
   supportPhone: string
   supportDescription: string
   onLanguageChange?: (language: HeaderLanguage) => void
+  onExit?: () => void
+  disabled?: boolean
 }
 
 === src/components/layout/TerminalLayout/TerminalLayout.styled.ts ===
@@ -890,6 +904,8 @@ export const StyledButton = styled.button<StyledButtonProps>`
   line-height: ${getButtonLineHeight()};
   letter-spacing: 0.56px;
   text-transform: uppercase;
+  leading-trim: both;
+  text-edge: cap;
   text-align: center;
 
   ${({ $variant }) => getVariantStyles($variant)};
@@ -905,9 +921,9 @@ export const StyledButton = styled.button<StyledButtonProps>`
 
 export const ButtonContent = styled.span<{ $disabled?: boolean }>`
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   opacity: ${({ $disabled }) => ($disabled ? 0.3 : 1)};
 `
@@ -947,7 +963,7 @@ const Button = ({
   onClick,
   type = 'button',
 }: ButtonProps) => {
-  const isIconBeforeLabel = variant === 'back'
+  const isIconBeforeLabel = variant === 'back' || variant === 'cancel'
   const iconSrc = icon ? iconMap[icon] : null
 
   return (
@@ -1135,11 +1151,6 @@ import {
   Wrapper,
 } from './IbanInput.styled'
 
-
-const getMask = () => {
-  return 'UA __ ______ ___________________'
-}
-
 const getStaticPrefix = () => {
   return 'UA '
 }
@@ -1148,10 +1159,9 @@ const getEditableMask = () => {
   return '__ ______ ___________________'
 }
 
-const IbanInput = ({ value, onChange, placeholder }: IbanInputProps) => {
+const IbanInput = ({ value }: IbanInputProps) => {
   const fieldRef = useRef<HTMLDivElement>(null)
 
-  // value зберігає ТІЛЬКИ цифри (без UA та пробілів)
   const digits = value
 
   const formatDisplay = () => {
@@ -1173,19 +1183,6 @@ const IbanInput = ({ value, onChange, placeholder }: IbanInputProps) => {
     return result
   }
 
-  const handleDigitClick = (digit: string) => {
-    if (digits.length < 27) {
-      onChange(digits + digit)
-    }
-  }
-
-  const handleDeleteClick = () => {
-    if (digits.length > 0) {
-      onChange(digits.slice(0, -1))
-    }
-  }
-
-  // Скрол до кінця при зміні
   useEffect(() => {
     if (fieldRef.current) {
       fieldRef.current.scrollLeft = fieldRef.current.scrollWidth
@@ -1215,8 +1212,6 @@ export default IbanInput
 === src/components/ui/IbanInput/IbanInput.types.ts ===
 export type IbanInputProps = {
   value: string
-  onChange: (value: string) => void
-  placeholder: string
 }
 
 === src/components/ui/InactivityPopup/InactivityPopup.styled.ts ===
@@ -1299,7 +1294,6 @@ export const ArrowNextIcon = styled.img`
 
 === src/components/ui/InactivityPopup/InactivityPopup.tsx ===
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import ArrowNextIcon from '../../../assets/icons/arrow-next.svg'
 import TimerIcon from '../../../assets/icons/icontimer.png'
 import {
@@ -1436,20 +1430,58 @@ export type InputFieldProps = {
 
 === src/components/ui/NumericKeypad/NumericKeypad.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
+
+const getKeyWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '130px'
+  return '104px'
+}
+
+const getKeyHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '120px'
+  return '96px'
+}
+
+const getKeyGap = () => {
+  return '16px'
+}
+
+const getDeleteWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '275px'
+  return '225px'
+}
+
+const getDeleteHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '120px'
+  return '96px'
+}
+
+const getDeleteFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getKeyFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '42px'
+  return '36px'
+}
+
+const getKeypadPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '210px'
+}
 
 export const Keypad = styled.div`
-  width: 545px;
+  width: 100%;
   height: 100%;
   min-height: 100%;
-  padding: 210px 0 0;
-
+  padding: ${getKeypadPaddingTop()} 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
   align-self: stretch;
-
   background: #26cfc8;
 `
 
@@ -1465,48 +1497,43 @@ export const Row = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 16px;
+  gap: ${getKeyGap()};
   align-self: stretch;
   flex-shrink: 0;
 `
 
 export const KeyButton = styled.button`
-  width: 104px;
-  height: 96px;
+  width: ${getKeyWidth()};
+  height: ${getKeyHeight()};
   padding: 10px 20px;
-
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-
   border: none;
   border-radius: 16px;
   background: #f2f2f6;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
-
   color: #111e29;
   text-align: center;
   font-family: 'Oschad Sans';
-  font-size: 36px;
+  font-size: ${getKeyFontSize()};
   font-style: normal;
   font-weight: 600;
   line-height: normal;
 `
 
 export const DeleteButton = styled.button`
-  width: 225px;
-  height: 96px;
+  width: ${getDeleteWidth()};
+  height: ${getDeleteHeight()};
   padding: 10px 20px;
-
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-
   border: none;
   border-radius: 16px;
   background: #f2f2f6;
@@ -1515,8 +1542,8 @@ export const DeleteButton = styled.button`
 `
 
 export const DeleteIcon = styled.img`
-  width: 35px;
-  height: 30px;
+  width: 34px;
+  height: 29px;
   display: block;
 `
 
@@ -1524,10 +1551,10 @@ export const DeleteLabel = styled.span`
   color: #111e29;
   text-align: center;
   font-family: 'Oschad Sans';
-  font-size: 22px;
+  font-size: ${getDeleteFontSize()};
   font-style: normal;
-  font-weight: 600;
-  line-height: 24px;
+  font-weight: 400;
+  line-height: 100%;
 `
 
 === src/components/ui/NumericKeypad/NumericKeypad.tsx ===
@@ -1786,6 +1813,110 @@ export type OperationCardProps = {
   onClick?: () => void
 }
 
+=== src/components/ui/Pagination/Pagination.styled.ts ===
+import styled from 'styled-components'
+
+export const PaginationRoot = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 60px;
+  align-self: stretch;
+`
+
+export const PageButton = styled.button<{ $active?: boolean; $isArrow?: boolean }>`
+  width: ${({ $isArrow }) => ($isArrow ? '60px' : '30px')};
+  height: ${({ $isArrow }) => ($isArrow ? '60px' : '30px')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background-color: ${({ $isArrow }) => ($isArrow ? 'rgba(30, 192, 191, 1)' : 'transparent')};
+  border-radius: ${({ $isArrow }) => ($isArrow ? '15px' : '0')};
+  cursor: pointer;
+  
+  ${({ $active }) => $active && `
+    border-bottom: 1px solid rgba(17, 30, 41, 1);
+  `}
+
+  &:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+`
+
+export const PageNumber = styled.span<{ $active: boolean }>`
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: ${({ $active }) => ($active ? 700 : 400)};
+  line-height: normal;
+`
+
+export const ArrowIcon = styled.img<{ $reversed?: boolean }>`
+  width: 40px;
+  height: 19px;
+  ${({ $reversed }) => $reversed && 'transform: rotate(180deg);'}
+`
+
+
+=== src/components/ui/Pagination/Pagination.tsx ===
+import type { PaginationProps } from './Pagination.types'
+import arrowIcon from '../../../assets/icons/cont.svg?url'
+import {
+  ArrowIcon,
+  PageButton,
+  PageNumber,
+  PaginationRoot,
+} from './Pagination.styled'
+
+const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+
+  return (
+    <PaginationRoot>
+      <PageButton
+        $isArrow
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        <ArrowIcon src={arrowIcon} alt="Previous" />
+      </PageButton>
+
+      {pages.map((page) => (
+        <PageButton
+          key={page}
+          $active={page === currentPage}
+          onClick={() => onPageChange(page)}
+        >
+          <PageNumber $active={page === currentPage}>{page}</PageNumber>
+        </PageButton>
+      ))}
+
+      <PageButton
+        $isArrow
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        <ArrowIcon src={arrowIcon} alt="Next" $reversed />
+      </PageButton>
+    </PaginationRoot>
+  )
+}
+
+export default Pagination
+
+
+=== src/components/ui/Pagination/Pagination.types.ts ===
+export type PaginationProps = {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}
+
+
 === src/components/ui/PhoneInput/PhoneInput.styled.ts ===
 import styled from 'styled-components'
 
@@ -1820,7 +1951,7 @@ import type { PhoneInputProps } from './PhoneInput.types'
 import { Field, Placeholder, Wrapper } from './PhoneInput.styled'
 
 const formatPhone = (digits: string) => {
-  const d = digits.slice(0, 10) // 0XXXXXXXXX
+  const d = digits.slice(0, 10)
 
   let result = '+38 '
 
@@ -1844,7 +1975,7 @@ const formatPhone = (digits: string) => {
   return result
 }
 
-const PhoneInput = ({ value, onChange, placeholder }: PhoneInputProps) => {
+const PhoneInput = ({ value, placeholder }: PhoneInputProps) => {
   const isEmpty = value.length === 0
 
   return (
@@ -1865,8 +1996,475 @@ export default PhoneInput
 === src/components/ui/PhoneInput/PhoneInput.types.ts ===
 export type PhoneInputProps = {
   value: string
-  onChange: (value: string) => void
   placeholder: string
+}
+
+=== src/components/ui/SmsInput/SmsInput.styled.ts ===
+import styled from 'styled-components'
+
+export const Wrapper = styled.div`
+  width: 100%;
+`
+
+export const Field = styled.div`
+  width: 100%;
+  height: 80px;
+  padding: 8px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  border: 2px solid #00829b;
+  background: #ffffff;
+  overflow: hidden;
+  color: #111e29;
+  text-align: center;
+  font-family: 'Oschad Sans';
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`
+
+export const Placeholder = styled.span`
+  color: rgba(17, 30, 41, 0.35);
+`
+
+=== src/components/ui/SmsInput/SmsInput.tsx ===
+import type { SmsInputProps } from './SmsInput.types'
+import { Field, Placeholder, Wrapper } from './SmsInput.styled'
+
+const SmsInput = ({ value, placeholder }: SmsInputProps) => {
+  const isEmpty = value.length === 0
+
+  return (
+    <Wrapper>
+      <Field>
+        {isEmpty ? <Placeholder>{placeholder}</Placeholder> : value}
+      </Field>
+    </Wrapper>
+  )
+}
+
+export default SmsInput
+
+=== src/components/ui/SmsInput/SmsInput.types.ts ===
+export type SmsInputProps = {
+  value: string
+  placeholder: string
+}
+
+=== src/components/ui/UtilityCard/UtilityCard.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../../config/screenConfig'
+
+export const Card = styled.div`
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  width: 260px;
+  height: 200px;
+  flex-shrink: 0;
+
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    width: 260px;
+    height: 200px;
+  `}
+`
+
+export const TopRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+`
+
+export const IconWrapper = styled.div`
+  background-color: rgba(255, 255, 255, 1);
+  width: 90px;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+`
+
+export const Icon = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+`
+
+export const ArrowWrapper = styled.div`
+  width: 62px;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+`
+
+export const Arrow = styled.img`
+  width: 32px;
+  height: 24px;
+`
+
+export const NameWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+`
+
+export const Name = styled.span`
+  color: rgba(17, 30, 41, 1);
+  width: 220px;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: normal;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`
+
+
+=== src/components/ui/UtilityCard/UtilityCard.tsx ===
+import type { UtilityCardProps } from './UtilityCard.types'
+import {
+  Arrow,
+  ArrowWrapper,
+  Card,
+  Icon,
+  IconWrapper,
+  Name,
+  NameWrapper,
+  TopRow,
+} from './UtilityCard.styled'
+
+const UtilityCard = ({ name, iconSrc, arrowSrc, onClick }: UtilityCardProps) => {
+  return (
+    <Card onClick={onClick}>
+      <TopRow>
+        <IconWrapper>
+          <Icon src={iconSrc} alt={name} />
+        </IconWrapper>
+        <ArrowWrapper>
+          <Arrow src={arrowSrc} alt="" />
+        </ArrowWrapper>
+      </TopRow>
+      <NameWrapper>
+        <Name>{name}</Name>
+      </NameWrapper>
+    </Card>
+  )
+}
+
+export default UtilityCard
+
+
+=== src/components/ui/UtilityCard/UtilityCard.types.ts ===
+export type UtilityCardProps = {
+  name: string
+  iconSrc: string
+  arrowSrc: string
+  onClick?: () => void
+}
+
+
+=== src/config/paymentConfig.ts ===
+export const paymentConfig = {
+  commissionPercent: 1,
+  acceptedBills: '20, 50, 100, 200, 500 та 1000 грн.',
+  minAmount: 1,
+  maxAmount: 5000,
+  currency: 'грн.',
+  payerName: 'Пекарський Сергій Петрович',
+  paymentPurpose: 'Поповнення картки власними коштами',
+}
+
+=== src/config/paymentConfig.types.ts ===
+export type PaymentConfig = {
+  commissionPercent: number
+  acceptedBills: string
+  minAmount: number
+  maxAmount: number
+  currency: string
+  payerName: string
+  paymentPurpose: string
+}
+
+=== src/config/scenarioConfig.ts ===
+import { routePaths } from '../constants/routePaths'
+
+export type ScenarioId = 'cardTopUp' | 'mobileTopUp' | 'billsPayment' | 'utilities'
+
+export type Step = {
+  id: string
+  path: string
+  nextStep?: string
+  errorStep?: string
+}
+
+export type Scenario = {
+  id: ScenarioId
+  name: string
+  startStep: string
+  steps: Record<string, Step>
+}
+
+export const scenarios: Record<ScenarioId, Scenario> = {
+  cardTopUp: {
+    id: 'cardTopUp',
+    name: 'Поповнення картки',
+    startStep: 'cardInput',
+    steps: {
+      cardInput: {
+        id: 'cardInput',
+        path: routePaths.cardInput,
+        nextStep: 'phoneInput',
+        errorStep: 'cardError',
+      },
+      phoneInput: {
+        id: 'phoneInput',
+        path: routePaths.phoneInput,
+        nextStep: 'smsInput',
+        errorStep: 'phoneError',
+      },
+      smsInput: {
+        id: 'smsInput',
+        path: routePaths.smsInput,
+        nextStep: 'paymentInfo',
+        errorStep: 'smsError',
+      },
+      paymentInfo: {
+        id: 'paymentInfo',
+        path: routePaths.paymentInfo,
+        nextStep: 'cashAcceptance',
+        errorStep: 'printerError',
+      },
+      cashAcceptance: {
+        id: 'cashAcceptance',
+        path: routePaths.cashAcceptance,
+        nextStep: 'paymentResult',
+        errorStep: 'cashError',
+      },
+      paymentResult: {
+        id: 'paymentResult',
+        path: routePaths.paymentResult,
+      },
+      cardError: {
+        id: 'cardError',
+        path: routePaths.cardError,
+        nextStep: 'cardInput',
+      },
+      phoneError: {
+        id: 'phoneError',
+        path: routePaths.phoneError,
+        nextStep: 'phoneInput',
+      },
+      smsError: {
+        id: 'smsError',
+        path: routePaths.smsError,
+        nextStep: 'smsInput',
+      },
+      printerError: {
+        id: 'printerError',
+        path: routePaths.printerError,
+        nextStep: 'paymentResult',
+      },
+      cashError: {
+        id: 'cashError',
+        path: routePaths.cashError,
+        nextStep: 'cashAcceptance',
+      },
+    },
+  },
+  mobileTopUp: {
+    id: 'mobileTopUp',
+    name: 'Мобільний зв\'язок',
+    startStep: 'phoneInput',
+    steps: {
+      phoneInput: {
+        id: 'phoneInput',
+        path: routePaths.phoneInput,
+        nextStep: 'smsInput',
+        errorStep: 'phoneError',
+      },
+      smsInput: {
+        id: 'smsInput',
+        path: routePaths.smsInput,
+        nextStep: 'paymentInfo',
+        errorStep: 'smsError',
+      },
+      paymentInfo: {
+        id: 'paymentInfo',
+        path: routePaths.paymentInfo,
+        nextStep: 'cashAcceptance',
+        errorStep: 'printerError',
+      },
+      cashAcceptance: {
+        id: 'cashAcceptance',
+        path: routePaths.cashAcceptance,
+        nextStep: 'paymentResult',
+        errorStep: 'cashError',
+      },
+      paymentResult: {
+        id: 'paymentResult',
+        path: routePaths.paymentResult,
+      },
+      phoneError: {
+        id: 'phoneError',
+        path: routePaths.phoneError,
+        nextStep: 'phoneInput',
+      },
+      smsError: {
+        id: 'smsError',
+        path: routePaths.smsError,
+        nextStep: 'smsInput',
+      },
+      printerError: {
+        id: 'printerError',
+        path: routePaths.printerError,
+        nextStep: 'paymentResult',
+      },
+      cashError: {
+        id: 'cashError',
+        path: routePaths.cashError,
+        nextStep: 'cashAcceptance',
+      },
+    },
+  },
+  billsPayment: {
+    id: 'billsPayment',
+    name: 'Оплата рахунків',
+    startStep: 'ibanInput',
+    steps: {
+      ibanInput: {
+        id: 'ibanInput',
+        path: routePaths.ibanInput,
+        nextStep: 'phoneInput',
+        errorStep: 'ibanError',
+      },
+      phoneInput: {
+        id: 'phoneInput',
+        path: routePaths.phoneInput,
+        nextStep: 'smsInput',
+        errorStep: 'phoneError',
+      },
+      smsInput: {
+        id: 'smsInput',
+        path: routePaths.smsInput,
+        nextStep: 'paymentPurpose',
+        errorStep: 'smsError',
+      },
+      paymentPurpose: {
+        id: 'paymentPurpose',
+        path: routePaths.paymentPurpose,
+        nextStep: 'paymentInfo',
+        errorStep: 'purposeError',
+      },
+      paymentInfo: {
+        id: 'paymentInfo',
+        path: routePaths.paymentInfo,
+        nextStep: 'cashAcceptance',
+        errorStep: 'printerError',
+      },
+      cashAcceptance: {
+        id: 'cashAcceptance',
+        path: routePaths.cashAcceptance,
+        nextStep: 'paymentResult',
+        errorStep: 'cashError',
+      },
+      paymentResult: {
+        id: 'paymentResult',
+        path: routePaths.paymentResult,
+      },
+      ibanError: {
+        id: 'ibanError',
+        path: routePaths.ibanError,
+        nextStep: 'ibanInput',
+      },
+      phoneError: {
+        id: 'phoneError',
+        path: routePaths.phoneError,
+        nextStep: 'phoneInput',
+      },
+      smsError: {
+        id: 'smsError',
+        path: routePaths.smsError,
+        nextStep: 'smsInput',
+      },
+      purposeError: {
+        id: 'purposeError',
+        path: routePaths.purposeError,
+        nextStep: 'paymentPurpose',
+      },
+      printerError: {
+        id: 'printerError',
+        path: routePaths.printerError,
+        nextStep: 'paymentResult',
+      },
+      cashError: {
+        id: 'cashError',
+        path: routePaths.cashError,
+        nextStep: 'cashAcceptance',
+      },
+    },
+  },
+  utilities: {
+    id: 'utilities',
+    name: 'Комунальні послуги',
+    startStep: 'utilities',
+    steps: {
+      utilities: {
+        id: 'utilities',
+        path: routePaths.utilities,
+        nextStep: 'paymentInfo',
+        errorStep: 'utilitiesError',
+      },
+      paymentInfo: {
+        id: 'paymentInfo',
+        path: routePaths.paymentInfo,
+        nextStep: 'cashAcceptance',
+        errorStep: 'printerError',
+      },
+      cashAcceptance: {
+        id: 'cashAcceptance',
+        path: routePaths.cashAcceptance,
+        nextStep: 'paymentResult',
+        errorStep: 'cashError',
+      },
+      paymentResult: {
+        id: 'paymentResult',
+        path: routePaths.paymentResult,
+      },
+      utilitiesError: {
+        id: 'utilitiesError',
+        path: routePaths.utilitiesError,
+        nextStep: 'utilities',
+      },
+      printerError: {
+        id: 'printerError',
+        path: routePaths.printerError,
+        nextStep: 'paymentResult',
+      },
+      cashError: {
+        id: 'cashError',
+        path: routePaths.cashError,
+        nextStep: 'cashAcceptance',
+      },
+    },
+  },
 }
 
 === src/config/screenConfig.ts ===
@@ -1892,10 +2490,52 @@ export const SCREEN_RESOLUTIONS: Record<ScreenMode, ScreenResolution> = {
   },
 }
 
-export const ACTIVE_SCREEN_MODE: ScreenMode = '800p'
+export const ACTIVE_SCREEN_MODE: ScreenMode = '1024p'
 
 
 export const INACTIVITY_TIMEOUT_SECONDS = 30
+
+=== src/config/utilitiesData.ts ===
+import icon01 from '../assets/icons/icon_01.png'
+import icon02 from '../assets/icons/icon_02.png'
+import icon03 from '../assets/icons/icon_03.png'
+import icon04 from '../assets/icons/icon_04.png'
+import icon05 from '../assets/icons/icon_05.png'
+import icon06 from '../assets/icons/icon_06.png'
+import icon07 from '../assets/icons/icon_07.png'
+import icon08 from '../assets/icons/icon_08.png'
+import icon09 from '../assets/icons/icon_09.png'
+import icon10 from '../assets/icons/icon_10.png'
+import icon11 from '../assets/icons/icon_11.png'
+import icon12 from '../assets/icons/icon_12.png'
+import icon13 from '../assets/icons/icon_13.png'
+import icon14 from '../assets/icons/icon_14.png'
+import icon15 from '../assets/icons/icon_15.png'
+
+export interface UtilityOperator {
+  id: string
+  name: string
+  icon: string
+}
+
+export const utilitiesData: UtilityOperator[] = [
+  { id: '1', name: 'Рівнеоблводоканал', icon: icon01 },
+  { id: '2', name: 'Рівненська обласна ЕК (електроенергія)', icon: icon02 },
+  { id: '3', name: 'ДП «КиївГазЕнерджі»', icon: icon03 },
+  { id: '4', name: '"Київтеплоенерго" Централізоване опалення і постачання гарячої води', icon: icon04 },
+  { id: '5', name: 'YASNO Київські енергетичні послуги (електроенергія)', icon: icon05 },
+  { id: '6', name: 'Київводоканал', icon: icon06 },
+  { id: '7', name: 'Газмережі Рівненська філія за розподіл газу', icon: icon07 },
+  { id: '8', name: 'ГК "Нафтогаз України"', icon: icon08 },
+  { id: '9', name: 'Рівнеоблводоканал', icon: icon09 },
+  { id: '10', name: 'Рівненська обласна ЕК (електроенергія)', icon: icon10 },
+  { id: '11', name: 'Київводоканал', icon: icon11 },
+  { id: '12', name: 'ДП «КиївГазЕнерджі»', icon: icon12 },
+  { id: '13', name: 'Газмережі Рівненська філія за розподіл газу', icon: icon13 },
+  { id: '14', name: 'Київтеплоенерго', icon: icon14 },
+  { id: '15', name: 'Київводоканал', icon: icon15 },
+]
+
 
 === src/constants/routePaths.ts ===
 export const routePaths = {
@@ -1908,10 +2548,99 @@ export const routePaths = {
   ibanInput: '/iban-input',
   textInput: '/text-input',
   cashAcceptance: '/cash-acceptance',
+  smsInput: '/sms-input',
+  paymentInfo: '/payment-info',
+  paymentResult: '/payment-result',
+  receipt: '/receipt',
+  phoneError: '/phone-error',
+  smsError: '/sms-error',
+  ibanError: '/iban-error',
+  textError: '/text-error',
+  cashError: '/cash-error',
+  paymentPurpose: '/payment-purpose',
+  purposeError: '/purpose-error',
+  utilities: '/utilities',
+  utilitiesError: '/utilities-error',
 } as const
 
+=== src/context/LocaleContext.tsx ===
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { Locale } from '../locale/types'
+import { defaultLocale } from '../locale'
+
+type LocaleContextType = {
+  locale: Locale
+  setLocale: (locale: Locale) => void
+}
+
+const LocaleContext = createContext<LocaleContextType | undefined>(undefined)
+
+export const LocaleProvider = ({ children }: { children: ReactNode }) => {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+
+  return (
+    <LocaleContext.Provider value={{ locale, setLocale }}>
+      {children}
+    </LocaleContext.Provider>
+  )
+}
+
+export const useLocale = () => {
+  const context = useContext(LocaleContext)
+  if (!context) {
+    throw new Error('useLocale must be used within LocaleProvider')
+  }
+  return context
+}
+
+=== src/context/TransactionContext.tsx ===
+import { createContext, useContext, useState, type ReactNode } from 'react'
+
+export type TransactionData = {
+  cardNumber?: string
+  phoneNumber?: string
+  smsCode?: string
+  iban?: string
+  paymentPurpose?: string
+  amount?: number
+}
+
+type TransactionContextType = {
+  data: TransactionData
+  updateData: (newData: Partial<TransactionData>) => void
+  clearData: () => void
+}
+
+const TransactionContext = createContext<TransactionContextType | undefined>(undefined)
+
+export const TransactionProvider = ({ children }: { children: ReactNode }) => {
+  const [data, setData] = useState<TransactionData>({})
+
+  const updateData = (newData: Partial<TransactionData>) => {
+    setData((prev) => ({ ...prev, ...newData }))
+  }
+
+  const clearData = () => {
+    setData({})
+  }
+
+  return (
+    <TransactionContext.Provider value={{ data, updateData, clearData }}>
+      {children}
+    </TransactionContext.Provider>
+  )
+}
+
+export const useTransaction = () => {
+  const context = useContext(TransactionContext)
+  if (!context) {
+    throw new Error('useTransaction must be used within TransactionProvider')
+  }
+  return context
+}
+
 === src/hoc/withInactivity.tsx ===
-import { useEffect, useRef, useState, ComponentType } from 'react'
+import { useEffect, useRef, useState, type ComponentType } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InactivityPopup from '../components/ui/InactivityPopup/InactivityPopup'
 import { INACTIVITY_TIMEOUT_SECONDS } from '../config/screenConfig'
@@ -1980,6 +2709,86 @@ export const withInactivity = <P extends object>(
   }
 }
 
+=== src/hoc/withScenario.tsx ===
+import { type ComponentType } from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
+import { routePaths } from '../constants/routePaths'
+import { useScenarioNavigation } from '../hooks/useScenarioNavigation'
+import type { ScenarioId } from '../config/scenarioConfig'
+
+export const withScenario = <P extends object>(
+  WrappedComponent: ComponentType<P & { navigation: ReturnType<typeof useScenarioNavigation>; currentStepId: string }>,
+  stepId: string
+) => {
+  return (props: P) => {
+    const location = useLocation()
+    const scenarioId = location.state?.scenarioId as ScenarioId
+
+    if (!scenarioId) {
+      return <Navigate to={routePaths.chooseOperationType} replace />
+    }
+
+    const navigation = useScenarioNavigation(scenarioId)
+
+    return (
+      <WrappedComponent
+        {...props}
+        navigation={navigation}
+        currentStepId={stepId}
+      />
+    )
+  }
+}
+
+=== src/hooks/useScenarioNavigation.ts ===
+import { useNavigate } from 'react-router-dom'
+import type { ScenarioId } from '../config/scenarioConfig'
+import { scenarios, type Step } from '../config/scenarioConfig'
+
+export const useScenarioNavigation = (scenarioId: ScenarioId) => {
+  const navigate = useNavigate()
+  const scenario = scenarios[scenarioId]
+
+  const goToStep = (stepId: string, state?: unknown) => {
+    const step = scenario.steps[stepId]
+    if (step) {
+      navigate(step.path, { state: { ...(state as object), scenarioId } })
+    } else {
+      console.error(`Step ${stepId} not found in scenario ${scenarioId}`)
+    }
+  }
+
+  const goToNext = (currentStepId: string, state?: unknown) => {
+    const currentStep = scenario.steps[currentStepId]
+    if (currentStep?.nextStep) {
+      goToStep(currentStep.nextStep, state)
+    } else {
+      console.error(`Next step not defined for ${currentStepId}`)
+    }
+  }
+
+  const goToError = (currentStepId: string, state?: unknown) => {
+    const currentStep = scenario.steps[currentStepId]
+    if (currentStep?.errorStep) {
+      goToStep(currentStep.errorStep, state)
+    } else {
+      console.error(`Error step not defined for ${currentStepId}`)
+    }
+  }
+
+  const getCurrentStep = (stepId: string): Step | undefined => {
+    return scenario.steps[stepId]
+  }
+
+  return {
+    goToStep,
+    goToNext,
+    goToError,
+    getCurrentStep,
+    scenario,
+  }
+}
+
 === src/locale/en.ts ===
 const en = {
   header: {
@@ -2030,6 +2839,7 @@ const en = {
   phoneInputScreen: {
     title: 'Enter the phone number for top-up',
     hint: 'Please enter your phone number in the format +38 (0XX) XXX XX XX',
+    errorMessage: 'The entered number is not valid!',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',
@@ -2045,7 +2855,8 @@ const en = {
   },
   ibanInputScreen: {
     title: 'Enter IBAN number',
-    hint: 'Enter IBAN containing 27 digits in the format UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hint: 'Enter IBAN containing 27 digits in the format',
+    hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
     back: 'Back',
     continue: 'Continue',
     delete: 'Delete',
@@ -2074,6 +2885,61 @@ const en = {
     back: 'Back',
     continue: 'Continue',
   },
+  smsInputScreen: {
+    title: 'Enter the confirmation code from SMS',
+    hint: 'Password validity period:',
+    back: 'Back',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: '____',
+  },
+paymentInfoScreen: {
+  title: 'Card top-up',
+  titleMobile: 'Mobile top-up',
+  titleBills: 'Bill payment by IBAN',
+  subtitle: 'Please check the data before depositing',
+  cardNumber: 'Card number',
+  phoneNumber: 'Phone number',
+  operator: 'Mobile operator',
+  edrpou: 'EDRPOU',
+  iban: 'IBAN',
+  payerName: "Payer's full name",
+  recipientName: "Recipient's full name",
+  paymentPurpose: 'Payment purpose',
+  amount: 'Payment amount',
+  commission: 'Commission',
+  acceptedBills: 'Banknotes accepted',
+  cancel: 'Cancel',
+  continue: 'Continue',
+  currency: 'UAH',
+},
+paymentResultScreen: {
+  title: 'Payment successful',
+  receipt: 'Receipt',
+  complete: 'Complete',
+},
+receiptScreen: {
+  title: 'Receipt',
+  print: 'Print',
+  complete: 'Complete',
+},
+paymentPurposeScreen: {
+  title: 'Enter payment purpose',
+  placeholder: 'Payment for water supply services',
+  delete: 'Delete',
+  back: 'Back',
+  continue: 'Continue',
+  en: 'en',
+  ua: 'ua',
+},
+utilitiesErrorScreen: {
+  title: 'Service temporarily unavailable',
+  message: 'Please try again later',
+},
+utilitiesScreen: {
+  title: 'Payment for utilities',
+  ibanButton: 'Pay by IBAN',
+},
 }
 
 export default en
@@ -2092,6 +2958,126 @@ export const defaultLocale: Locale = 'uk'
 
 === src/locale/types.ts ===
 export type Locale = 'uk' | 'en'
+
+export type Translations = {
+  header: {
+    supportPhone: string
+    supportDescription: string
+    languageUa: string
+    languageEn: string
+    exit: string
+  }
+  footer: {
+    cancel: string
+    repeat: string
+    continue: string
+  }
+  errorScreen: {
+    title: string
+    primaryMessage: string
+    secondaryMessage: string
+  }
+  printerErrorScreen: {
+    title: string
+    primaryMessage: string
+    secondaryMessage: string
+  }
+  startScreen: {
+    title: string
+    cards: {
+      billsPayment: { title: string; description: string }
+      mobileTopUp: { title: string; description: string }
+      cardTopUp: { title: string; description: string }
+      utilities: { title: string; description: string }
+    }
+  }
+  phoneInputScreen: {
+    title: string
+    hint: string
+    errorMessage: string
+    back: string
+    continue: string
+    delete: string
+    emptyMask: string
+  }
+  cardInputScreen: {
+    title: string
+    hint: string
+    back: string
+    continue: string
+    delete: string
+    emptyMask: string
+  }
+  ibanInputScreen: {
+    title: string
+    hint: string
+    hintFormat: string
+    back: string
+    continue: string
+    delete: string
+    emptyMask: string
+  }
+  textInputScreen: {
+    title: string
+    placeholder: string
+    delete: string
+    back: string
+    continue: string
+    en: string
+    ua: string
+  }
+  cashAcceptanceScreen: {
+    title: string
+    instruction: string
+    completeHint: string
+    notice: string
+    maxAmount: string
+    commissionRate: string
+    willBeCredited: string
+    acceptedAmount: string
+    commission: string
+    currency: string
+    back: string
+    continue: string
+  }
+  smsInputScreen: {
+    title: string
+    hint: string
+    back: string
+    continue: string
+    delete: string
+    emptyMask: string
+  }
+  paymentInfoScreen: {
+    title: string
+    titleMobile: string
+    subtitle: string
+    cardNumber: string
+    phoneNumber: string
+    operator: string
+    edrpou: string
+    iban: string
+    payerName: string
+    recipientName: string
+    paymentPurpose: string
+    amount: string
+    commission: string
+    acceptedBills: string
+    cancel: string
+    continue: string
+    currency: string
+  }
+  paymentResultScreen: {
+    title: string
+    receipt: string
+    complete: string
+  }
+  receiptScreen: {
+    title: string
+    print: string
+    complete: string
+  }
+}
 
 === src/locale/uk.ts ===
 const uk = {
@@ -2143,6 +3129,7 @@ const uk = {
   phoneInputScreen: {
     title: 'Введіть номер телефону для поповнення',
     hint: 'Будь ласка, введіть свій номер телефону у форматі +38 (0XX) XXX XX XX',
+    errorMessage: 'Введений номер не є дійсним!',
     back: 'Назад',
     continue: 'Продовжити',
     delete: 'Стерти',
@@ -2158,7 +3145,8 @@ const uk = {
   },
   ibanInputScreen: {
     title: 'Введіть номер IBAN',
-    hint: 'Введіть IBAN, який містить 27 цифр у форматі UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
+    hint: 'Введіть IBAN, який містить 27 цифр у форматі',
+    hintFormat: 'UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX',
     back: 'Назад',
     continue: 'Продовжити',
     delete: 'Стерти',
@@ -2187,6 +3175,61 @@ const uk = {
     back: 'Назад',
     continue: 'Продовжити',
   },
+  smsInputScreen: {
+    title: 'Введіть отриманий код підтвердження з СМС',
+    hint: 'Час дії паролю:',
+    back: 'Назад',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: '____',
+  },
+paymentInfoScreen: {
+  title: 'Поповнення картки',
+  titleMobile: 'Поповнення мобільного зв\'язку',
+  titleBills: 'Оплата рахунку по IBAN',
+  subtitle: 'Будь ласка, перевірте дані перед внесенням',
+  cardNumber: 'Номер картки',
+  phoneNumber: 'Номер телефону',
+  operator: 'Оператор зв\'язку',
+  edrpou: 'ЄДРПОУ',
+  iban: 'IBAN',
+  payerName: 'ПІБ Платника',
+  recipientName: 'ПІБ Отримувача',
+  paymentPurpose: 'Призначення платежу',
+  amount: 'Сума платежу',
+  commission: 'Комісія',
+  acceptedBills: 'Приймаються купюри',
+  cancel: 'Скасувати',
+  continue: 'Продовжити',
+  currency: 'грн.',
+},
+paymentResultScreen: {
+  title: 'Платіж успішний',
+  receipt: 'Квитанція',
+  complete: 'Завершити',
+},
+receiptScreen: {
+  title: 'Квитанція',
+  print: 'Друкувати',
+  complete: 'Завершити',
+},
+paymentPurposeScreen: {
+  title: 'Введіть призначення платежу',
+  placeholder: 'Оплата за послуги водопостачання',
+  delete: 'Стерти',
+  back: 'Назад',
+  continue: 'Продовжити',
+  en: 'en',
+  ua: 'ua',
+},
+utilitiesErrorScreen: {
+  title: 'Послуга тимчасово недоступна',
+  message: 'Спробуйте пізніше',
+},
+utilitiesScreen: {
+  title: 'Оплата за комунальні послуги',
+  ibanButton: 'Оплатити по IBAN',
+},
 }
 
 export default uk
@@ -2410,6 +3453,7 @@ export default CardErrorView
 
 === src/pages/CardInput/CardInputPage.tsx ===
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -2419,28 +3463,46 @@ import TerminalViewport from '../../components/layout/TerminalViewport/TerminalV
 import CardInput from '../../components/ui/CardInput/CardInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
 import { withInactivity } from '../../hoc/withInactivity'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
+import {
+  Content,
+  HintCard,
+  HintText,
+  InputWrapper,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './CardInputView.styled'
 
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+type CardInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
 
-import CardInputView from './CardInputView'
-
-const CardInputPage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+const CardInputPage = ({ navigation, currentStepId }: CardInputPageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [value, setValue] = useState('')
 
   const t = translations[locale]
 
-  const handleLanguageChange = (_language: HeaderLanguage) => {
-    setLocale((prev) => prev)
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
   const handleDigitClick = (digit: string) => {
     setValue((prev) => {
-      if (prev.length >= 16) {
-        return prev
-      }
-
+      if (prev.length >= 16) return prev
       return prev + digit
     })
   }
@@ -2450,6 +3512,21 @@ const CardInputPage = () => {
   }
 
   const isValid = value.length === 16
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ cardNumber: value })
+      navigation.goToNext(currentStepId)
+    }
+  }
 
   return (
     <TerminalViewport>
@@ -2462,6 +3539,7 @@ const CardInputPage = () => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
@@ -2470,43 +3548,105 @@ const CardInputPage = () => {
               {
                 label: t.cardInputScreen.back,
                 variant: 'cancel',
+                icon: 'arrow-back',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
               {
                 label: t.cardInputScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
         }
       >
-        <CardInputView
-          t={t}
-          input={
-            <CardInput
-              value={value}
-              placeholder={t.cardInputScreen.emptyMask}
-            />
-          }
-          keypad={
+        <Content>
+          <Left>
+            <TitleBlock>
+              <TitleRow>
+                <Title>{t.cardInputScreen.title}</Title>
+              </TitleRow>
+            </TitleBlock>
+
+            <InputWrapper>
+              <CardInput
+                value={value}
+                placeholder={t.cardInputScreen.emptyMask}
+              />
+            </InputWrapper>
+
+            <HintCard>
+              <HintText>{t.cardInputScreen.hint}</HintText>
+            </HintCard>
+          </Left>
+
+          <Right>
             <NumericKeypad
               onDigitClick={handleDigitClick}
               onDeleteClick={handleDeleteClick}
               deleteLabel={t.cardInputScreen.delete}
             />
-          }
-        />
+          </Right>
+        </Content>
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default withInactivity(CardInputPage)
+export default withInactivity(withScenario(CardInputPage, 'cardInput'))
 
 === src/pages/CardInput/CardInputView.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getLeftPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '100px'
+  return '100px 60px'
+}
+
+const getTitleWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '770px'
+  return '520px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintMaxWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getHintLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getRightWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '820px'
+  return '545px'
+}
 
 export const Content = styled.main`
   display: flex;
@@ -2520,24 +3660,23 @@ export const Content = styled.main`
 
 export const Left = styled.section`
   display: flex;
-  width: 735px;
-  min-width: 735px;
+  flex: 1 0 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 64px;
-  padding: 100px 60px;
-  flex-shrink: 0;
+  padding: ${getLeftPadding()};
   align-self: stretch;
 `
 
 export const TitleBlock = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 `
 
 export const TitleRow = styled.div`
-  width: 520px;
+  width: ${getTitleWidth()};
   display: flex;
   align-items: flex-start;
   gap: 24px;
@@ -2547,24 +3686,27 @@ export const TitleRow = styled.div`
 export const Title = styled.h1`
   margin: 0;
   flex: 1 0 0;
-
   color: #111e29;
   font-family: 'Oschad Sans';
-  font-size: 46px;
+  font-size: ${getTitleFontSize()};
   font-style: normal;
   font-weight: 600;
-  line-height: 46px;
+  line-height: ${getTitleLineHeight()};
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
 `
 
 export const HintCard = styled.div`
-  width: 580px;
+  width: 100%;
+  max-width: ${getHintMaxWidth()};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   padding: 30px 40px;
   flex-shrink: 0;
-
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
@@ -2572,23 +3714,25 @@ export const HintCard = styled.div`
 
 export const HintText = styled.p`
   margin: 0;
-
+  width: 100%;
   color: #111e29;
   text-align: left;
   font-family: 'Oschad Sans';
-  font-size: 24px;
+  font-size: ${getHintFontSize()};
   font-style: normal;
   font-weight: 500;
-  line-height: 32px;
+  line-height: ${getHintLineHeight()};
 `
 
 export const Right = styled.aside`
-  width: 545px;
-  min-width: 545px;
+  width: ${getRightWidth()};
+  min-width: ${getRightWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
   flex-shrink: 0;
   align-self: stretch;
-  min-height: 100%;
-  display: flex;
 `
 
 === src/pages/CardInput/CardInputView.tsx ===
@@ -2636,21 +3780,36 @@ const CardInputView = ({ t, input, keypad }: CardInputViewProps) => {
 export default CardInputView
 
 === src/pages/CashAcceptance/CashAcceptancePage.tsx ===
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
 import CashAcceptanceView from './CashAcceptanceView'
 
-const CashAcceptancePage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+type CashAcceptancePageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const CashAcceptancePage = ({ navigation, currentStepId }: CashAcceptancePageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [acceptedAmount, setAcceptedAmount] = useState(0)
   const [isInserting, setIsInserting] = useState(true)
+  const hasUpdated = useRef(false)
 
   const t = translations[locale]
 
@@ -2658,11 +3817,6 @@ const CashAcceptancePage = () => {
     setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
-  // Розрахунок комісії (1%)
-  const commission = acceptedAmount * 0.01
-  const finalAmount = acceptedAmount - commission
-
-  // Симуляція внесення коштів
   useEffect(() => {
     if (!isInserting) return
 
@@ -2680,7 +3834,32 @@ const CashAcceptancePage = () => {
     return () => clearInterval(interval)
   }, [isInserting])
 
+  // Окремий useEffect для збереження amount після завершення внесення
+  useEffect(() => {
+    if (!isInserting && acceptedAmount >= 1200 && !hasUpdated.current) {
+      hasUpdated.current = true
+      updateData({ amount: acceptedAmount })
+    }
+  }, [isInserting, acceptedAmount, updateData])
+
+  const commission = acceptedAmount * 0.01
+  const finalAmount = acceptedAmount - commission
   const isValid = acceptedAmount > 0
+  const isCancelDisabled = acceptedAmount > 0
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      navigation.goToNext(currentStepId)
+    }
+  }
 
   return (
     <TerminalViewport>
@@ -2688,26 +3867,32 @@ const CashAcceptancePage = () => {
         variant="default"
         header={
           <TerminalHeader
-            variant="language-switcher"
-            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            variant="action-button"
+            actionLabel={t.header.exit}
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+            disabled={isCancelDisabled}
           />
         }
         footer={
           <TerminalFooter
             leftButtons={[
               {
-                label: t.cashAcceptanceScreen.back,
+                label: t.footer.cancel,
                 variant: 'cancel',
+                disabled: isCancelDisabled,
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
               {
                 label: t.cashAcceptanceScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
@@ -2724,7 +3909,7 @@ const CashAcceptancePage = () => {
   )
 }
 
-export default CashAcceptancePage
+export default withScenario(CashAcceptancePage, 'cashAcceptance')
 
 === src/pages/CashAcceptance/CashAcceptanceView.styled.ts ===
 import styled from 'styled-components'
@@ -3215,23 +4400,45 @@ const CashAcceptanceView = ({
 export default CashAcceptanceView
 
 === src/pages/ChooseOperationType/ChooseOperationTypePage.tsx ===
-import { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
 import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
+import { translations } from '../../locale'
+import type { ScenarioId } from '../../config/scenarioConfig'
+import { useLocale } from '../../context/LocaleContext'
+import { routePaths } from '../../constants/routePaths'
 import ChooseOperationTypeView from './ChooseOperationTypeView'
 
 const ChooseOperationTypePage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
-
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
   const t = translations[locale]
 
   const handleLanguageChange = (language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleCardClick = (scenarioId: ScenarioId) => {
+    let path = ''
+    switch (scenarioId) {
+      case 'cardTopUp':
+        path = routePaths.cardInput
+        break
+      case 'mobileTopUp':
+        path = routePaths.phoneInput
+        break
+      case 'billsPayment':
+        path = routePaths.ibanInput
+        break
+      case 'utilities':
+        path = routePaths.utilities
+        break
+      default:
+        path = routePaths.chooseOperationType
+    }
+    navigate(path, { state: { scenarioId } })
   }
 
   return (
@@ -3247,7 +4454,7 @@ const ChooseOperationTypePage = () => {
           />
         }
       >
-        <ChooseOperationTypeView t={t} />
+        <ChooseOperationTypeView t={t} onCardClick={handleCardClick} />
       </TerminalLayout>
     </TerminalViewport>
   )
@@ -3355,13 +4562,15 @@ import cardIcon3 from '../../assets/icons/cardicon-3.svg'
 import cardIcon4 from '../../assets/icons/cardicon-4.svg'
 import OperationCard from '../../components/ui/OperationCard/OperationCard'
 import type { Translations } from '../../locale/types'
+import type { ScenarioId } from '../../config/scenarioConfig'
 import { Cards, Content, Title, TitleWrap } from './ChooseOperationTypeView.styled'
 
 type ChooseOperationTypeViewProps = {
   t: Translations
+  onCardClick: (scenarioId: ScenarioId) => void
 }
 
-const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
+const ChooseOperationTypeView = ({ t, onCardClick }: ChooseOperationTypeViewProps) => {
   return (
     <Content>
       <TitleWrap>
@@ -3374,6 +4583,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.billsPayment.description}
           iconSrc={cardIcon1}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('billsPayment')}
         />
 
         <OperationCard
@@ -3381,6 +4591,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.mobileTopUp.description}
           iconSrc={cardIcon2}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('mobileTopUp')}
         />
 
         <OperationCard
@@ -3388,6 +4599,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.cardTopUp.description}
           iconSrc={cardIcon3}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('cardTopUp')}
         />
 
         <OperationCard
@@ -3395,6 +4607,7 @@ const ChooseOperationTypeView = ({ t }: ChooseOperationTypeViewProps) => {
           description={t.startScreen.cards.utilities.description}
           iconSrc={cardIcon4}
           arrowSrc={cardArrowIcon}
+          onClick={() => onCardClick('utilities')}
         />
       </Cards>
     </Content>
@@ -3405,6 +4618,7 @@ export default ChooseOperationTypeView
 
 === src/pages/IbanInput/IbanInputPage.tsx ===
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
@@ -3413,18 +4627,42 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import IbanInput from '../../components/ui/IbanInput/IbanInput'
 import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
-import { defaultLocale, translations } from '../../locale'
-import type { Locale } from '../../locale/types'
-import IbanInputView from './IbanInputView'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
 
-const IbanInputPage = () => {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+import {
+  Content,
+  HintCard,
+  HintText,
+  InputWrapper,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './IbanInputView.styled'
+
+type IbanInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const IbanInputPage = ({ navigation, currentStepId }: IbanInputPageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
   const [digits, setDigits] = useState('')
 
   const t = translations[locale]
 
-  const handleLanguageChange = (_language: HeaderLanguage) => {
-    setLocale((prev) => prev)
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
   }
 
   const handleDigitClick = (digit: string) => {
@@ -3437,11 +4675,22 @@ const IbanInputPage = () => {
     setDigits((prev) => prev.slice(0, -1))
   }
 
-  const handleChange = (newDigits: string) => {
-    setDigits(newDigits)
+  const isValid = digits.length === 27
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
   }
 
-  const isValid = digits.length === 27
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ iban: digits })
+      navigation.goToNext(currentStepId)
+    }
+  }
 
   return (
     <TerminalViewport>
@@ -3454,52 +4703,111 @@ const IbanInputPage = () => {
             supportPhone={t.header.supportPhone}
             supportDescription={t.header.supportDescription}
             onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
           />
         }
         footer={
           <TerminalFooter
             leftButtons={[
               {
-                label: t.ibanInputScreen.back,
+                label: t.footer.cancel,
                 variant: 'cancel',
+                onClick: handleBack,
               },
             ]}
             rightButtons={[
               {
                 label: t.ibanInputScreen.continue,
                 variant: 'continue',
+                icon: 'arrow-next',
                 disabled: !isValid,
+                onClick: handleContinue,
               },
             ]}
           />
         }
       >
-        <IbanInputView
-          t={t}
-          input={
-            <IbanInput
-              value={digits}
-              onChange={handleChange}
-              placeholder={t.ibanInputScreen.emptyMask}
-            />
-          }
-          keypad={
+        <Content>
+          <Left>
+            <TitleBlock>
+              <TitleRow>
+                <Title>{t.ibanInputScreen.title}</Title>
+              </TitleRow>
+            </TitleBlock>
+
+            <InputWrapper>
+              <IbanInput value={digits} />
+            </InputWrapper>
+
+            <HintCard>
+              <HintText>{t.ibanInputScreen.hint}</HintText>
+              <HintText>{t.ibanInputScreen.hintFormat}</HintText>
+            </HintCard>
+          </Left>
+
+          <Right>
             <NumericKeypad
               onDigitClick={handleDigitClick}
               onDeleteClick={handleDeleteClick}
               deleteLabel={t.ibanInputScreen.delete}
             />
-          }
-        />
+          </Right>
+        </Content>
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
-export default IbanInputPage
+export default withScenario(IbanInputPage, 'ibanInput')
 
 === src/pages/IbanInput/IbanInputView.styled.ts ===
 import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getLeftPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '100px'
+  return '100px 60px'
+}
+
+const getTitleWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '770px'
+  return '520px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '615px'
+}
+
+const getHintMaxWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '615px'
+}
+
+const getHintFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '22px'
+}
+
+const getHintLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getRightWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '820px'
+  return '545px'
+}
 
 export const Content = styled.main`
   display: flex;
@@ -3513,26 +4821,23 @@ export const Content = styled.main`
 
 export const Left = styled.section`
   display: flex;
-  width: 735px;
-  min-width: 735px;
+  flex: 1 0 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 64px;
-  padding: 100px 60px;
-  flex-shrink: 0;
+  padding: ${getLeftPadding()};
   align-self: stretch;
 `
 
 export const TitleBlock = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 `
 
 export const TitleRow = styled.div`
-  width: 100%;
-  max-width: 520px;
+  width: ${getTitleWidth()};
   display: flex;
   align-items: flex-start;
   gap: 24px;
@@ -3542,24 +4847,27 @@ export const TitleRow = styled.div`
 export const Title = styled.h1`
   margin: 0;
   flex: 1 0 0;
-
   color: #111e29;
   font-family: 'Oschad Sans';
-  font-size: 46px;
+  font-size: ${getTitleFontSize()};
   font-style: normal;
   font-weight: 600;
-  line-height: 46px;
+  line-height: ${getTitleLineHeight()};
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
 `
 
 export const HintCard = styled.div`
   width: 100%;
+  max-width: ${getHintMaxWidth()};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   padding: 30px 40px;
   flex-shrink: 0;
-
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
@@ -3568,23 +4876,24 @@ export const HintCard = styled.div`
 export const HintText = styled.p`
   margin: 0;
   width: 100%;
-
   color: #111e29;
   text-align: left;
   font-family: 'Oschad Sans';
-  font-size: 24px;
+  font-size: ${getHintFontSize()};
   font-style: normal;
   font-weight: 500;
-  line-height: 32px;
+  line-height: ${getHintLineHeight()};
 `
 
 export const Right = styled.aside`
-  width: 545px;
-  min-width: 545px;
+  width: ${getRightWidth()};
+  min-width: ${getRightWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
   flex-shrink: 0;
   align-self: stretch;
-  min-height: 100%;
-  display: flex;
 `
 
 === src/pages/IbanInput/IbanInputView.tsx ===
@@ -3594,6 +4903,7 @@ import {
   Content,
   HintCard,
   HintText,
+  InputWrapper,
   Left,
   Right,
   Title,
@@ -3617,10 +4927,13 @@ const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
           </TitleRow>
         </TitleBlock>
 
-        {input}
+        <InputWrapper>
+          {input}
+        </InputWrapper>
 
         <HintCard>
           <HintText>{t.ibanInputScreen.hint}</HintText>
+          <HintText>{t.ibanInputScreen.hintFormat}</HintText>
         </HintCard>
       </Left>
 
@@ -3631,8 +4944,728 @@ const IbanInputView = ({ t, input, keypad }: IbanInputViewProps) => {
 
 export default IbanInputView
 
-=== src/pages/PhoneInput/PhoneInputPage.tsx ===
+=== src/pages/PaymentInfo/PaymentInfoPage.tsx ===
+import { useNavigate, useLocation } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { paymentConfig } from '../../config/paymentConfig'
+import { routePaths } from '../../constants/routePaths'
+import type { ScenarioId } from '../../config/scenarioConfig'
+
+import PaymentInfoView from './PaymentInfoView'
+
+type PaymentInfoPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { locale, setLocale } = useLocale()
+  const { data } = useTransaction()
+
+  const t = translations[locale]
+  const scenarioId = location.state?.scenarioId as ScenarioId
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    navigation.goToNext(currentStepId)
+  }
+
+  // Спільні дані для всіх сценаріїв
+  const phoneNumber = data.phoneNumber || '+38 (096) 834 - 70-01'
+  const amount = 'від 1 до 5000 грн.'
+  const commission = `${paymentConfig.commissionPercent}%`
+  const acceptedBills = paymentConfig.acceptedBills
+  const payerName = paymentConfig.payerName
+
+  // Дані для cardTopUp
+  const cardNumber = data.cardNumber || '5167 **** **** 4826'
+  const paymentPurposeCard = data.paymentPurpose || paymentConfig.paymentPurpose
+  const recipientName = 'Сергій П.'
+
+  // Дані для mobileTopUp
+  const operator = 'ПрАТ "Київстар"'
+  const edrpou = '21673832'
+  const ibanMobile = 'UA983005280000026004000003072'
+  const paymentPurposeMobile = 'За послуги мобільного зв\'язку'
+
+  // Дані для billsPayment
+  const iban = data.iban || 'UA983005280000026004000003072'
+  const paymentPurposeBills = data.paymentPurpose || 'Оплата за послуги водопостачання'
+  const recipientBills = 'РОВКП ВКГ «Рівнеоблводоканал»'
+
+  const isCardTopUp = scenarioId === 'cardTopUp'
+  const isMobileTopUp = scenarioId === 'mobileTopUp'
+  const isBillsPayment = scenarioId === 'billsPayment'
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.footer.cancel,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.paymentInfoScreen.continue,
+                variant: 'continue',
+                icon: 'arrow-next',
+                onClick: handleContinue,
+              },
+            ]}
+          />
+        }
+      >
+        <PaymentInfoView
+          t={t}
+          scenarioId={scenarioId}
+          isCardTopUp={isCardTopUp}
+          isMobileTopUp={isMobileTopUp}
+          isBillsPayment={isBillsPayment}
+          cardNumber={cardNumber}
+          phoneNumber={phoneNumber}
+          amount={amount}
+          commission={commission}
+          acceptedBills={acceptedBills}
+          payerName={payerName}
+          paymentPurposeCard={paymentPurposeCard}
+          recipientName={recipientName}
+          operator={operator}
+          edrpou={edrpou}
+          ibanMobile={ibanMobile}
+          paymentPurposeMobile={paymentPurposeMobile}
+          iban={iban}
+          paymentPurposeBills={paymentPurposeBills}
+          recipientBills={recipientBills}
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default withScenario(PaymentInfoPage, 'paymentInfo')
+
+=== src/pages/PaymentInfo/PaymentInfoView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInfoBlockPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '0 100px'
+  return '0 60px'
+}
+
+const getInformationPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '20px 60px'
+  return '20px 40px'
+}
+
+const getCardGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '20px'
+  return '30px'
+}
+
+const getColumnsGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getLabelFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '28px'
+  return '24px'
+}
+
+const getDataFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '28px'
+  return '24px'
+}
+
+const getSubtitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getRowGap = () => {
+  return '20px'
+}
+
+const getLabelPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '5px 0'
+  return '10px 0'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+  text-align: center;
+`
+
+export const InfoBlock = styled.div`
+  display: flex;
+  padding: ${getInfoBlockPadding()};
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+`
+
+export const Information = styled.div`
+  display: flex;
+  padding: ${getInformationPadding()};
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${getCardGap()};
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+export const Subtitle = styled.h2`
+  margin: 0;
+  padding: 15px 0;
+  color: #111e29;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getSubtitleFontSize()};
+  font-weight: 600;
+  line-height: normal;
+  text-transform: uppercase;
+`
+
+export const ColumnsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: ${getColumnsGap()};
+  width: 100%;
+`
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${getRowGap()};
+  flex: 1;
+`
+
+export const InfoRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+`
+
+export const Label = styled.span`
+  width: 200px;
+  padding: ${getLabelPadding()};
+  flex-shrink: 0;
+  color: rgba(17, 30, 41, 0.6);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getLabelFontSize()};
+  font-weight: 400;
+  line-height: normal;
+`
+
+export const Data = styled.span`
+  flex: 1;
+  padding: ${getLabelPadding()};
+  color: rgba(17, 30, 41, 0.8);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getDataFontSize()};
+  font-weight: 600;
+  line-height: normal;
+`
+
+=== src/pages/PaymentInfo/PaymentInfoView.tsx ===
+import type { Translations } from '../../locale/types'
+import type { ScenarioId } from '../../config/scenarioConfig'
+import {
+  Column,
+  ColumnsContainer,
+  ContentWrapper,
+  Data,
+  InfoBlock,
+  Information,
+  InfoRow,
+  Label,
+  PageTitle,
+  Subtitle,
+  TitleWrapper,
+} from './PaymentInfoView.styled'
+
+type PaymentInfoViewProps = {
+  t: Translations
+  scenarioId: ScenarioId
+  isCardTopUp: boolean
+  isMobileTopUp: boolean
+  isBillsPayment: boolean
+  cardNumber: string
+  phoneNumber: string
+  amount: string
+  commission: string
+  acceptedBills: string
+  payerName: string
+  paymentPurposeCard: string
+  recipientName: string
+  operator: string
+  edrpou: string
+  ibanMobile: string
+  paymentPurposeMobile: string
+  iban: string
+  paymentPurposeBills: string
+  recipientBills: string
+}
+
+const PaymentInfoView = ({
+  t,
+  isCardTopUp,
+  isMobileTopUp,
+  isBillsPayment,
+  cardNumber,
+  phoneNumber,
+  amount,
+  commission,
+  acceptedBills,
+  payerName,
+  paymentPurposeCard,
+  recipientName,
+  operator,
+  edrpou,
+  ibanMobile,
+  paymentPurposeMobile,
+  iban,
+  paymentPurposeBills,
+  recipientBills,
+}: PaymentInfoViewProps) => {
+  const title = isCardTopUp
+    ? t.paymentInfoScreen.title
+    : isMobileTopUp
+    ? t.paymentInfoScreen.titleMobile
+    : t.paymentInfoScreen.titleBills
+
+  return (
+    <ContentWrapper>
+      <TitleWrapper>
+        <PageTitle>{title}</PageTitle>
+      </TitleWrapper>
+
+      <InfoBlock>
+        <Information>
+          <Subtitle>{t.paymentInfoScreen.subtitle}</Subtitle>
+
+          <ColumnsContainer>
+            <Column>
+              {isCardTopUp && (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.cardNumber}</Label>
+                    <Data>{cardNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.payerName}</Label>
+                    <Data>{payerName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.recipientName}</Label>
+                    <Data>{recipientName}</Data>
+                  </InfoRow>
+                </>
+              )}
+
+              {isMobileTopUp && (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.operator}</Label>
+                    <Data>{operator}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.edrpou}</Label>
+                    <Data>{edrpou}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.iban}</Label>
+                    <Data>{ibanMobile}</Data>
+                  </InfoRow>
+                </>
+              )}
+
+              {isBillsPayment && (
+                <>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.iban}</Label>
+                    <Data>{iban}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.phoneNumber}</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.payerName}</Label>
+                    <Data>{payerName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>{t.paymentInfoScreen.recipientName}</Label>
+                    <Data>{recipientBills}</Data>
+                  </InfoRow>
+                </>
+              )}
+            </Column>
+
+            <Column>
+              <InfoRow>
+                <Label>{t.paymentInfoScreen.amount}</Label>
+                <Data>{amount}</Data>
+              </InfoRow>
+
+              <InfoRow>
+                <Label>{t.paymentInfoScreen.commission}</Label>
+                <Data>{commission}</Data>
+              </InfoRow>
+
+              <InfoRow>
+                <Label>{t.paymentInfoScreen.acceptedBills}</Label>
+                <Data>{acceptedBills}</Data>
+              </InfoRow>
+
+              <InfoRow>
+                <Label>{t.paymentInfoScreen.paymentPurpose}</Label>
+                <Data>
+                  {isCardTopUp
+                    ? paymentPurposeCard
+                    : isMobileTopUp
+                    ? paymentPurposeMobile
+                    : paymentPurposeBills}
+                </Data>
+              </InfoRow>
+            </Column>
+          </ColumnsContainer>
+        </Information>
+      </InfoBlock>
+    </ContentWrapper>
+  )
+}
+
+export default PaymentInfoView
+
+=== src/pages/PaymentPurpose/PaymentPurposePage.tsx ===
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import AlphanumericKeypad from '../../components/ui/AlphanumericKeypad/AlphanumericKeypad'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
+import {
+  ContentWrapper,
+  InputField,
+  InputWrapper,
+  PageTitle,
+  TitleWrapper,
+} from './PaymentPurposeView.styled'
+
+type PaymentPurposePageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const PaymentPurposePage = ({ navigation, currentStepId }: PaymentPurposePageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData, data } = useTransaction()
+  const [value, setValue] = useState(data.paymentPurpose || '')
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleKeyPress = (key: string) => {
+    if (value.length < 100) {
+      setValue((prev) => prev + key)
+    }
+  }
+
+  const handleDelete = () => {
+    setValue((prev) => prev.slice(0, -1))
+  }
+
+  const isValid = value.length > 0 && value.length <= 100
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ paymentPurpose: value })
+      navigation.goToNext(currentStepId)
+    }
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        backgroundColor="rgba(38, 207, 200, 1)"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.footer.cancel,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.paymentPurposeScreen.continue,
+                variant: 'continue',
+                icon: 'arrow-next',
+                disabled: !isValid,
+                onClick: handleContinue,
+              },
+            ]}
+          />
+        }
+      >
+        <ContentWrapper>
+          <TitleWrapper>
+            <PageTitle>{t.paymentPurposeScreen.title}</PageTitle>
+          </TitleWrapper>
+
+          <InputWrapper>
+            <InputField
+              type="text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder={t.paymentPurposeScreen.placeholder}
+              maxLength={100}
+            />
+          </InputWrapper>
+
+          <AlphanumericKeypad
+            onKeyPress={handleKeyPress}
+            onDelete={handleDelete}
+            deleteLabel={t.paymentPurposeScreen.delete}
+            enLabel={t.paymentPurposeScreen.en}
+            uaLabel={t.paymentPurposeScreen.ua}
+          />
+        </ContentWrapper>
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default withScenario(PaymentPurposePage, 'paymentPurpose')
+
+=== src/pages/PaymentPurpose/PaymentPurposeView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleDisplay = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return 'none'
+  return 'block'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '1420px'
+  return '1140px'
+}
+
+const getInputHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '88px'
+  return '80px'
+}
+
+const getInputFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '42px'
+  return '36px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+  display: ${getTitleDisplay()};
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: 46px;
+  text-align: center;
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
+`
+
+export const InputField = styled.input`
+  width: 100%;
+  height: ${getInputHeight()};
+  padding: 0 28px;
+  border-radius: 20px;
+  border: 2px solid #0b8db0;
+  background: #ffffff;
+  outline: none;
+  color: #111e29;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInputFontSize()};
+  font-weight: 600;
+  text-align: left;
+  caret-color: #111e29;
+
+  &::placeholder {
+    color: rgba(17, 30, 41, 0.35);
+  }
+`
+
+=== src/pages/PaymentResult/PaymentResultPage.tsx ===
+import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
@@ -3640,16 +5673,571 @@ import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayou
 import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
 import { defaultLocale, translations } from '../../locale'
 import type { Locale } from '../../locale/types'
-import PhoneInputView from './PhoneInputView'
+import { routePaths } from '../../constants/routePaths'
 
-const PhoneInputPage = () => {
+import PaymentResultView from './PaymentResultView'
+
+const PaymentResultPage = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [locale, setLocale] = useState<Locale>(defaultLocale)
 
   const t = translations[locale]
 
-  const handleLanguageChange = (_language: HeaderLanguage) => {
-    setLocale((prev) => prev)
+  const message = location.state?.message || 'Інформаційний блок про успішність операції з довільним текстом.'
+  const scenarioId = location.state?.scenarioId
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
   }
+
+  const handleReceipt = () => {
+    navigate(routePaths.receipt, { state: { scenarioId } })
+  }
+
+  const handleComplete = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        backgroundColor="rgba(99, 209, 203, 1)"
+        header={
+          <TerminalHeader
+            variant="language-switcher"
+            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.paymentResultScreen.receipt,
+                variant: 'cancel',
+                onClick: handleReceipt,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.paymentResultScreen.complete,
+                variant: 'repeat',
+                onClick: handleComplete,
+              },
+            ]}
+          />
+        }
+      >
+        <PaymentResultView t={t} message={message} />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default PaymentResultPage
+
+=== src/pages/PaymentResult/PaymentResultView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getIconWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '300px'
+  return '200px'
+}
+
+const getIconHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '324px'
+  return '216px'
+}
+
+const getInfoCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '800px'
+  return '520px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getInfoTextLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(255, 255, 255, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+  text-align: center;
+`
+
+export const SuccessIcon = styled.img`
+  width: ${getIconWidth()};
+  height: ${getIconHeight()};
+`
+
+export const InfoCard = styled.div`
+  width: ${getInfoCardWidth()};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 30px 40px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+`
+
+export const InfoText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInfoTextFontSize()};
+  font-weight: 500;
+  line-height: ${getInfoTextLineHeight()};
+  text-align: center;
+`
+
+=== src/pages/PaymentResult/PaymentResultView.tsx ===
+import type { Translations } from '../../locale/types'
+import {
+  ContentWrapper,
+  InfoCard,
+  InfoText,
+  PageTitle,
+  SuccessIcon,
+  TitleWrapper,
+} from './PaymentResultView.styled'
+import TimerIcon from '../../assets/icons/icontimer.png'
+
+type PaymentResultViewProps = {
+  t: Translations
+  message: string
+}
+
+const PaymentResultView = ({ t, message }: PaymentResultViewProps) => {
+  return (
+    <ContentWrapper>
+      <TitleWrapper>
+        <PageTitle>{t.paymentResultScreen.title}</PageTitle>
+      </TitleWrapper>
+
+      <SuccessIcon src={TimerIcon} alt="" />
+
+      <InfoCard>
+        <InfoText>{message}</InfoText>
+      </InfoCard>
+    </ContentWrapper>
+  )
+}
+
+export default PaymentResultView
+
+=== src/pages/PhoneInput/PhoneInputPage.tsx ===
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
+import {
+  Content,
+  HintCard,
+  HintText,
+  ErrorText,
+  InputWrapper,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './PhoneInputView.styled'
+
+type PhoneInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const isValidPrefix = (digits: string): boolean => {
+  if (digits.length < 2) return false
+  const prefix = digits.slice(0, 2)
+  const validPrefixes = ['05', '06', '07', '08', '09']
+  return validPrefixes.includes(prefix)
+}
+
+const PhoneInputPage = ({ navigation, currentStepId }: PhoneInputPageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
+  const [phoneDigits, setPhoneDigits] = useState('')
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleDigitClick = (digit: string) => {
+    setPhoneDigits((prev) => {
+      if (prev.length >= 10) return prev
+      return prev + digit
+    })
+  }
+
+  const handleDeleteClick = () => {
+    setPhoneDigits((prev) => prev.slice(0, -1))
+  }
+
+  const isFullLength = phoneDigits.length === 10
+  const isPrefixValid = isValidPrefix(phoneDigits)
+  const isValid = isFullLength && isPrefixValid
+  const showError = isFullLength && !isPrefixValid
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ phoneNumber: phoneDigits })
+      navigation.goToNext(currentStepId)
+    }
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="numeric-entry"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.footer.cancel,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.phoneInputScreen.continue,
+                variant: 'continue',
+                icon: 'arrow-next',
+                disabled: !isValid,
+                onClick: handleContinue,
+              },
+            ]}
+          />
+        }
+      >
+        <Content>
+          <Left>
+            <TitleBlock>
+              <TitleRow>
+                <Title>{t.phoneInputScreen.title}</Title>
+              </TitleRow>
+            </TitleBlock>
+
+            <InputWrapper>
+              <PhoneInput
+                value={phoneDigits}
+                placeholder={t.phoneInputScreen.emptyMask}
+              />
+            </InputWrapper>
+
+            <HintCard>
+              <HintText>{t.phoneInputScreen.hint}</HintText>
+              {showError && (
+                <ErrorText>{t.phoneInputScreen.errorMessage}</ErrorText>
+              )}
+            </HintCard>
+          </Left>
+
+          <Right>
+            <NumericKeypad
+              onDigitClick={handleDigitClick}
+              onDeleteClick={handleDeleteClick}
+              deleteLabel={t.phoneInputScreen.delete}
+            />
+          </Right>
+        </Content>
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default withScenario(PhoneInputPage, 'phoneInput')
+
+=== src/pages/PhoneInput/PhoneInputView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getLeftPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '100px'
+  return '100px 60px'
+}
+
+const getTitleWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '770px'
+  return '520px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintMaxWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getHintLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getErrorFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '32px'
+  return '20px'
+}
+
+const getRightWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '820px'
+  return '545px'
+}
+
+export const Content = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex: 1 0 auto;
+  align-self: stretch;
+  min-height: 100%;
+  overflow: hidden;
+`
+
+export const Left = styled.section`
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 64px;
+  padding: ${getLeftPadding()};
+  align-self: stretch;
+`
+
+export const TitleBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+`
+
+export const TitleRow = styled.div`
+  width: ${getTitleWidth()};
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-shrink: 0;
+`
+
+export const Title = styled.h1`
+  margin: 0;
+  flex: 1 0 0;
+  color: #111e29;
+  font-family: 'Oschad Sans';
+  font-size: ${getTitleFontSize()};
+  font-style: normal;
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
+`
+
+export const HintCard = styled.div`
+  width: 100%;
+  max-width: ${getHintMaxWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px 40px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+export const HintText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: #111e29;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: ${getHintFontSize()};
+  font-style: normal;
+  font-weight: 500;
+  line-height: ${getHintLineHeight()};
+`
+
+export const ErrorText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: #e74c3c;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: ${getErrorFontSize()};
+  font-style: normal;
+  font-weight: 500;
+  line-height: ${getHintLineHeight()};
+`
+
+export const Right = styled.aside`
+  width: ${getRightWidth()};
+  min-width: ${getRightWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+`
+
+=== src/pages/PhoneInput/PhoneInputView.tsx ===
+import { useState } from 'react'
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import {
+  Content,
+  HintCard,
+  HintText,
+  InputWrapper,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './PhoneInputView.styled'
+
+const PhoneInputPage = () => {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const [phoneDigits, setPhoneDigits] = useState('')
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleDigitClick = (digit: string) => {
+    setPhoneDigits((prev) => {
+      if (prev.length >= 10) return prev
+      return prev + digit
+    })
+  }
+
+  const handleDeleteClick = () => {
+    setPhoneDigits((prev) => prev.slice(0, -1))
+  }
+
+  const isValid = phoneDigits.length === 10
 
   return (
     <TerminalViewport>
@@ -3676,174 +6264,46 @@ const PhoneInputPage = () => {
               {
                 label: t.phoneInputScreen.continue,
                 variant: 'continue',
+                disabled: !isValid,
               },
             ]}
           />
         }
       >
-        <PhoneInputView t={t} />
+        <Content>
+          <Left>
+            <TitleBlock>
+              <TitleRow>
+                <Title>{t.phoneInputScreen.title}</Title>
+              </TitleRow>
+            </TitleBlock>
+
+            <InputWrapper>
+              <PhoneInput
+                value={phoneDigits}
+                placeholder={t.phoneInputScreen.emptyMask}
+              />
+            </InputWrapper>
+
+            <HintCard>
+              <HintText>{t.phoneInputScreen.hint}</HintText>
+            </HintCard>
+          </Left>
+
+          <Right>
+            <NumericKeypad
+              onDigitClick={handleDigitClick}
+              onDeleteClick={handleDeleteClick}
+              deleteLabel={t.phoneInputScreen.delete}
+            />
+          </Right>
+        </Content>
       </TerminalLayout>
     </TerminalViewport>
   )
 }
 
 export default PhoneInputPage
-
-=== src/pages/PhoneInput/PhoneInputView.styled.ts ===
-import styled from 'styled-components'
-
-export const Content = styled.main`
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  flex: 1 0 auto;
-  align-self: stretch;
-  min-height: 100%;
-  overflow: hidden;
-`
-
-export const Left = styled.section`
-  display: flex;
-  width: 735px;
-  min-width: 735px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 64px;
-  padding: 100px 60px;
-  flex-shrink: 0;
-  align-self: stretch;
-`
-
-export const TitleBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
-export const TitleRow = styled.div`
-  width: 520px;
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  flex-shrink: 0;
-`
-
-export const Title = styled.h1`
-  margin: 0;
-  flex: 1 0 0;
-
-  color: #111e29;
-  font-family: 'Oschad Sans';
-  font-size: 46px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 46px;
-`
-
-export const HintCard = styled.div`
-  width: 580px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 30px 40px;
-  flex-shrink: 0;
-
-  border-radius: 20px;
-  background: #ffffff;
-  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
-`
-
-export const HintText = styled.p`
-  margin: 0;
-
-  color: #111e29;
-  text-align: left;
-  font-family: 'Oschad Sans';
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 32px;
-`
-
-export const Right = styled.aside`
-  width: 545px;
-  min-width: 545px;
-  flex-shrink: 0;
-  align-self: stretch;
-  min-height: 100%;
-  display: flex;
-`
-
-=== src/pages/PhoneInput/PhoneInputView.tsx ===
-import { useState } from 'react'
-import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
-import PhoneInput from '../../components/ui/PhoneInput/PhoneInput'
-import type { Translations } from '../../locale/types'
-import {
-  Content,
-  HintCard,
-  HintText,
-  Left,
-  Right,
-  Title,
-  TitleBlock,
-  TitleRow,
-} from './PhoneInputView.styled'
-
-type PhoneInputViewProps = {
-  t: Translations
-}
-
-const PhoneInputView = ({ t }: PhoneInputViewProps) => {
-  const [phoneDigits, setPhoneDigits] = useState('')
-
-  const handleDigitClick = (digit: string) => {
-    setPhoneDigits((prev) => {
-      if (prev.length >= 10) {
-        return prev
-      }
-
-      return prev + digit
-    })
-  }
-
-  const handleDeleteClick = () => {
-    setPhoneDigits((prev) => prev.slice(0, -1))
-  }
-
-  return (
-    <Content>
-      <Left>
-        <TitleBlock>
-          <TitleRow>
-            <Title>{t.phoneInputScreen.title}</Title>
-          </TitleRow>
-        </TitleBlock>
-
-        <PhoneInput
-          value={phoneDigits}
-          onChange={setPhoneDigits}
-          placeholder={t.phoneInputScreen.emptyMask}
-        />
-
-        <HintCard>
-          <HintText>{t.phoneInputScreen.hint}</HintText>
-        </HintCard>
-      </Left>
-
-      <Right>
-        <NumericKeypad
-          onDigitClick={handleDigitClick}
-          onDeleteClick={handleDeleteClick}
-          deleteLabel={t.phoneInputScreen.delete}
-        />
-      </Right>
-    </Content>
-  )
-}
-
-export default PhoneInputView
 
 === src/pages/PrinterError/PrinterErrorPage.tsx ===
 import { useState } from 'react'
@@ -4050,6 +6510,635 @@ const PrinterErrorView = ({
 }
 
 export default PrinterErrorView
+
+=== src/pages/Receipt/ReceiptPage.tsx ===
+import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import { routePaths } from '../../constants/routePaths'
+import { useTransaction } from '../../context/TransactionContext'
+import { paymentConfig } from '../../config/paymentConfig'
+
+import ReceiptView from './ReceiptView'
+
+const ReceiptPage = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const { data } = useTransaction()
+
+  const t = translations[locale]
+  const scenarioId = location.state?.scenarioId
+
+  // Дані з контексту (введені користувачем)
+  const iban = data.iban || 'UA273333680000026201000390748'
+  const paymentPurpose = data.paymentPurpose || 'поповнення карткового рахунку'
+  const phoneNumber = data.phoneNumber || '+38 (096) 834 - 70-01'
+  const payerName = data.payerName || paymentConfig.payerName
+
+  // Статичні дані
+  const bankName = 'АТ «ОЩАДБАНК»'
+  const date = '15.04.2026 18:21:06'
+  const cardNumberMasked = '5167 **** **** 9476'
+  const bankCode = '300465'
+  const receiptNumber = 'E1XM-K3PL-6JFG-OR3E'
+  const ptks = '9065007'
+  const address = 'Рівне, Льонокомбінатівська вул., 9'
+  const operationCode = '30256028782'
+  const paymentSystem = 'Mastercard'
+  const recipientBank = 'АТ «ОЩАДБАНК»'
+  const recipientCode = '325833352'
+
+  // Ліва колонка (верх) - однакова для всіх
+  const leftColumnTop = `Внесено: 1200,00 грн.\nСума операції: 1200,00 грн.\nЗараховано отримувачу: 1188,00 грн.\nКомісія банку: 12,00 грн.\nДата та час: ${date}`
+
+  // Ліва колонка (низ) - залежить від сценарію
+  let leftColumnBottom = ''
+
+  if (scenarioId === 'cardTopUp') {
+    leftColumnBottom = `Послуга: поповнення карткового рахунку, ПЕКАРСЬКИЙ С. П.\nНомер картки: ${cardNumberMasked}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
+  } else if (scenarioId === 'mobileTopUp') {
+    leftColumnBottom = `Послуга: Поповнення мобільного рахунку\nНомер телефону: ${phoneNumber}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
+  } else if (scenarioId === 'billsPayment') {
+    leftColumnBottom = `Послуга: Оплата рахунків по номеру IBAN\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
+  } else {
+    // Фолбек для невизначеного сценарію
+    leftColumnBottom = `Послуга: ${paymentPurpose}\nПлатник: ${payerName}\nБанк платника: ${bankName}\nКод банку платника: ${bankCode}\nПризначення платежу: ${paymentPurpose}`
+  }
+
+  // Права колонка (верх) - однакова для всіх
+  const rightColumnTop = `Квитанція №№: ${receiptNumber}\nПТКС: ${ptks}\nАдреса: ${address}\nКод операції: ${operationCode}`
+
+  // Права колонка (низ) - залежить від сценарію
+  let rightColumnBottom = ''
+
+  if (scenarioId === 'cardTopUp') {
+    rightColumnBottom = `Отримувач: Пекарський Сергій Петрович\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: ${recipientCode}`
+  } else if (scenarioId === 'mobileTopUp') {
+    rightColumnBottom = `Отримувач: ПрАТ "Київстар"\nРахунок отримувача: UA983005280000026004000003072\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: 21673832`
+  } else if (scenarioId === 'billsPayment') {
+    rightColumnBottom = `Отримувач: РОВКП ВКГ «Рівнеоблводоканал»\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}\nБанк отримувача: ${recipientBank}\nКод отримувача: ${recipientCode}`
+  } else {
+    // Фолбек для невизначеного сценарію
+    rightColumnBottom = `Отримувач: ${recipientBank}\nРахунок отримувача: ${iban}\nПлатіжна система: ${paymentSystem}`
+  }
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleComplete = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        header={
+          <TerminalHeader
+            variant="language-switcher"
+            activeLanguage={locale === 'uk' ? 'UA' : 'EN'}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.receiptScreen.print,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.receiptScreen.complete,
+                variant: 'continue',
+                icon: 'arrow-next',
+                onClick: handleComplete,
+              },
+            ]}
+          />
+        }
+      >
+        <ReceiptView
+          bankName={bankName}
+          leftColumnTop={leftColumnTop}
+          leftColumnBottom={leftColumnBottom}
+          rightColumnTop={rightColumnTop}
+          rightColumnBottom={rightColumnBottom}
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default ReceiptPage
+
+=== src/pages/Receipt/ReceiptView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getInfoBlockPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '0 100px'
+  return '0 60px'
+}
+
+const getInformationPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '20px 60px'
+  return '20px 40px'
+}
+
+const getCardGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '20px'
+  return '30px'
+}
+
+const getColumnsGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getReceiptTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '24px'
+  return '22px'
+}
+
+const getReceiptTextLineHeight = () => {
+  return '1.5'
+}
+
+const getBankTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+`
+
+export const InfoBlock = styled.div`
+  display: flex;
+  padding: ${getInfoBlockPadding()};
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+`
+
+export const Information = styled.div`
+  display: flex;
+  padding: ${getInformationPadding()};
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${getCardGap()};
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+export const BankTitle = styled.h2`
+  margin: 0;
+  color: #111e29;
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getBankTitleFontSize()};
+  font-weight: 600;
+  line-height: normal;
+`
+
+export const ColumnsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: ${getColumnsGap()};
+  width: 100%;
+`
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1;
+`
+
+export const ReceiptText = styled.p`
+  margin: 0;
+  color: rgba(17, 30, 41, 0.8);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getReceiptTextFontSize()};
+  font-weight: 500;
+  line-height: ${getReceiptTextLineHeight()};
+  text-align: left;
+  white-space: pre-wrap;
+`
+
+=== src/pages/Receipt/ReceiptView.tsx ===
+import {
+  BankTitle,
+  Column,
+  ColumnsContainer,
+  ContentWrapper,
+  InfoBlock,
+  Information,
+  ReceiptText,
+} from './ReceiptView.styled'
+
+type ReceiptViewProps = {
+  bankName: string
+  leftColumnTop: string
+  leftColumnBottom: string
+  rightColumnTop: string
+  rightColumnBottom: string
+}
+
+const ReceiptView = ({
+  bankName,
+  leftColumnTop,
+  leftColumnBottom,
+  rightColumnTop,
+  rightColumnBottom,
+}: ReceiptViewProps) => {
+  return (
+    <ContentWrapper>
+      <InfoBlock>
+        <Information>
+          <BankTitle>{bankName}</BankTitle>
+
+          <ColumnsContainer>
+            <Column>
+              <ReceiptText>{leftColumnTop}</ReceiptText>
+              <ReceiptText>{leftColumnBottom}</ReceiptText>
+            </Column>
+
+            <Column>
+              <ReceiptText>{rightColumnTop}</ReceiptText>
+              <ReceiptText>{rightColumnBottom}</ReceiptText>
+            </Column>
+          </ColumnsContainer>
+        </Information>
+      </InfoBlock>
+    </ContentWrapper>
+  )
+}
+
+export default ReceiptView
+
+=== src/pages/SmsInput/SmsInputPage.tsx ===
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import NumericKeypad from '../../components/ui/NumericKeypad/NumericKeypad'
+import SmsInput from '../../components/ui/SmsInput/SmsInput'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { useTransaction } from '../../context/TransactionContext'
+import { routePaths } from '../../constants/routePaths'
+
+import SmsInputView from './SmsInputView'
+
+type SmsInputPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const SmsInputPage = ({ navigation, currentStepId }: SmsInputPageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const { updateData } = useTransaction()
+  const [digits, setDigits] = useState('')
+  const [timeLeft, setTimeLeft] = useState(180)
+
+  const t = translations[locale]
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      navigate(routePaths.phoneInput)
+      return
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1)
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [timeLeft, navigate])
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleDigitClick = (digit: string) => {
+    setDigits((prev) => {
+      if (prev.length >= 4) return prev
+      return prev + digit
+    })
+  }
+
+  const handleDeleteClick = () => {
+    setDigits((prev) => prev.slice(0, -1))
+  }
+
+  const isValid = digits.length === 4
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleContinue = () => {
+    if (isValid) {
+      updateData({ smsCode: digits })
+      navigation.goToNext(currentStepId)
+    }
+  }
+
+  const minutes = Math.floor(timeLeft / 60)
+  const seconds = timeLeft % 60
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="numeric-entry"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.footer.cancel,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[
+              {
+                label: t.smsInputScreen.continue,
+                variant: 'continue',
+                icon: 'arrow-next',
+                disabled: !isValid,
+                onClick: handleContinue,
+              },
+            ]}
+          />
+        }
+      >
+        <SmsInputView
+          t={t}
+          minutes={minutes}
+          seconds={seconds}
+          input={
+            <SmsInput
+              value={digits}
+              placeholder={t.smsInputScreen.emptyMask}
+            />
+          }
+          keypad={
+            <NumericKeypad
+              onDigitClick={handleDigitClick}
+              onDeleteClick={handleDeleteClick}
+              deleteLabel={t.smsInputScreen.delete}
+            />
+          }
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default withScenario(SmsInputPage, 'smsInput')
+
+=== src/pages/SmsInput/SmsInputView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getLeftPadding = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '100px'
+  return '100px 60px'
+}
+
+const getTitleWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '770px'
+  return '520px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInputWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintMaxWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '780px'
+  return '580px'
+}
+
+const getHintFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getHintLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+const getRightWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '820px'
+  return '545px'
+}
+
+export const Content = styled.main`
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex: 1 0 auto;
+  align-self: stretch;
+  min-height: 100%;
+  overflow: hidden;
+`
+
+export const Left = styled.section`
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 64px;
+  padding: ${getLeftPadding()};
+  align-self: stretch;
+`
+
+export const TitleBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+`
+
+export const TitleRow = styled.div`
+  width: ${getTitleWidth()};
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-shrink: 0;
+`
+
+export const Title = styled.h1`
+  margin: 0;
+  flex: 1 0 0;
+  color: #111e29;
+  font-family: 'Oschad Sans';
+  font-size: ${getTitleFontSize()};
+  font-style: normal;
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+`
+
+export const InputWrapper = styled.div`
+  width: ${getInputWidth()};
+`
+
+export const HintCard = styled.div`
+  width: 100%;
+  max-width: ${getHintMaxWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px 40px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+export const HintText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: #111e29;
+  text-align: left;
+  font-family: 'Oschad Sans';
+  font-size: ${getHintFontSize()};
+  font-style: normal;
+  font-weight: 500;
+  line-height: ${getHintLineHeight()};
+`
+
+export const Right = styled.aside`
+  width: ${getRightWidth()};
+  min-width: ${getRightWidth()};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+`
+
+=== src/pages/SmsInput/SmsInputView.tsx ===
+import type { ReactNode } from 'react'
+import type { Translations } from '../../locale/types'
+import {
+  Content,
+  HintCard,
+  HintText,
+  InputWrapper,
+  Left,
+  Right,
+  Title,
+  TitleBlock,
+  TitleRow,
+} from './SmsInputView.styled'
+
+type SmsInputViewProps = {
+  t: Translations
+  minutes: number
+  seconds: number
+  input: ReactNode
+  keypad: ReactNode
+}
+
+const SmsInputView = ({ t, minutes, seconds, input, keypad }: SmsInputViewProps) => {
+  const timerValue = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+
+  return (
+    <Content>
+      <Left>
+        <TitleBlock>
+          <TitleRow>
+            <Title>{t.smsInputScreen.title}</Title>
+          </TitleRow>
+        </TitleBlock>
+
+        <InputWrapper>
+          {input}
+        </InputWrapper>
+
+        <HintCard>
+          <HintText>
+            {t.smsInputScreen.hint} {timerValue}
+          </HintText>
+        </HintCard>
+      </Left>
+
+      <Right>{keypad}</Right>
+    </Content>
+  )
+}
+
+export default SmsInputView
 
 === src/pages/TextInput/TextInputPage.tsx ===
 import { useState } from 'react'
@@ -4271,6 +7360,432 @@ const TextInputView = ({ t, value, onChange, keypad }: TextInputViewProps) => {
 
 export default TextInputView
 
+=== src/pages/Utilities/UtilitiesPage.tsx ===
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import { withScenario } from '../../hoc/withScenario'
+import { translations } from '../../locale'
+import { useLocale } from '../../context/LocaleContext'
+import { routePaths } from '../../constants/routePaths'
+import UtilitiesView from './UtilitiesView'
+import { utilitiesData, type UtilityOperator } from '../../config/utilitiesData'
+
+type UtilitiesPageProps = {
+  navigation: {
+    goToNext: (stepId: string, state?: unknown) => void
+    goToError: (stepId: string, state?: unknown) => void
+  }
+  currentStepId: string
+}
+
+const ITEMS_PER_PAGE = 8
+
+const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
+  const navigate = useNavigate()
+  const { locale, setLocale } = useLocale()
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const t = translations[locale]
+
+  const totalPages = Math.ceil(utilitiesData.length / ITEMS_PER_PAGE)
+  const currentOperators = utilitiesData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleExit = () => {
+    navigate(routePaths.chooseOperationType)
+  }
+
+  const handleIbanClick = () => {
+    navigate(routePaths.ibanInput, { state: { scenarioId: 'billsPayment' } })
+  }
+
+  const handleOperatorClick = (_operator: UtilityOperator) => {
+    // In current scenario, any operator leads to error as per requirements "empty but working header"
+    // But we should probably navigate to paymentInfo if configured
+    navigation.goToError(currentStepId)
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+            onExit={handleExit}
+          />
+        }
+        footer={null}
+      >
+        <UtilitiesView
+          t={t}
+          operators={currentOperators}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          onIbanClick={handleIbanClick}
+          onOperatorClick={handleOperatorClick}
+        />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default withScenario(UtilitiesPage, 'utilities')
+
+
+=== src/pages/Utilities/UtilitiesView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '100px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: 40px;
+`
+
+export const OperatorsGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 32px;
+  padding: 0 60px;
+  width: 100%;
+  flex-grow: 1;
+
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
+`
+
+export const TitleRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  padding: 0 60px;
+  
+  ${ACTIVE_SCREEN_MODE === '1080p' && `
+    padding: 0 100px;
+  `}
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+  text-align: left;
+`
+
+export const IbanButton = styled.button`
+  background-color: rgba(220, 225, 35, 1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 30px;
+  border: none;
+  border-radius: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  
+  span {
+    color: rgba(17, 30, 41, 1);
+    font-family: 'Oschad Sans', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+    white-space: nowrap;
+  }
+`
+
+=== src/pages/Utilities/UtilitiesView.tsx ===
+import type { Translations } from '../../locale/types'
+import {
+  ContentWrapper,
+  IbanButton,
+  OperatorsGrid,
+  PageTitle,
+  TitleRow,
+} from './UtilitiesView.styled'
+import UtilityCard from '../../components/ui/UtilityCard/UtilityCard'
+import cardArrowIcon from '../../assets/icons/cardarrow.svg'
+import type { UtilityOperator } from '../../config/utilitiesData'
+import Pagination from '../../components/ui/Pagination/Pagination'
+
+type UtilitiesViewProps = {
+  t: Translations
+  operators: UtilityOperator[]
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onIbanClick: () => void
+  onOperatorClick: (operator: UtilityOperator) => void
+}
+
+const UtilitiesView = ({
+  t,
+  operators,
+  currentPage,
+  totalPages,
+  onPageChange,
+  onIbanClick,
+  onOperatorClick,
+}: UtilitiesViewProps) => {
+  return (
+    <ContentWrapper>
+      <TitleRow>
+        <PageTitle>{t.utilitiesScreen.title}</PageTitle>
+        <IbanButton onClick={onIbanClick}>
+          <span>{t.utilitiesScreen.ibanButton}</span>
+        </IbanButton>
+      </TitleRow>
+
+      <OperatorsGrid>
+        {operators.map((operator) => (
+          <UtilityCard
+            key={operator.id}
+            name={operator.name}
+            iconSrc={operator.icon}
+            arrowSrc={cardArrowIcon}
+            onClick={() => onOperatorClick(operator)}
+          />
+        ))}
+      </OperatorsGrid>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+      />
+    </ContentWrapper>
+  )
+}
+
+export default UtilitiesView
+
+
+=== src/pages/UtilitiesError/UtilitiesErrorPage.tsx ===
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
+import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
+import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
+import TerminalLayout from '../../components/layout/TerminalLayout/TerminalLayout'
+import TerminalViewport from '../../components/layout/TerminalViewport/TerminalViewport'
+import { defaultLocale, translations } from '../../locale'
+import type { Locale } from '../../locale/types'
+import { routePaths } from '../../constants/routePaths'
+import UtilitiesErrorView from './UtilitiesErrorView'
+
+const UtilitiesErrorPage = () => {
+  const navigate = useNavigate()
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
+
+  const t = translations[locale]
+
+  const handleLanguageChange = (language: HeaderLanguage) => {
+    setLocale(language === 'UA' ? 'uk' : 'en')
+  }
+
+  const handleBack = () => {
+    navigate(routePaths.utilities)
+  }
+
+  return (
+    <TerminalViewport>
+      <TerminalLayout
+        variant="default"
+        header={
+          <TerminalHeader
+            variant="action-button"
+            actionLabel={t.header.exit}
+            supportPhone={t.header.supportPhone}
+            supportDescription={t.header.supportDescription}
+            onLanguageChange={handleLanguageChange}
+          />
+        }
+        footer={
+          <TerminalFooter
+            leftButtons={[
+              {
+                label: t.footer.cancel,
+                variant: 'cancel',
+                onClick: handleBack,
+              },
+            ]}
+            rightButtons={[]}
+          />
+        }
+      >
+        <UtilitiesErrorView t={t} />
+      </TerminalLayout>
+    </TerminalViewport>
+  )
+}
+
+export default UtilitiesErrorPage
+
+=== src/pages/UtilitiesError/UtilitiesErrorView.styled.ts ===
+import styled from 'styled-components'
+import { ACTIVE_SCREEN_MODE } from '../../config/screenConfig'
+
+const getContentPaddingTop = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '80px'
+  return '100px'
+}
+
+const getContentGap = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '40px'
+  return '60px'
+}
+
+const getTitleFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getTitleLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '62px'
+  return '46px'
+}
+
+const getInfoCardWidth = () => {
+  if (ACTIVE_SCREEN_MODE === '800p') return '600px'
+  if (ACTIVE_SCREEN_MODE === '1080p') return '800px'
+  return '520px'
+}
+
+const getInfoTextFontSize = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return '36px'
+  return '24px'
+}
+
+const getInfoTextLineHeight = () => {
+  if (ACTIVE_SCREEN_MODE === '1080p') return 'normal'
+  return '32px'
+}
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: ${getContentPaddingTop()};
+  gap: ${getContentGap()};
+`
+
+export const TitleWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+`
+
+export const PageTitle = styled.h1`
+  margin: 0;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getTitleFontSize()};
+  font-weight: 600;
+  line-height: ${getTitleLineHeight()};
+  text-align: center;
+`
+
+export const InfoCard = styled.div`
+  width: ${getInfoCardWidth()};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 30px 40px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+`
+
+export const InfoText = styled.p`
+  margin: 0;
+  width: 100%;
+  color: rgba(17, 30, 41, 1);
+  font-family: 'Oschad Sans', Arial, sans-serif;
+  font-size: ${getInfoTextFontSize()};
+  font-weight: 500;
+  line-height: ${getInfoTextLineHeight()};
+  text-align: center;
+`
+
+=== src/pages/UtilitiesError/UtilitiesErrorView.tsx ===
+import type { Translations } from '../../locale/types'
+import {
+  ContentWrapper,
+  InfoCard,
+  InfoText,
+  PageTitle,
+  TitleWrapper,
+} from './UtilitiesErrorView.styled'
+
+type UtilitiesErrorViewProps = {
+  t: Translations
+}
+
+const UtilitiesErrorView = ({ t }: UtilitiesErrorViewProps) => {
+  return (
+    <ContentWrapper>
+      <TitleWrapper>
+        <PageTitle>{t.utilitiesErrorScreen.title}</PageTitle>
+      </TitleWrapper>
+
+      <InfoCard>
+        <InfoText>{t.utilitiesErrorScreen.message}</InfoText>
+      </InfoCard>
+    </ContentWrapper>
+  )
+}
+
+export default UtilitiesErrorView
+
 === src/routes/router.tsx ===
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { routePaths } from '../constants/routePaths'
@@ -4282,6 +7797,13 @@ import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
 import PrinterErrorPage from '../pages/PrinterError/PrinterErrorPage'
 import TextInputPage from '../pages/TextInput/TextInputPage'
+import SmsInputPage from '../pages/SmsInput/SmsInputPage'
+import PaymentInfoPage from '../pages/PaymentInfo/PaymentInfoPage'
+import PaymentResultPage from '../pages/PaymentResult/PaymentResultPage'
+import ReceiptPage from '../pages/Receipt/ReceiptPage'
+import PaymentPurposePage from '../pages/PaymentPurpose/PaymentPurposePage'
+import UtilitiesPage from '../pages/Utilities/UtilitiesPage'
+import UtilitiesErrorPage from '../pages/UtilitiesError/UtilitiesErrorPage'
 
 export const router = createBrowserRouter([
   {
@@ -4320,6 +7842,34 @@ export const router = createBrowserRouter([
     path: routePaths.cashAcceptance,
     element: <CashAcceptancePage />,
   },
+  {
+    path: routePaths.smsInput,
+    element: <SmsInputPage />,
+  },
+  {
+    path: routePaths.paymentInfo,
+    element: <PaymentInfoPage />,
+  },
+  {
+    path: routePaths.paymentResult,
+    element: <PaymentResultPage />,
+  },
+  {
+    path: routePaths.receipt,
+    element: <ReceiptPage />,
+  },
+  {
+  path: routePaths.paymentPurpose,
+  element: <PaymentPurposePage />,
+},
+{
+  path: routePaths.utilities,
+  element: <UtilitiesPage />,
+},
+{
+  path: routePaths.utilitiesError,
+  element: <UtilitiesErrorPage />,
+},
 ])
 
 === src/styles/GlobalStyles.ts ===

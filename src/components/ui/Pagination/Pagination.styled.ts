@@ -20,6 +20,12 @@ export const PageButton = styled.button<{ $active?: boolean; $isArrow?: boolean 
   background-color: ${({ $isArrow }) => ($isArrow ? 'rgba(30, 192, 191, 1)' : 'transparent')};
   border-radius: ${({ $isArrow }) => ($isArrow ? '15px' : '0')};
   cursor: pointer;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
   
   ${({ $active }) => $active && `
     border-bottom: 1px solid rgba(17, 30, 41, 1);
@@ -28,6 +34,7 @@ export const PageButton = styled.button<{ $active?: boolean; $isArrow?: boolean 
   &:disabled {
     opacity: 0.25;
     cursor: not-allowed;
+    transform: none;
   }
 `
 

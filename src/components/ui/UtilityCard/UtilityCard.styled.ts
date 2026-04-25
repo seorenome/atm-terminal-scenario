@@ -15,6 +15,12 @@ export const Card = styled.div`
   width: 260px;
   height: 200px;
   flex-shrink: 0;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
 
   ${ACTIVE_SCREEN_MODE === '1080p' && `
     width: 260px;

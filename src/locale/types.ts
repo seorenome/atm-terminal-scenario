@@ -9,6 +9,7 @@ export type Translations = {
     exit: string
   }
   footer: {
+    back: string
     cancel: string
     repeat: string
     continue: string
@@ -92,6 +93,7 @@ export type Translations = {
   paymentInfoScreen: {
     title: string
     titleMobile: string
+    titleBills: string
     subtitle: string
     cardNumber: string
     phoneNumber: string
@@ -117,5 +119,22 @@ export type Translations = {
     title: string
     print: string
     complete: string
+  }
+  paymentPurposeScreen: {
+    title: string
+    placeholder: string
+    delete: string
+    back: string
+    continue: string
+    en: string
+    ua: string
+  }
+  utilitiesErrorScreen: {
+    title: string
+    message: string
+  }
+  utilitiesScreen: {
+    title: string
+    ibanButton: string
   }
 }

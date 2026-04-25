@@ -7,6 +7,7 @@ const uk = {
     exit: 'Завершити',
   },
   footer: {
+    back: 'Назад',
     cancel: 'Скасувати',
     repeat: 'Повторити',
     continue: 'Продовжити',

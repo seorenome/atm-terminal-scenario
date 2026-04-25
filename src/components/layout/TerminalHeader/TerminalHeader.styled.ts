@@ -122,6 +122,12 @@ export const LanguageButton = styled.button<{ $active: boolean }>`
   font-style: normal;
   font-weight: ${({ $active }) => ($active ? 700 : 300)};
   text-decoration: none;
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
   
   ${ACTIVE_SCREEN_MODE === '1080p' && `
     font-size: 52px;
@@ -145,6 +151,12 @@ export const ActionButton = styled.button<{ disabled?: boolean }>`
   background: ${({ disabled }) => (disabled ? 'rgba(222, 222, 222, 1)' : 'rgba(235, 246, 250, 1)')};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+  
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
 `
 
 export const ActionIcon = styled.img`
