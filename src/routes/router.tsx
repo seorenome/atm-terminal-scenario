@@ -1,9 +1,10 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { routePaths } from '../constants/routePaths'
+import StartPage from '../pages/Start/StartPage'
+import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
 import CardErrorPage from '../pages/CardError/CardErrorPage'
 import CardInputPage from '../pages/CardInput/CardInputPage'
 import CashAcceptancePage from '../pages/CashAcceptance/CashAcceptancePage'
-import ChooseOperationTypePage from '../pages/ChooseOperationType/ChooseOperationTypePage'
 import IbanInputPage from '../pages/IbanInput/IbanInputPage'
 import IbanErrorPage from '../pages/IbanError/IbanErrorPage'
 import PhoneInputPage from '../pages/PhoneInput/PhoneInputPage'
@@ -20,7 +21,11 @@ import UtilitiesErrorPage from '../pages/UtilitiesError/UtilitiesErrorPage'
 export const router = createBrowserRouter([
   {
     path: routePaths.home,
-    element: <Navigate to={routePaths.chooseOperationType} replace />,
+    element: <Navigate to={routePaths.start} replace />,
+  },
+  {
+    path: routePaths.start,
+    element: <StartPage />,
   },
   {
     path: routePaths.chooseOperationType,
