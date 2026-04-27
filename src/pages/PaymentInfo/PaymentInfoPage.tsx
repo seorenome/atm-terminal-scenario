@@ -25,6 +25,16 @@ type PaymentInfoPageProps = {
   currentStepId: string
 }
 
+// Функція форматування IBAN (UA ** + останні 14 цифр)
+const formatIban = (iban: string): string => {
+  let cleanIban = iban.replace(/\s/g, '').toUpperCase()
+  let hasPrefix = cleanIban.startsWith('UA')
+  let digits = hasPrefix ? cleanIban.slice(2) : cleanIban
+  if (digits.length !== 27) return iban
+  const last14 = digits.slice(-14)
+  return `UA ** ${last14}`
+}
+
 const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -69,11 +79,13 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   // Дані для mobileTopUp
   const operator = 'ПрАТ "Київстар"'
   const edrpou = '21673832'
-  const ibanMobile = 'UA983005280000026004000003072'
+  const rawIbanMobile = 'UA983005280000026004000003072'
+  const ibanMobile = formatIban(rawIbanMobile)
   const paymentPurposeMobile = 'За послуги мобільного зв\'язку'
 
   // Дані для billsPayment
-  const iban = data.iban || 'UA983005280000026004000003072'
+  const rawIban = data.iban || 'UA983005280000026004000003072'
+  const iban = formatIban(rawIban)
   const paymentPurposeBills = data.paymentPurpose || 'Оплата за послуги водопостачання'
   const recipientBills = 'РОВКП ВКГ «Рівнеоблводоканал»'
 

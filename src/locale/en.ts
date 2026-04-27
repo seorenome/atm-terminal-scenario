@@ -120,7 +120,7 @@ paymentInfoScreen: {
   edrpou: 'EDRPOU',
   iban: 'IBAN',
   payerName: "Payer's full name",
-  recipientName: "Recipient's full name",
+  recipientName: "Recipient",
   paymentPurpose: 'Payment purpose',
   amount: 'Payment amount',
   commission: 'Commission',

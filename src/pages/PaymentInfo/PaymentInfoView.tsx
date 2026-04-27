@@ -37,6 +37,32 @@ type PaymentInfoViewProps = {
   recipientBills: string
 }
 
+const formatCardNumber = (cardNumber: string): string => {
+  if (cardNumber.length !== 16) return cardNumber
+  const first4 = cardNumber.slice(0, 4)
+  const last4 = cardNumber.slice(-4)
+  return `${first4} **** **** ${last4}`
+}
+
+const formatIban = (iban: string): string => {
+  // Видаляємо всі пробіли та переводимо у верхній регістр
+  let cleanIban = iban.replace(/\s/g, '').toUpperCase()
+  
+  // Перевіряємо наявність префікса UA
+  let hasPrefix = cleanIban.startsWith('UA')
+  
+  // Отримуємо тільки цифри
+  let digits = hasPrefix ? cleanIban.slice(2) : cleanIban
+  
+  // Перевіряємо довжину цифр (має бути 27)
+  if (digits.length !== 27) return iban
+  
+  // Беремо останні 14 цифр
+  const last14 = digits.slice(-14)
+  
+  return `UA ** ${last14}`
+}
+
 const PaymentInfoView = ({
   t,
   isCardTopUp,
@@ -64,6 +90,9 @@ const PaymentInfoView = ({
     ? t.paymentInfoScreen.titleMobile
     : t.paymentInfoScreen.titleBills
 
+  const formattedCardNumber = formatCardNumber(cardNumber)
+  const formattedIban = formatIban(iban)
+
   return (
     <ContentWrapper>
       <TitleWrapper>
@@ -80,7 +109,7 @@ const PaymentInfoView = ({
                 <>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.cardNumber}</Label>
-                    <Data>{cardNumber}</Data>
+                    <Data>{formattedCardNumber}</Data>
                   </InfoRow>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.phoneNumber}</Label>
@@ -122,7 +151,7 @@ const PaymentInfoView = ({
                 <>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.iban}</Label>
-                    <Data>{iban}</Data>
+                    <Data>{formattedIban}</Data>
                   </InfoRow>
                   <InfoRow>
                     <Label>{t.paymentInfoScreen.phoneNumber}</Label>

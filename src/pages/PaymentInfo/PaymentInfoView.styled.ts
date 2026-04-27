@@ -143,7 +143,7 @@ export const Column = styled.div`
 export const InfoRow = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: 2px;
   width: 100%;
 `
 

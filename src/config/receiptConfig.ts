@@ -1,21 +1,19 @@
 import type { ScenarioId } from './scenarioConfig'
 
-export type ReceiptField = {
-  label: string
-  value: string
-  visible: boolean
-}
-
-export type ReceiptColumn = {
-  title?: string
-  fields: ReceiptField[]
-}
-
 export type ReceiptConfig = {
   leftColumnTop: string[]
   leftColumnBottom: string[]
   rightColumnTop: string[]
   rightColumnBottom: string[]
+}
+
+const formatIban = (iban: string): string => {
+  let cleanIban = iban.replace(/\s/g, '').toUpperCase()
+  let hasPrefix = cleanIban.startsWith('UA')
+  let digits = hasPrefix ? cleanIban.slice(2) : cleanIban
+  if (digits.length !== 27) return iban
+  const last14 = digits.slice(-14)
+  return `UA ** ${last14}`
 }
 
 export const getReceiptConfig = (
@@ -59,6 +57,8 @@ export const getReceiptConfig = (
   let leftColumnBottom: string[] = []
   let rightColumnBottom: string[] = []
 
+  const formattedIban = data.iban ? formatIban(data.iban) : 'UA ** ***********'
+
   switch (scenarioId) {
     case 'cardTopUp':
       leftColumnBottom = [
@@ -70,7 +70,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: Пекарський Сергій Петрович`,
-        `Рахунок отримувача: ${data.iban || 'UA903052992990004000600055925'}`,
+        `Рахунок отримувача: ${formattedIban}`,
         `Платіжна система: ${paymentSystem}`,
         `Банк отримувача: ${recipientBank}`,
         `Код отримувача: ${recipientCode}`,
@@ -84,11 +84,10 @@ export const getReceiptConfig = (
         `Платник: ${data.payerName || 'ПЕКАРСЬКИЙ С. П.'}`,
         `Банк платника: ${bankName}`,
         `Код банку платника: 300465`,
-        // Призначення платежу приховано для mobileTopUp
       ]
       rightColumnBottom = [
         `Отримувач: ПрАТ "Київстар"`,
-        `Рахунок отримувача: UA983005280000026004000003072`,
+        `Рахунок отримувача: ${formatIban('UA983005280000026004000003072')}`,
         `Платіжна система: ${paymentSystem}`,
         `Банк отримувача: ${recipientBank}`,
         `Код отримувача: 21673832`,
@@ -105,7 +104,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: РОВКП ВКГ «Рівнеоблводоканал»`,
-        `Рахунок отримувача: ${data.iban || 'UA983005280000026004000003072'}`,
+        `Рахунок отримувача: ${formattedIban}`,
         `Платіжна система: ${paymentSystem}`,
         `Банк отримувача: ${recipientBank}`,
         `Код отримувача: ${recipientCode}`,
@@ -121,7 +120,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: ${recipientBank}`,
-        `Рахунок отримувача: ${data.iban || 'UA903052992990004000600055925'}`,
+        `Рахунок отримувача: ${formattedIban}`,
         `Платіжна система: ${paymentSystem}`,
       ]
       break

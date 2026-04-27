@@ -120,7 +120,7 @@ paymentInfoScreen: {
   edrpou: 'ЄДРПОУ',
   iban: 'IBAN',
   payerName: 'ПІБ Платника',
-  recipientName: 'ПІБ Отримувача',
+  recipientName: 'Отримувач',
   paymentPurpose: 'Призначення платежу',
   amount: 'Сума платежу',
   commission: 'Комісія',
