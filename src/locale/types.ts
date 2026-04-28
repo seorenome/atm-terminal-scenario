@@ -65,6 +65,13 @@ export type Translations = {
     delete: string
     emptyMask: string
   }
+  accountInputScreen: {
+    title: string
+    hint: string
+    continue: string
+    delete: string
+    emptyMask: string
+  }
   textInputScreen: {
     title: string
     placeholder: string

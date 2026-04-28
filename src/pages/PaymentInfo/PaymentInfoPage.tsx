@@ -55,6 +55,8 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   const handleBack = () => {
     if (scenarioId === 'billsPayment') {
       navigation.goToStep('paymentPurpose')
+    } else if (scenarioId === 'utilities') {
+      navigation.goToStep('accountInput')
     } else {
       navigation.goToStep('smsInput')
     }
@@ -89,9 +91,17 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   const paymentPurposeBills = data.paymentPurpose || 'Оплата за послуги водопостачання'
   const recipientBills = 'РОВКП ВКГ «Рівнеоблводоканал»'
 
+  // Дані для utilities (комунальні послуги) з TransactionContext
+  const operatorName = data.operatorName || ''
+  const accountNumber = data.accountNumber || ''
+  const servicePayerName = data.payerName || ''
+  const serviceAddress = data.serviceAddress || ''
+  const serviceAmount = data.amount || 0
+
   const isCardTopUp = scenarioId === 'cardTopUp'
   const isMobileTopUp = scenarioId === 'mobileTopUp'
   const isBillsPayment = scenarioId === 'billsPayment'
+  const isUtilities = scenarioId === 'utilities'
 
   return (
     <TerminalViewport>
@@ -134,6 +144,7 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           isCardTopUp={isCardTopUp}
           isMobileTopUp={isMobileTopUp}
           isBillsPayment={isBillsPayment}
+          isUtilities={isUtilities}
           cardNumber={cardNumber}
           phoneNumber={phoneNumber}
           amount={amount}
@@ -149,6 +160,11 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           iban={iban}
           paymentPurposeBills={paymentPurposeBills}
           recipientBills={recipientBills}
+          operatorName={operatorName}
+          accountNumber={accountNumber}
+          servicePayerName={servicePayerName}
+          serviceAddress={serviceAddress}
+          serviceAmount={serviceAmount}
         />
       </TerminalLayout>
     </TerminalViewport>

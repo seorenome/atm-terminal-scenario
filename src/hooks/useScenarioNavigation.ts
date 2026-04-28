@@ -18,7 +18,7 @@ export const useScenarioNavigation = (scenarioId: ScenarioId) => {
   const goToNext = (currentStepId: string, state?: unknown) => {
     const currentStep = scenario.steps[currentStepId]
     if (currentStep?.nextStep) {
-      goToStep(currentStep.nextStep, state)
+      goToStep(currentStep.nextStep, state)  // ← тут state передається в goToStep
     } else {
       console.error(`Next step not defined for ${currentStepId}`)
     }

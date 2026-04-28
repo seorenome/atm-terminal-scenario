@@ -156,6 +156,13 @@ utilitiesScreen: {
   title: 'Оплата за комунальні послуги',
   ibanButton: 'Оплатити по IBAN',
 },
+  accountInputScreen: {
+    title: 'Введіть номер рахунку для оплати',
+    hint: 'Будь ласка, введіть номер рахунку у форматі {length} цифр',
+    continue: 'Продовжити',
+    delete: 'Стерти',
+    emptyMask: '',
+  },
 }
 
 export default uk

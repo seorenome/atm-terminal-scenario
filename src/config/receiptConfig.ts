@@ -24,6 +24,11 @@ export const getReceiptConfig = (
     phoneNumber?: string
     payerName?: string
     cardNumber?: string
+    // Дані для utilities
+    operatorName?: string
+    accountNumber?: string
+    serviceAddress?: string
+    amount?: number
   }
 ): ReceiptConfig => {
   const bankName = 'АТ «ОЩАДБАНК»'
@@ -36,12 +41,17 @@ export const getReceiptConfig = (
   const recipientBank = 'АТ «ОЩАДБАНК»'
   const recipientCode = '325833352'
 
+  // Розрахунок комісії та підсумкової суми
+  const enteredAmount = data.amount || 1200
+  const commissionAmount = enteredAmount * 0.01
+  const finalAmount = enteredAmount - commissionAmount
+
   // Ліва колонка (верх) - однакова для всіх
   const leftColumnTop = [
-    `Внесено: 1200,00 грн.`,
-    `Сума операції: 1200,00 грн.`,
-    `Зараховано отримувачу: 1188,00 грн.`,
-    `Комісія банку: 12,00 грн.`,
+    `Внесено: ${enteredAmount.toFixed(2)} грн.`,
+    `Сума операції: ${enteredAmount.toFixed(2)} грн.`,
+    `Зараховано отримувачу: ${finalAmount.toFixed(2)} грн.`,
+    `Комісія банку: ${commissionAmount.toFixed(2)} грн.`,
     `Дата та час: ${date}`,
   ]
 
@@ -57,8 +67,6 @@ export const getReceiptConfig = (
   let leftColumnBottom: string[] = []
   let rightColumnBottom: string[] = []
 
-  const formattedIban = data.iban ? formatIban(data.iban) : 'UA ** ***********'
-
   switch (scenarioId) {
     case 'cardTopUp':
       leftColumnBottom = [
@@ -70,7 +78,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: Пекарський Сергій Петрович`,
-        `Рахунок отримувача: ${formattedIban}`,
+        `Рахунок отримувача: ${formatIban(data.iban || 'UA903052992990004000600055925')}`,
         `Платіжна система: ${paymentSystem}`,
         `Банк отримувача: ${recipientBank}`,
         `Код отримувача: ${recipientCode}`,
@@ -104,10 +112,26 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: РОВКП ВКГ «Рівнеоблводоканал»`,
-        `Рахунок отримувача: ${formattedIban}`,
+        `Рахунок отримувача: ${formatIban(data.iban || 'UA983005280000026004000003072')}`,
         `Платіжна система: ${paymentSystem}`,
         `Банк отримувача: ${recipientBank}`,
         `Код отримувача: ${recipientCode}`,
+      ]
+      break
+
+    case 'utilities':
+      leftColumnBottom = [
+        `Послуга: ${data.operatorName || 'Комунальна послуга'}`,
+        `Особовий рахунок: ${data.accountNumber || '___________'}`,
+        `Платник: ${data.payerName || 'ПЕКАРСЬКИЙ С. П.'}`,
+        `Адреса: ${data.serviceAddress || '__________'}`,
+        `Номер телефону: ${data.phoneNumber || '+38 (0XX) XXX XX XX'}`,
+      ]
+      rightColumnBottom = [
+        `Отримувач: ${data.operatorName || 'Комунальне підприємство'}`,
+        `Призначення платежу: ${data.paymentPurpose || `Оплата за ${data.operatorName || 'послуги'} за квітень 2026`}`,
+        `Період оплати: квітень 2026`,
+        `Платіжна система: ${paymentSystem}`,
       ]
       break
 
@@ -120,7 +144,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: ${recipientBank}`,
-        `Рахунок отримувача: ${formattedIban}`,
+        `Рахунок отримувача: ${formatIban(data.iban || 'UA903052992990004000600055925')}`,
         `Платіжна система: ${paymentSystem}`,
       ]
       break

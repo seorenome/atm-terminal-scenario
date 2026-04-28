@@ -223,8 +223,26 @@ export const scenarios: Record<ScenarioId, Scenario> = {
       utilities: {
         id: 'utilities',
         path: routePaths.utilities,
-        nextStep: 'paymentInfo',
+        nextStep: 'accountInput',
         errorStep: 'utilitiesError',
+      },
+      accountInput: {
+        id: 'accountInput',
+        path: routePaths.accountInput,
+        nextStep: 'phoneInput',
+        errorStep: 'accountError',
+      },
+      phoneInput: {
+        id: 'phoneInput',
+        path: routePaths.phoneInput,
+        nextStep: 'smsInput',
+        errorStep: 'phoneError',
+      },
+      smsInput: {
+        id: 'smsInput',
+        path: routePaths.smsInput,
+        nextStep: 'paymentInfo',
+        errorStep: 'smsError',
       },
       paymentInfo: {
         id: 'paymentInfo',
@@ -246,6 +264,21 @@ export const scenarios: Record<ScenarioId, Scenario> = {
         id: 'utilitiesError',
         path: routePaths.utilitiesError,
         nextStep: 'utilities',
+      },
+      accountError: {
+        id: 'accountError',
+        path: routePaths.accountError,
+        nextStep: 'accountInput',
+      },
+      phoneError: {
+        id: 'phoneError',
+        path: routePaths.phoneError,
+        nextStep: 'phoneInput',
+      },
+      smsError: {
+        id: 'smsError',
+        path: routePaths.smsError,
+        nextStep: 'smsInput',
       },
       printerError: {
         id: 'printerError',

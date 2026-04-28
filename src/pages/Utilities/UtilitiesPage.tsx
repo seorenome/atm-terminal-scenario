@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import TerminalHeader from '../../components/layout/TerminalHeader/TerminalHeader'
 import type { HeaderLanguage } from '../../components/layout/TerminalHeader/TerminalHeader.types'
@@ -16,6 +16,7 @@ type UtilitiesPageProps = {
   navigation: {
     goToNext: (stepId: string, state?: unknown) => void
     goToError: (stepId: string, state?: unknown) => void
+    goToStep: (stepId: string, state?: unknown) => void
   }
   currentStepId: string
 }
@@ -24,10 +25,8 @@ const ITEMS_PER_PAGE = 8
 
 const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { locale, setLocale } = useLocale()
   const [currentPage, setCurrentPage] = useState(1)
-
 
   const t = translations[locale]
 
@@ -49,8 +48,9 @@ const UtilitiesPage = ({ navigation, currentStepId }: UtilitiesPageProps) => {
     navigate(routePaths.ibanInput, { state: { scenarioId: 'billsPayment' } })
   }
 
-  const handleOperatorClick = (_operator: UtilityOperator) => {
-    navigation.goToError(currentStepId)
+  const handleOperatorClick = (operator: UtilityOperator) => {
+    // Перехід на сторінку введення рахунку з передачею ID оператора
+    navigation.goToStep('accountInput', { operatorId: operator.id })
   }
 
   return (

@@ -34,12 +34,22 @@ const ReceiptPage = () => {
   const cardNumber = data.cardNumber
   const payerName = paymentConfig.payerName
 
+  // Дані для utilities
+  const operatorName = data.operatorName
+  const accountNumber = data.accountNumber
+  const serviceAddress = data.serviceAddress
+  const amount = data.amount
+
   const receiptConfig = getReceiptConfig(scenarioId, {
     iban,
     paymentPurpose,
     phoneNumber,
     payerName,
     cardNumber,
+    operatorName,
+    accountNumber,
+    serviceAddress,
+    amount,
   })
 
   const leftColumnTopText = receiptConfig.leftColumnTop.join('\n')

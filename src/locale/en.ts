@@ -156,6 +156,13 @@ utilitiesScreen: {
   title: 'Payment for utilities',
   ibanButton: 'Pay by IBAN',
 },
+  accountInputScreen: {
+    title: 'Enter account number for payment',
+    hint: 'Please enter your account number in {length} digit format',
+    continue: 'Continue',
+    delete: 'Delete',
+    emptyMask: '',
+  },
 }
 
 export default en

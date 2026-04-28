@@ -7,6 +7,13 @@ export type TransactionData = {
   iban?: string
   paymentPurpose?: string
   amount?: number
+  // Дані для utilities
+  operatorId?: string
+  operatorName?: string
+  serviceType?: string
+  accountNumber?: string
+  payerName?: string
+  serviceAddress?: string
 }
 
 type TransactionContextType = {

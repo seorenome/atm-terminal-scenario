@@ -22,4 +22,6 @@ export const routePaths = {
   purposeError: '/purpose-error',
   utilities: '/utilities',
   utilitiesError: '/utilities-error',
+  accountInput: '/account-input',
+accountError: '/account-error',
 } as const

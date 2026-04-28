@@ -262,7 +262,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   display: flex;
   justify-content: center;
   align-items: center;
-`,tl=({children:e})=>(0,U.jsx)($c,{children:(0,U.jsx)(el,{children:e})}),W={uk:{header:{supportPhone:`0 800 210 800`,supportDescription:`в межах України безкоштовно`,languageUa:`UA`,languageEn:`EN`,exit:`Завершити`},footer:{back:`Назад`,cancel:`Скасувати`,repeat:`Повторити`,continue:`Продовжити`},errorScreen:{title:`Ви вказали невірний номер картки одержувача!`,primaryMessage:`Операцію буде скасовано.`,secondaryMessage:`Щоб виправити дані та подовжити операцію поповнення картки, натисніть кнопку “ПОВТОРИТИ”`},ibanErrorScreen:{title:`Ви вказали невірний номер IBAN!`,primaryMessage:`Операцію буде скасовано.`,secondaryMessage:`Щоб виправити дані та продовжити операцію оплати рахунку, натисніть кнопку “ПОВТОРИТИ”`},printerErrorScreen:{title:`Неможливо надрукувати квитанцію після завершення операції`,primaryMessage:`Принтер чеків тимчасово не працює.`,secondaryMessage:`Якщо ви погоджуєтесь здійснити оперецію без квитанції, натисніть кнопку “Продовжити”`},startScreen:{title:`Оберіть послугу`,cards:{billsPayment:{title:`Оплата рахунків`,description:`Миттєве поповнення рахунків за реквізитами банку`},mobileTopUp:{title:`Мобільний зв'язок`,description:`Будь-який мобільний оператор на території України`},cardTopUp:{title:`Поповнення картки`,description:`Поповнення будь-якої картки українського банку`},utilities:{title:`Комунальні послуги`,description:`Оплата комунальних послуг за реквізитами по всій Україні`}}},phoneInputScreen:{title:`Введіть номер телефону для поповнення`,hint:`Будь ласка, введіть свій номер телефону у форматі +38 (0XX) XXX XX XX`,errorMessage:`Введений номер не є дійсним!`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`+38 (___) ___ __ __`},cardInputScreen:{title:`Введіть номер картки для поповнення`,hint:`Будь ласка, введіть свій номер картки у форматі XXXX XXXX XXXX XXXX`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`____ ____ ____ ____`},ibanInputScreen:{title:`Введіть номер IBAN`,hint:`Введіть IBAN, який містить 27 цифр у форматі`,hintFormat:`UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX`,hintExample:`(Введіть 623333680000026204506225422)`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`UA __ ______ ___________________`},textInputScreen:{title:`Введіть призначення платежу`,placeholder:`Введіть призначення платежу`,delete:`Стерти`,back:`Назад`,continue:`Продовжити`,en:`en`,ua:`ua`},cashAcceptanceScreen:{title:`Внесення коштів`,instruction:`Будь ласка, внесіть кошти по одній банкноті`,completeHint:`Для завершення операції натисніть кнопку “Продовжити”`,notice:`Зверніть увагу: термінал банкноти не повертає, решти не дає.`,maxAmount:`Максимальна сума поповнення 5000 грн.`,commissionRate:`Комісія 1% від суми поповнення`,willBeCredited:`Буде зараховано на рахунок`,acceptedAmount:`Прийнято коштів на суму`,commission:`Комісія`,currency:`грн.`,back:`Назад`,continue:`Продовжити`},smsInputScreen:{title:`Введіть отриманий код підтвердження з СМС`,hint:`Час дії паролю:`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`____`},paymentInfoScreen:{title:`Поповнення картки`,titleMobile:`Поповнення мобільного зв'язку`,titleBills:`Оплата рахунку по IBAN`,subtitle:`Будь ласка, перевірте дані перед внесенням`,cardNumber:`Номер картки`,phoneNumber:`Номер телефону`,operator:`Оператор зв'язку`,edrpou:`ЄДРПОУ`,iban:`IBAN`,payerName:`ПІБ Платника`,recipientName:`ПІБ Отримувача`,paymentPurpose:`Призначення платежу`,amount:`Сума платежу`,commission:`Комісія`,acceptedBills:`Приймаються купюри`,cancel:`Скасувати`,continue:`Продовжити`,currency:`грн.`},paymentResultScreen:{title:`Платіж успішний`,receipt:`Квитанція`,complete:`Завершити`},receiptScreen:{title:`Квитанція`,print:`Друкувати`,complete:`Завершити`},paymentPurposeScreen:{title:`Введіть призначення платежу`,placeholder:`Оплата за послуги водопостачання`,delete:`Стерти`,back:`Назад`,continue:`Продовжити`,en:`en`,ua:`ua`},utilitiesErrorScreen:{title:`Послуга тимчасово недоступна`,message:`Спробуйте пізніше`},utilitiesScreen:{title:`Оплата за комунальні послуги`,ibanButton:`Оплатити по IBAN`}},en:{header:{supportPhone:`0 800 210 800`,supportDescription:`free within Ukraine`,languageUa:`UA`,languageEn:`EN`,exit:`Exit`},footer:{back:`Back`,cancel:`Cancel`,repeat:`Repeat`,continue:`Continue`},errorScreen:{title:`You entered an incorrect recipient card number!`,primaryMessage:`The operation will be cancelled.`,secondaryMessage:`To correct the data and continue the card top-up operation, press the “REPEAT” button`},ibanErrorScreen:{title:`You entered an incorrect IBAN number!`,primaryMessage:`The operation will be cancelled.`,secondaryMessage:`To correct the data and continue the bill payment operation, press the “REPEAT” button`},printerErrorScreen:{title:`It is impossible to print a receipt after the operation is completed`,primaryMessage:`The receipt printer is temporarily unavailable.`,secondaryMessage:`If you agree to perform the operation without a receipt, press the “Continue” button`},startScreen:{title:`Choose a service`,cards:{billsPayment:{title:`Bill payment`,description:`Instant account top-up using bank details`},mobileTopUp:{title:`Mobile connection`,description:`Any mobile operator within Ukraine`},cardTopUp:{title:`Card top-up`,description:`Top up any card of a Ukrainian bank`},utilities:{title:`Utility services`,description:`Payment of utility services by details across Ukraine`}}},phoneInputScreen:{title:`Enter the phone number for top-up`,hint:`Please enter your phone number in the format +38 (0XX) XXX XX XX`,errorMessage:`The entered number is not valid!`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`+38 (___) ___ __ __`},cardInputScreen:{title:`Enter the card number for top-up`,hint:`Please enter your card number in the format XXXX XXXX XXXX XXXX`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`____ ____ ____ ____`},ibanInputScreen:{title:`Enter IBAN number`,hint:`Enter IBAN containing 27 digits in the format`,hintFormat:`UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX`,hintExample:`(Enter 623333680000026204506225422)`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`UA __ ______ ___________________`},textInputScreen:{title:`Enter payment purpose`,placeholder:`Enter payment purpose`,delete:`Delete`,back:`Back`,continue:`Continue`,en:`en`,ua:`ua`},cashAcceptanceScreen:{title:`Cash deposit`,instruction:`Please insert banknotes one by one`,completeHint:`To complete the operation, press the “Continue” button`,notice:`Please note: the terminal does not return banknotes, no change is given.`,maxAmount:`Maximum deposit amount is 5000 UAH.`,commissionRate:`Commission 1% of the deposit amount`,willBeCredited:`Will be credited to account`,acceptedAmount:`Amount accepted`,commission:`Commission`,currency:`UAH`,back:`Back`,continue:`Continue`},smsInputScreen:{title:`Enter the confirmation code from SMS`,hint:`Password validity period:`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`____`},paymentInfoScreen:{title:`Card top-up`,titleMobile:`Mobile top-up`,titleBills:`Bill payment by IBAN`,subtitle:`Please check the data before depositing`,cardNumber:`Card number`,phoneNumber:`Phone number`,operator:`Mobile operator`,edrpou:`EDRPOU`,iban:`IBAN`,payerName:`Payer's full name`,recipientName:`Recipient's full name`,paymentPurpose:`Payment purpose`,amount:`Payment amount`,commission:`Commission`,acceptedBills:`Banknotes accepted`,cancel:`Cancel`,continue:`Continue`,currency:`UAH`},paymentResultScreen:{title:`Payment successful`,receipt:`Receipt`,complete:`Complete`},receiptScreen:{title:`Receipt`,print:`Print`,complete:`Complete`},paymentPurposeScreen:{title:`Enter payment purpose`,placeholder:`Payment for water supply services`,delete:`Delete`,back:`Back`,continue:`Continue`,en:`en`,ua:`ua`},utilitiesErrorScreen:{title:`Service temporarily unavailable`,message:`Please try again later`},utilitiesScreen:{title:`Payment for utilities`,ibanButton:`Pay by IBAN`}}},nl=(0,x.createContext)(void 0),rl=({children:e})=>{let[t,n]=(0,x.useState)(`uk`);return(0,U.jsx)(nl.Provider,{value:{locale:t,setLocale:n},children:e})},G=()=>{let e=(0,x.useContext)(nl);if(!e)throw Error(`useLocale must be used within LocaleProvider`);return e},il=`data:image/svg+xml,%3csvg%20width='32'%20height='25'%20viewBox='0%200%2032%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M21.4629%201.05176L31.5498%2010.9648C31.8364%2011.2466%2031.9978%2011.6323%2031.998%2012.0342C31.998%2012.4364%2031.8366%2012.8225%2031.5498%2013.1045L21.4629%2023.0176L20.3936%2024.0693L18.29%2021.9297L19.3604%2020.8779L26.832%2013.5342H0V10.5342H26.8311L19.3604%203.19043L18.29%202.13965L20.3936%200L21.4629%201.05176Z'%20fill='%23111E29'/%3e%3c/svg%3e`,al=`/assets/cardicon-1-BKsjS7xQ.svg`,ol=`/assets/cardicon-2-DyyHpPb0.svg`,sl=`/assets/cardicon-3-Ci3EQOp5.svg`,cl=`/assets/cardicon-4-DXPdGr0D.svg`,ll=H.button`
+`,tl=({children:e})=>(0,U.jsx)($c,{children:(0,U.jsx)(el,{children:e})}),W={uk:{header:{supportPhone:`0 800 210 800`,supportDescription:`в межах України безкоштовно`,languageUa:`UA`,languageEn:`EN`,exit:`Завершити`},footer:{back:`Назад`,cancel:`Скасувати`,repeat:`Повторити`,continue:`Продовжити`},errorScreen:{title:`Ви вказали невірний номер картки одержувача!`,primaryMessage:`Операцію буде скасовано.`,secondaryMessage:`Щоб виправити дані та подовжити операцію поповнення картки, натисніть кнопку “ПОВТОРИТИ”`},ibanErrorScreen:{title:`Ви вказали невірний номер IBAN!`,primaryMessage:`Операцію буде скасовано.`,secondaryMessage:`Щоб виправити дані та продовжити операцію оплати рахунку, натисніть кнопку “ПОВТОРИТИ”`},printerErrorScreen:{title:`Неможливо надрукувати квитанцію після завершення операції`,primaryMessage:`Принтер чеків тимчасово не працює.`,secondaryMessage:`Якщо ви погоджуєтесь здійснити оперецію без квитанції, натисніть кнопку “Продовжити”`},startScreen:{title:`Оберіть послугу`,cards:{billsPayment:{title:`Оплата рахунків`,description:`Миттєве поповнення рахунків за реквізитами банку`},mobileTopUp:{title:`Мобільний зв'язок`,description:`Будь-який мобільний оператор на території України`},cardTopUp:{title:`Поповнення картки`,description:`Поповнення будь-якої картки українського банку`},utilities:{title:`Комунальні послуги`,description:`Оплата комунальних послуг за реквізитами по всій Україні`}}},phoneInputScreen:{title:`Введіть номер телефону для поповнення`,hint:`Будь ласка, введіть свій номер телефону у форматі +38 (0XX) XXX XX XX`,errorMessage:`Введений номер не є дійсним!`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`+38 (___) ___ __ __`},cardInputScreen:{title:`Введіть номер картки для поповнення`,hint:`Будь ласка, введіть свій номер картки у форматі XXXX XXXX XXXX XXXX`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`____ ____ ____ ____`},ibanInputScreen:{title:`Введіть номер IBAN`,hint:`Введіть IBAN, який містить 27 цифр у форматі`,hintFormat:`UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX`,hintExample:`(Введіть 623333680000026204506225422)`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`UA __ ______ ___________________`},textInputScreen:{title:`Введіть призначення платежу`,placeholder:`Введіть призначення платежу`,delete:`Стерти`,back:`Назад`,continue:`Продовжити`,en:`en`,ua:`ua`},cashAcceptanceScreen:{title:`Внесення коштів`,instruction:`Будь ласка, внесіть кошти по одній банкноті`,completeHint:`Для завершення операції натисніть кнопку “Продовжити”`,notice:`Зверніть увагу: термінал банкноти не повертає, решти не дає.`,maxAmount:`Максимальна сума поповнення 5000 грн.`,commissionRate:`Комісія 1% від суми поповнення`,willBeCredited:`Буде зараховано на рахунок`,acceptedAmount:`Прийнято коштів на суму`,commission:`Комісія`,currency:`грн.`,back:`Назад`,continue:`Продовжити`},smsInputScreen:{title:`Введіть отриманий код підтвердження з СМС`,hint:`Час дії паролю:`,back:`Назад`,continue:`Продовжити`,delete:`Стерти`,emptyMask:`____`},paymentInfoScreen:{title:`Поповнення картки`,titleMobile:`Поповнення мобільного зв'язку`,titleBills:`Оплата рахунку по IBAN`,subtitle:`Будь ласка, перевірте дані перед внесенням`,cardNumber:`Номер картки`,phoneNumber:`Номер телефону`,operator:`Оператор зв'язку`,edrpou:`ЄДРПОУ`,iban:`IBAN`,payerName:`ПІБ Платника`,recipientName:`Отримувач`,paymentPurpose:`Призначення платежу`,amount:`Сума платежу`,commission:`Комісія`,acceptedBills:`Приймаються купюри`,cancel:`Скасувати`,continue:`Продовжити`,currency:`грн.`},paymentResultScreen:{title:`Платіж успішний`,receipt:`Квитанція`,complete:`Завершити`},receiptScreen:{title:`Квитанція`,print:`Друкувати`,complete:`Завершити`},paymentPurposeScreen:{title:`Введіть призначення платежу`,placeholder:`Оплата за послуги водопостачання`,delete:`Стерти`,back:`Назад`,continue:`Продовжити`,en:`en`,ua:`ua`},utilitiesErrorScreen:{title:`Послуга тимчасово недоступна`,message:`Спробуйте пізніше`},utilitiesScreen:{title:`Оплата за комунальні послуги`,ibanButton:`Оплатити по IBAN`}},en:{header:{supportPhone:`0 800 210 800`,supportDescription:`free within Ukraine`,languageUa:`UA`,languageEn:`EN`,exit:`Exit`},footer:{back:`Back`,cancel:`Cancel`,repeat:`Repeat`,continue:`Continue`},errorScreen:{title:`You entered an incorrect recipient card number!`,primaryMessage:`The operation will be cancelled.`,secondaryMessage:`To correct the data and continue the card top-up operation, press the “REPEAT” button`},ibanErrorScreen:{title:`You entered an incorrect IBAN number!`,primaryMessage:`The operation will be cancelled.`,secondaryMessage:`To correct the data and continue the bill payment operation, press the “REPEAT” button`},printerErrorScreen:{title:`It is impossible to print a receipt after the operation is completed`,primaryMessage:`The receipt printer is temporarily unavailable.`,secondaryMessage:`If you agree to perform the operation without a receipt, press the “Continue” button`},startScreen:{title:`Choose a service`,cards:{billsPayment:{title:`Bill payment`,description:`Instant account top-up using bank details`},mobileTopUp:{title:`Mobile connection`,description:`Any mobile operator within Ukraine`},cardTopUp:{title:`Card top-up`,description:`Top up any card of a Ukrainian bank`},utilities:{title:`Utility services`,description:`Payment of utility services by details across Ukraine`}}},phoneInputScreen:{title:`Enter the phone number for top-up`,hint:`Please enter your phone number in the format +38 (0XX) XXX XX XX`,errorMessage:`The entered number is not valid!`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`+38 (___) ___ __ __`},cardInputScreen:{title:`Enter the card number for top-up`,hint:`Please enter your card number in the format XXXX XXXX XXXX XXXX`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`____ ____ ____ ____`},ibanInputScreen:{title:`Enter IBAN number`,hint:`Enter IBAN containing 27 digits in the format`,hintFormat:`UA XX XXXXXX XXXXXXXXXXXXXXXXXXXXX`,hintExample:`(Enter 623333680000026204506225422)`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`UA __ ______ ___________________`},textInputScreen:{title:`Enter payment purpose`,placeholder:`Enter payment purpose`,delete:`Delete`,back:`Back`,continue:`Continue`,en:`en`,ua:`ua`},cashAcceptanceScreen:{title:`Cash deposit`,instruction:`Please insert banknotes one by one`,completeHint:`To complete the operation, press the “Continue” button`,notice:`Please note: the terminal does not return banknotes, no change is given.`,maxAmount:`Maximum deposit amount is 5000 UAH.`,commissionRate:`Commission 1% of the deposit amount`,willBeCredited:`Will be credited to account`,acceptedAmount:`Amount accepted`,commission:`Commission`,currency:`UAH`,back:`Back`,continue:`Continue`},smsInputScreen:{title:`Enter the confirmation code from SMS`,hint:`Password validity period:`,back:`Back`,continue:`Continue`,delete:`Delete`,emptyMask:`____`},paymentInfoScreen:{title:`Card top-up`,titleMobile:`Mobile top-up`,titleBills:`Bill payment by IBAN`,subtitle:`Please check the data before depositing`,cardNumber:`Card number`,phoneNumber:`Phone number`,operator:`Mobile operator`,edrpou:`EDRPOU`,iban:`IBAN`,payerName:`Payer's full name`,recipientName:`Recipient`,paymentPurpose:`Payment purpose`,amount:`Payment amount`,commission:`Commission`,acceptedBills:`Banknotes accepted`,cancel:`Cancel`,continue:`Continue`,currency:`UAH`},paymentResultScreen:{title:`Payment successful`,receipt:`Receipt`,complete:`Complete`},receiptScreen:{title:`Receipt`,print:`Print`,complete:`Complete`},paymentPurposeScreen:{title:`Enter payment purpose`,placeholder:`Payment for water supply services`,delete:`Delete`,back:`Back`,continue:`Continue`,en:`en`,ua:`ua`},utilitiesErrorScreen:{title:`Service temporarily unavailable`,message:`Please try again later`},utilitiesScreen:{title:`Payment for utilities`,ibanButton:`Pay by IBAN`}}},nl=(0,x.createContext)(void 0),rl=({children:e})=>{let[t,n]=(0,x.useState)(`uk`);return(0,U.jsx)(nl.Provider,{value:{locale:t,setLocale:n},children:e})},G=()=>{let e=(0,x.useContext)(nl);if(!e)throw Error(`useLocale must be used within LocaleProvider`);return e},il=`data:image/svg+xml,%3csvg%20width='32'%20height='25'%20viewBox='0%200%2032%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M21.4629%201.05176L31.5498%2010.9648C31.8364%2011.2466%2031.9978%2011.6323%2031.998%2012.0342C31.998%2012.4364%2031.8366%2012.8225%2031.5498%2013.1045L21.4629%2023.0176L20.3936%2024.0693L18.29%2021.9297L19.3604%2020.8779L26.832%2013.5342H0V10.5342H26.8311L19.3604%203.19043L18.29%202.13965L20.3936%200L21.4629%201.05176Z'%20fill='%23111E29'/%3e%3c/svg%3e`,al=`/assets/cardicon-1-BKsjS7xQ.svg`,ol=`/assets/cardicon-2-DyyHpPb0.svg`,sl=`/assets/cardicon-3-Ci3EQOp5.svg`,cl=`/assets/cardicon-4-DXPdGr0D.svg`,ll=H.button`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1549,7 +1549,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
 `,fh=H.div`
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: 2px;
   width: 100%;
 `,ph=H.span`
   width: 200px;
@@ -1568,32 +1568,32 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   font-size: ${eh()};
   font-weight: 600;
   line-height: normal;
-`,hh=({t:e,isCardTopUp:t,isMobileTopUp:n,isBillsPayment:r,cardNumber:i,phoneNumber:a,amount:o,commission:s,acceptedBills:c,payerName:l,paymentPurposeCard:u,recipientName:d,operator:f,edrpou:p,ibanMobile:m,paymentPurposeMobile:h,iban:g,paymentPurposeBills:_,recipientBills:v})=>(0,U.jsxs)(ih,{children:[(0,U.jsx)(ah,{children:(0,U.jsx)(oh,{children:t?e.paymentInfoScreen.title:n?e.paymentInfoScreen.titleMobile:e.paymentInfoScreen.titleBills})}),(0,U.jsx)(sh,{children:(0,U.jsxs)(ch,{children:[(0,U.jsx)(lh,{children:e.paymentInfoScreen.subtitle}),(0,U.jsxs)(uh,{children:[(0,U.jsxs)(dh,{children:[t&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.cardNumber}),(0,U.jsx)(mh,{children:i})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.payerName}),(0,U.jsx)(mh,{children:l})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.recipientName}),(0,U.jsx)(mh,{children:d})]})]}),n&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.operator}),(0,U.jsx)(mh,{children:f})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.edrpou}),(0,U.jsx)(mh,{children:p})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.iban}),(0,U.jsx)(mh,{children:m})]})]}),r&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.iban}),(0,U.jsx)(mh,{children:g})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.payerName}),(0,U.jsx)(mh,{children:l})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.recipientName}),(0,U.jsx)(mh,{children:v})]})]})]}),(0,U.jsxs)(dh,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.amount}),(0,U.jsx)(mh,{children:o})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.commission}),(0,U.jsx)(mh,{children:s})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.acceptedBills}),(0,U.jsx)(mh,{children:c})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.paymentPurpose}),(0,U.jsx)(mh,{children:t?u:n?h:_})]})]})]})]})})]}),gh=Eu(ku(({navigation:e,currentStepId:t})=>{let n=tr(),r=Qn(),{locale:i,setLocale:a}=G(),{data:o}=Mu(),s=W[i],c=r.state?.scenarioId,l=e=>{a(e===`UA`?`uk`:`en`)},u=()=>{n(I.chooseOperationType)},d=()=>{c===`billsPayment`?e.goToStep(`paymentPurpose`):e.goToStep(`smsInput`)},f=()=>{e.goToNext(t)},p=o.phoneNumber||`+38 (096) 834 - 70-01`,m=`${Wm.commissionPercent}%`,h=Wm.acceptedBills,g=Wm.payerName,_=o.cardNumber||`5167 **** **** 4826`,v=o.paymentPurpose||Wm.paymentPurpose,y=o.iban||`UA983005280000026004000003072`,b=o.paymentPurpose||`Оплата за послуги водопостачання`,x=c===`cardTopUp`,S=c===`mobileTopUp`,C=c===`billsPayment`;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:s.header.exit,supportPhone:s.header.supportPhone,supportDescription:s.header.supportDescription,onLanguageChange:l,onExit:u}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:s.footer.back,variant:`back`,icon:`arrow-back`,onClick:d}],rightButtons:[{label:s.paymentInfoScreen.continue,variant:`continue`,icon:`arrow-next`,onClick:f}]}),children:(0,U.jsx)(hh,{t:s,scenarioId:c,isCardTopUp:x,isMobileTopUp:S,isBillsPayment:C,cardNumber:_,phoneNumber:p,amount:`від 1 до 5000 грн.`,commission:m,acceptedBills:h,payerName:g,paymentPurposeCard:v,recipientName:`Сергій П.`,operator:`ПрАТ "Київстар"`,edrpou:`21673832`,ibanMobile:`UA983005280000026004000003072`,paymentPurposeMobile:`За послуги мобільного зв'язку`,iban:y,paymentPurposeBills:b,recipientBills:`РОВКП ВКГ «Рівнеоблводоканал»`})})})},`paymentInfo`)),_h=()=>`60px`,vh=()=>`100px`,yh=()=>`46px`,bh=()=>`46px`,xh=()=>`200px`,Sh=()=>`216px`,Ch=()=>`520px`,wh=()=>`24px`,Th=()=>`32px`,Eh=H.div`
+`,hh=e=>e.length===16?`${e.slice(0,4)} **** **** ${e.slice(-4)}`:e,gh=e=>{let t=e.replace(/\s/g,``).toUpperCase(),n=t.startsWith(`UA`)?t.slice(2):t;return n.length===27?`UA ** ${n.slice(-14)}`:e},_h=({t:e,isCardTopUp:t,isMobileTopUp:n,isBillsPayment:r,cardNumber:i,phoneNumber:a,amount:o,commission:s,acceptedBills:c,payerName:l,paymentPurposeCard:u,recipientName:d,operator:f,edrpou:p,ibanMobile:m,paymentPurposeMobile:h,iban:g,paymentPurposeBills:_,recipientBills:v})=>{let y=t?e.paymentInfoScreen.title:n?e.paymentInfoScreen.titleMobile:e.paymentInfoScreen.titleBills,b=hh(i),x=gh(g);return(0,U.jsxs)(ih,{children:[(0,U.jsx)(ah,{children:(0,U.jsx)(oh,{children:y})}),(0,U.jsx)(sh,{children:(0,U.jsxs)(ch,{children:[(0,U.jsx)(lh,{children:e.paymentInfoScreen.subtitle}),(0,U.jsxs)(uh,{children:[(0,U.jsxs)(dh,{children:[t&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.cardNumber}),(0,U.jsx)(mh,{children:b})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.payerName}),(0,U.jsx)(mh,{children:l})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.recipientName}),(0,U.jsx)(mh,{children:d})]})]}),n&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.operator}),(0,U.jsx)(mh,{children:f})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.edrpou}),(0,U.jsx)(mh,{children:p})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.iban}),(0,U.jsx)(mh,{children:m})]})]}),r&&(0,U.jsxs)(U.Fragment,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.iban}),(0,U.jsx)(mh,{children:x})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.phoneNumber}),(0,U.jsx)(mh,{children:a})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.payerName}),(0,U.jsx)(mh,{children:l})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.recipientName}),(0,U.jsx)(mh,{children:v})]})]})]}),(0,U.jsxs)(dh,{children:[(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.amount}),(0,U.jsx)(mh,{children:o})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.commission}),(0,U.jsx)(mh,{children:s})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.acceptedBills}),(0,U.jsx)(mh,{children:c})]}),(0,U.jsxs)(fh,{children:[(0,U.jsx)(ph,{children:e.paymentInfoScreen.paymentPurpose}),(0,U.jsx)(mh,{children:t?u:n?h:_})]})]})]})]})})]})},vh=e=>{let t=e.replace(/\s/g,``).toUpperCase(),n=t.startsWith(`UA`)?t.slice(2):t;return n.length===27?`UA ** ${n.slice(-14)}`:e},yh=Eu(ku(({navigation:e,currentStepId:t})=>{let n=tr(),r=Qn(),{locale:i,setLocale:a}=G(),{data:o}=Mu(),s=W[i],c=r.state?.scenarioId,l=e=>{a(e===`UA`?`uk`:`en`)},u=()=>{n(I.chooseOperationType)},d=()=>{c===`billsPayment`?e.goToStep(`paymentPurpose`):e.goToStep(`smsInput`)},f=()=>{e.goToNext(t)},p=o.phoneNumber||`+38 (096) 834 - 70-01`,m=`${Wm.commissionPercent}%`,h=Wm.acceptedBills,g=Wm.payerName,_=o.cardNumber||`5167 **** **** 4826`,v=o.paymentPurpose||Wm.paymentPurpose,y=vh(`UA983005280000026004000003072`),b=vh(o.iban||`UA983005280000026004000003072`),x=o.paymentPurpose||`Оплата за послуги водопостачання`,S=c===`cardTopUp`,C=c===`mobileTopUp`,w=c===`billsPayment`;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:s.header.exit,supportPhone:s.header.supportPhone,supportDescription:s.header.supportDescription,onLanguageChange:l,onExit:u}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:s.footer.back,variant:`back`,icon:`arrow-back`,onClick:d}],rightButtons:[{label:s.paymentInfoScreen.continue,variant:`continue`,icon:`arrow-next`,onClick:f}]}),children:(0,U.jsx)(_h,{t:s,scenarioId:c,isCardTopUp:S,isMobileTopUp:C,isBillsPayment:w,cardNumber:_,phoneNumber:p,amount:`від 1 до 5000 грн.`,commission:m,acceptedBills:h,payerName:g,paymentPurposeCard:v,recipientName:`Сергій П.`,operator:`ПрАТ "Київстар"`,edrpou:`21673832`,ibanMobile:y,paymentPurposeMobile:`За послуги мобільного зв'язку`,iban:b,paymentPurposeBills:x,recipientBills:`РОВКП ВКГ «Рівнеоблводоканал»`})})})},`paymentInfo`)),bh=()=>`60px`,xh=()=>`100px`,Sh=()=>`46px`,Ch=()=>`46px`,wh=()=>`200px`,Th=()=>`216px`,Eh=()=>`520px`,Dh=()=>`24px`,Oh=()=>`32px`,kh=H.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${vh()};
-  gap: ${_h()};
-`,Dh=H.div`
+  padding-top: ${xh()};
+  gap: ${bh()};
+`,Ah=H.div`
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 0 60px;
-`,Oh=H.h1`
+`,jh=H.h1`
   margin: 0;
   color: rgba(255, 255, 255, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${yh()};
+  font-size: ${Sh()};
   font-weight: 600;
-  line-height: ${bh()};
+  line-height: ${Ch()};
   text-align: center;
-`,kh=H.img`
-  width: ${xh()};
-  height: ${Sh()};
-`,Ah=H.div`
-  width: ${Ch()};
+`,Mh=H.img`
+  width: ${wh()};
+  height: ${Th()};
+`,Nh=H.div`
+  width: ${Eh()};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1603,98 +1603,98 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   border-radius: 20px;
   background-color: #ffffff;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
-`,jh=H.p`
+`,Ph=H.p`
   margin: 0;
   width: 100%;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${wh()};
+  font-size: ${Dh()};
   font-weight: 500;
-  line-height: ${Th()};
+  line-height: ${Oh()};
   text-align: center;
-`,Mh=({t:e,message:t})=>(0,U.jsxs)(Eh,{children:[(0,U.jsx)(Dh,{children:(0,U.jsx)(Oh,{children:e.paymentResultScreen.title})}),(0,U.jsx)(kh,{src:_u,alt:``}),(0,U.jsx)(Ah,{children:(0,U.jsx)(jh,{children:t})})]}),Nh=Eu(()=>{let e=tr(),t=Qn(),[n,r]=(0,x.useState)(`uk`),i=W[n],a=t.state?.message||`Інформаційний блок про успішність операції з довільним текстом.`,o=t.state?.scenarioId;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,backgroundColor:`rgba(99, 209, 203, 1)`,header:(0,U.jsx)(Wc,{variant:`language-switcher`,activeLanguage:n===`uk`?`UA`:`EN`,supportPhone:i.header.supportPhone,supportDescription:i.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:i.paymentResultScreen.receipt,variant:`cancel`,onClick:()=>{e(I.receipt,{state:{scenarioId:o}})}}],rightButtons:[{label:i.paymentResultScreen.complete,variant:`repeat`,onClick:()=>{e(I.chooseOperationType)}}]}),children:(0,U.jsx)(Mh,{t:i,message:a})})})}),Ph=(e,t)=>{let n=`АТ «ОЩАДБАНК»`,r=new Date().toLocaleString(`uk-UA`),i=`Mastercard`,a=`АТ «ОЩАДБАНК»`,o=`325833352`,s=[`Внесено: 1200,00 грн.`,`Сума операції: 1200,00 грн.`,`Зараховано отримувачу: 1188,00 грн.`,`Комісія банку: 12,00 грн.`,`Дата та час: ${r}`],c=[`Квитанція №№: E1XM-K3PL-6JFG-OR3E`,`ПТКС: 9065007`,`Адреса: Рівне, Льонокомбінатівська вул., 9`,`Код операції: 30256028782`],l=[],u=[];switch(e){case`cardTopUp`:l=[`Послуга: поповнення карткового рахунку, ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Номер картки: ${t.cardNumber||`5167 **** **** 9476`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: Пекарський Сергій Петрович`,`Рахунок отримувача: ${t.iban||`UA903052992990004000600055925`}`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: ${o}`];break;case`mobileTopUp`:l=[`Послуга: Поповнення мобільного рахунку`,`Номер телефону: ${t.phoneNumber||`+38 (096) 834 - 70-01`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: ПрАТ "Київстар"`,`Рахунок отримувача: UA983005280000026004000003072`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: 21673832`];break;case`billsPayment`:l=[`Послуга: Оплата рахунків по номеру IBAN`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`,`Призначення платежу: ${t.paymentPurpose||`Оплата за послуги водопостачання`}`],u=[`Отримувач: РОВКП ВКГ «Рівнеоблводоканал»`,`Рахунок отримувача: ${t.iban||`UA983005280000026004000003072`}`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: ${o}`];break;default:l=[`Послуга: ${t.paymentPurpose||`Банківська операція`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: ${a}`,`Рахунок отримувача: ${t.iban||`UA903052992990004000600055925`}`,`Платіжна система: ${i}`];break}return{leftColumnTop:s,leftColumnBottom:l,rightColumnTop:c,rightColumnBottom:u}},Fh=()=>`100px`,Ih=()=>`0 60px`,Lh=()=>`20px 40px`,Rh=()=>`30px`,zh=()=>`60px`,Bh=()=>`22px`,Vh=()=>`1.5`,Hh=()=>`24px`,Uh=H.div`
+`,Fh=({t:e,message:t})=>(0,U.jsxs)(kh,{children:[(0,U.jsx)(Ah,{children:(0,U.jsx)(jh,{children:e.paymentResultScreen.title})}),(0,U.jsx)(Mh,{src:_u,alt:``}),(0,U.jsx)(Nh,{children:(0,U.jsx)(Ph,{children:t})})]}),Ih=Eu(()=>{let e=tr(),t=Qn(),[n,r]=(0,x.useState)(`uk`),i=W[n],a=t.state?.message||`Інформаційний блок про успішність операції з довільним текстом.`,o=t.state?.scenarioId;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,backgroundColor:`rgba(99, 209, 203, 1)`,header:(0,U.jsx)(Wc,{variant:`language-switcher`,activeLanguage:n===`uk`?`UA`:`EN`,supportPhone:i.header.supportPhone,supportDescription:i.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:i.paymentResultScreen.receipt,variant:`cancel`,onClick:()=>{e(I.receipt,{state:{scenarioId:o}})}}],rightButtons:[{label:i.paymentResultScreen.complete,variant:`repeat`,onClick:()=>{e(I.chooseOperationType)}}]}),children:(0,U.jsx)(Fh,{t:i,message:a})})})}),Lh=e=>{let t=e.replace(/\s/g,``).toUpperCase(),n=t.startsWith(`UA`)?t.slice(2):t;return n.length===27?`UA ** ${n.slice(-14)}`:e},Rh=(e,t)=>{let n=`АТ «ОЩАДБАНК»`,r=new Date().toLocaleString(`uk-UA`),i=`Mastercard`,a=`АТ «ОЩАДБАНК»`,o=`325833352`,s=[`Внесено: 1200,00 грн.`,`Сума операції: 1200,00 грн.`,`Зараховано отримувачу: 1188,00 грн.`,`Комісія банку: 12,00 грн.`,`Дата та час: ${r}`],c=[`Квитанція №№: E1XM-K3PL-6JFG-OR3E`,`ПТКС: 9065007`,`Адреса: Рівне, Льонокомбінатівська вул., 9`,`Код операції: 30256028782`],l=[],u=[],d=t.iban?Lh(t.iban):`UA ** ***********`;switch(e){case`cardTopUp`:l=[`Послуга: поповнення карткового рахунку, ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Номер картки: ${t.cardNumber||`5167 **** **** 9476`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: Пекарський Сергій Петрович`,`Рахунок отримувача: ${d}`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: ${o}`];break;case`mobileTopUp`:l=[`Послуга: Поповнення мобільного рахунку`,`Номер телефону: ${t.phoneNumber||`+38 (096) 834 - 70-01`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: ПрАТ "Київстар"`,`Рахунок отримувача: ${Lh(`UA983005280000026004000003072`)}`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: 21673832`];break;case`billsPayment`:l=[`Послуга: Оплата рахунків по номеру IBAN`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`,`Призначення платежу: ${t.paymentPurpose||`Оплата за послуги водопостачання`}`],u=[`Отримувач: РОВКП ВКГ «Рівнеоблводоканал»`,`Рахунок отримувача: ${d}`,`Платіжна система: ${i}`,`Банк отримувача: ${a}`,`Код отримувача: ${o}`];break;default:l=[`Послуга: ${t.paymentPurpose||`Банківська операція`}`,`Платник: ${t.payerName||`ПЕКАРСЬКИЙ С. П.`}`,`Банк платника: ${n}`,`Код банку платника: 300465`],u=[`Отримувач: ${a}`,`Рахунок отримувача: ${d}`,`Платіжна система: ${i}`];break}return{leftColumnTop:s,leftColumnBottom:l,rightColumnTop:c,rightColumnBottom:u}},zh=()=>`100px`,Bh=()=>`0 60px`,Vh=()=>`20px 40px`,Hh=()=>`30px`,Uh=()=>`60px`,Wh=()=>`22px`,Gh=()=>`1.5`,Kh=()=>`24px`,qh=H.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${Fh()};
-`,Wh=H.div`
+  padding-top: ${zh()};
+`,Jh=H.div`
   display: flex;
-  padding: ${Ih()};
+  padding: ${Bh()};
   justify-content: space-between;
   align-items: flex-start;
   align-self: stretch;
-`,Gh=H.div`
+`,Yh=H.div`
   display: flex;
-  padding: ${Lh()};
+  padding: ${Vh()};
   flex-direction: column;
   align-items: flex-start;
-  gap: ${Rh()};
+  gap: ${Hh()};
   flex: 1 0 0;
   align-self: stretch;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
-`,Kh=H.h2`
+`,Xh=H.h2`
   margin: 0;
   color: #111e29;
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${Hh()};
+  font-size: ${Kh()};
   font-weight: 600;
   line-height: normal;
-`,qh=H.div`
+`,Zh=H.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: ${zh()};
+  gap: ${Uh()};
   width: 100%;
-`,Jh=H.div`
+`,Qh=H.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   flex: 1;
-`,Yh=H.p`
+`,$h=H.p`
   margin: 0;
   color: rgba(17, 30, 41, 0.8);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${Bh()};
+  font-size: ${Wh()};
   font-weight: 500;
-  line-height: ${Vh()};
+  line-height: ${Gh()};
   text-align: left;
   white-space: pre-wrap;
-`,Xh=({bankName:e,leftColumnTop:t,leftColumnBottom:n,rightColumnTop:r,rightColumnBottom:i})=>(0,U.jsx)(Uh,{children:(0,U.jsx)(Wh,{children:(0,U.jsxs)(Gh,{children:[(0,U.jsx)(Kh,{children:e}),(0,U.jsxs)(qh,{children:[(0,U.jsxs)(Jh,{children:[(0,U.jsx)(Yh,{children:t}),(0,U.jsx)(Yh,{children:n})]}),(0,U.jsxs)(Jh,{children:[(0,U.jsx)(Yh,{children:r}),(0,U.jsx)(Yh,{children:i})]})]})]})})}),Zh=()=>{let e=tr(),t=Qn(),[n,r]=(0,x.useState)(`uk`),{data:i}=Mu(),a=W[n],o=t.state?.scenarioId,s=i.iban,c=i.paymentPurpose,l=i.phoneNumber,u=i.cardNumber,d=Wm.payerName,f=Ph(o,{iban:s,paymentPurpose:c,phoneNumber:l,payerName:d,cardNumber:u}),p=f.leftColumnTop.join(`
+`,eg=({bankName:e,leftColumnTop:t,leftColumnBottom:n,rightColumnTop:r,rightColumnBottom:i})=>(0,U.jsx)(qh,{children:(0,U.jsx)(Jh,{children:(0,U.jsxs)(Yh,{children:[(0,U.jsx)(Xh,{children:e}),(0,U.jsxs)(Zh,{children:[(0,U.jsxs)(Qh,{children:[(0,U.jsx)($h,{children:t}),(0,U.jsx)($h,{children:n})]}),(0,U.jsxs)(Qh,{children:[(0,U.jsx)($h,{children:r}),(0,U.jsx)($h,{children:i})]})]})]})})}),tg=()=>{let e=tr(),t=Qn(),[n,r]=(0,x.useState)(`uk`),{data:i}=Mu(),a=W[n],o=t.state?.scenarioId,s=i.iban,c=i.paymentPurpose,l=i.phoneNumber,u=i.cardNumber,d=Wm.payerName,f=Rh(o,{iban:s,paymentPurpose:c,phoneNumber:l,payerName:d,cardNumber:u}),p=f.leftColumnTop.join(`
 `),m=f.leftColumnBottom.join(`
 `),h=f.rightColumnTop.join(`
 `),g=f.rightColumnBottom.join(`
-`);return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`language-switcher`,activeLanguage:n===`uk`?`UA`:`EN`,supportPhone:a.header.supportPhone,supportDescription:a.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:a.receiptScreen.print,variant:`cancel`,onClick:()=>{e(I.chooseOperationType)}}],rightButtons:[{label:a.receiptScreen.complete,variant:`continue`,icon:`arrow-next`,onClick:()=>{e(I.chooseOperationType)}}]}),children:(0,U.jsx)(Xh,{bankName:`АТ «ОЩАДБАНК»`,leftColumnTop:p,leftColumnBottom:m,rightColumnTop:h,rightColumnBottom:g})})})},Qh=()=>`100px`,$h=()=>`60px`,eg=()=>`46px`,tg=()=>`block`,ng=()=>`1140px`,rg=()=>`80px`,ig=()=>`36px`,ag=H.div`
+`);return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`language-switcher`,activeLanguage:n===`uk`?`UA`:`EN`,supportPhone:a.header.supportPhone,supportDescription:a.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:a.receiptScreen.print,variant:`cancel`,onClick:()=>{e(I.chooseOperationType)}}],rightButtons:[{label:a.receiptScreen.complete,variant:`continue`,icon:`arrow-next`,onClick:()=>{e(I.chooseOperationType)}}]}),children:(0,U.jsx)(eg,{bankName:`АТ «ОЩАДБАНК»`,leftColumnTop:p,leftColumnBottom:m,rightColumnTop:h,rightColumnBottom:g})})})},ng=()=>`100px`,rg=()=>`60px`,ig=()=>`46px`,ag=()=>`block`,og=()=>`1140px`,sg=()=>`80px`,cg=()=>`36px`,lg=H.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${Qh()};
-  gap: ${$h()};
-`,og=H.div`
+  padding-top: ${ng()};
+  gap: ${rg()};
+`,ug=H.div`
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 0 60px;
-  display: ${tg()};
-`,sg=H.h1`
+  display: ${ag()};
+`,dg=H.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${eg()};
+  font-size: ${ig()};
   font-weight: 600;
   line-height: 46px;
   text-align: center;
-`,cg=H.div`
-  width: ${ng()};
-`,lg=H.input`
+`,fg=H.div`
+  width: ${og()};
+`,pg=H.input`
   width: 100%;
-  height: ${rg()};
+  height: ${sg()};
   padding: 0 28px;
   border-radius: 20px;
   border: 2px solid #0b8db0;
@@ -1702,7 +1702,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   outline: none;
   color: #111e29;
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${ig()};
+  font-size: ${cg()};
   font-weight: 600;
   text-align: left;
   caret-color: #111e29;
@@ -1710,15 +1710,15 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   &::placeholder {
     color: rgba(17, 30, 41, 0.35);
   }
-`,ug=Eu(ku(({navigation:e,currentStepId:t})=>{let n=tr(),{locale:r,setLocale:i}=G(),{updateData:a,data:o}=Mu(),[s,c]=(0,x.useState)(o.paymentPurpose||``),l=W[r],u=e=>{i(e===`UA`?`uk`:`en`)},d=e=>{s.length<100&&c(t=>t+e)},f=()=>{c(e=>e.slice(0,-1))},p=s.length>0&&s.length<=100;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,backgroundColor:`rgba(38, 207, 200, 1)`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:l.header.exit,supportPhone:l.header.supportPhone,supportDescription:l.header.supportDescription,onLanguageChange:u,onExit:()=>{n(I.chooseOperationType)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:l.footer.cancel,variant:`cancel`,onClick:()=>{n(I.chooseOperationType)}}],rightButtons:[{label:l.paymentPurposeScreen.continue,variant:`continue`,icon:`arrow-next`,disabled:!p,onClick:()=>{p&&(a({paymentPurpose:s}),e.goToNext(t))}}]}),children:(0,U.jsxs)(ag,{children:[(0,U.jsx)(og,{children:(0,U.jsx)(sg,{children:l.paymentPurposeScreen.title})}),(0,U.jsx)(cg,{children:(0,U.jsx)(lg,{type:`text`,value:s,onChange:e=>c(e.target.value),placeholder:l.paymentPurposeScreen.placeholder,maxLength:100})}),(0,U.jsx)(am,{onKeyPress:d,onDelete:f,deleteLabel:l.paymentPurposeScreen.delete,enLabel:l.paymentPurposeScreen.en,uaLabel:l.paymentPurposeScreen.ua})]})})})},`paymentPurpose`)),dg=()=>`100px`,fg=()=>`46px`,pg=()=>`46px`,mg=H.div`
+`,mg=Eu(ku(({navigation:e,currentStepId:t})=>{let n=tr(),{locale:r,setLocale:i}=G(),{updateData:a,data:o}=Mu(),[s,c]=(0,x.useState)(o.paymentPurpose||``),l=W[r],u=e=>{i(e===`UA`?`uk`:`en`)},d=e=>{s.length<100&&c(t=>t+e)},f=()=>{c(e=>e.slice(0,-1))},p=s.length>0&&s.length<=100;return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,backgroundColor:`rgba(38, 207, 200, 1)`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:l.header.exit,supportPhone:l.header.supportPhone,supportDescription:l.header.supportDescription,onLanguageChange:u,onExit:()=>{n(I.chooseOperationType)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:l.footer.cancel,variant:`cancel`,onClick:()=>{n(I.chooseOperationType)}}],rightButtons:[{label:l.paymentPurposeScreen.continue,variant:`continue`,icon:`arrow-next`,disabled:!p,onClick:()=>{p&&(a({paymentPurpose:s}),e.goToNext(t))}}]}),children:(0,U.jsxs)(lg,{children:[(0,U.jsx)(ug,{children:(0,U.jsx)(dg,{children:l.paymentPurposeScreen.title})}),(0,U.jsx)(fg,{children:(0,U.jsx)(pg,{type:`text`,value:s,onChange:e=>c(e.target.value),placeholder:l.paymentPurposeScreen.placeholder,maxLength:100})}),(0,U.jsx)(am,{onKeyPress:d,onDelete:f,deleteLabel:l.paymentPurposeScreen.delete,enLabel:l.paymentPurposeScreen.en,uaLabel:l.paymentPurposeScreen.ua})]})})})},`paymentPurpose`)),hg=()=>`100px`,gg=()=>`46px`,_g=()=>`46px`,vg=H.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${dg()};
+  padding-top: ${hg()};
   gap: 40px;
-`,hg=H.div`
+`,yg=H.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -1729,7 +1729,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   flex-grow: 1;
 
   ${!1}
-`,gg=H.div`
+`,bg=H.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -1738,15 +1738,15 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   padding: 0 60px;
   
   ${!1}
-`,_g=H.h1`
+`,xg=H.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${fg()};
+  font-size: ${gg()};
   font-weight: 600;
-  line-height: ${pg()};
+  line-height: ${_g()};
   text-align: left;
-`,vg=H.button`
+`,Sg=H.button`
   background-color: rgba(220, 225, 35, 1);
   display: flex;
   align-items: center;
@@ -1771,7 +1771,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     line-height: normal;
     white-space: nowrap;
   }
-`,yg=H.div`
+`,Cg=H.div`
   background-color: rgba(255, 255, 255, 1);
   display: flex;
   flex-direction: column;
@@ -1793,13 +1793,13 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   }
 
   ${!1}
-`,bg=H.div`
+`,wg=H.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-`,xg=H.div`
+`,Tg=H.div`
   background-color: rgba(255, 255, 255, 1);
   width: 90px;
   height: 90px;
@@ -1807,25 +1807,25 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-`,Sg=H.img`
+`,Eg=H.img`
   width: 100%;
   height: auto;
   object-fit: contain;
-`,Cg=H.div`
+`,Dg=H.div`
   width: 62px;
   height: 62px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-`,wg=H.img`
+`,Og=H.img`
   width: 32px;
   height: 24px;
-`,Tg=H.div`
+`,kg=H.div`
   display: flex;
   align-items: center;
   flex-grow: 1;
-`,Eg=H.span`
+`,Ag=H.span`
   color: rgba(17, 30, 41, 1);
   width: 220px;
   font-family: 'Oschad Sans', Arial, sans-serif;
@@ -1837,14 +1837,14 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-`,Dg=({name:e,iconSrc:t,arrowSrc:n,onClick:r})=>(0,U.jsxs)(yg,{onClick:r,children:[(0,U.jsxs)(bg,{children:[(0,U.jsx)(xg,{children:(0,U.jsx)(Sg,{src:t,alt:e})}),(0,U.jsx)(Cg,{children:(0,U.jsx)(wg,{src:n,alt:``})})]}),(0,U.jsx)(Tg,{children:(0,U.jsx)(Eg,{children:e})})]}),Og=`data:image/svg+xml,%3csvg%20width='40'%20height='19'%20viewBox='0%200%2040%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M18.3211%2018.6221L10.3661%2010.4122C9.87796%209.90841%209.87796%209.09159%2010.3661%208.58778L18.3211%200.37785C18.8092%20-0.125952%2019.6007%20-0.125952%2020.0888%200.37785C20.577%200.881653%2020.577%201.69848%2020.0888%202.20228L14.2678%208.20993L30%208.20993L30%2010.7901L14.2678%2010.7901L20.0888%2016.7977C20.577%2017.3015%2020.577%2018.1183%2020.0888%2018.6221C19.6007%2019.1259%2018.8092%2019.1259%2018.3211%2018.6221Z'%20fill='white'/%3e%3c/svg%3e`,kg=H.div`
+`,jg=({name:e,iconSrc:t,arrowSrc:n,onClick:r})=>(0,U.jsxs)(Cg,{onClick:r,children:[(0,U.jsxs)(wg,{children:[(0,U.jsx)(Tg,{children:(0,U.jsx)(Eg,{src:t,alt:e})}),(0,U.jsx)(Dg,{children:(0,U.jsx)(Og,{src:n,alt:``})})]}),(0,U.jsx)(kg,{children:(0,U.jsx)(Ag,{children:e})})]}),Mg=`data:image/svg+xml,%3csvg%20width='40'%20height='19'%20viewBox='0%200%2040%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M18.3211%2018.6221L10.3661%2010.4122C9.87796%209.90841%209.87796%209.09159%2010.3661%208.58778L18.3211%200.37785C18.8092%20-0.125952%2019.6007%20-0.125952%2020.0888%200.37785C20.577%200.881653%2020.577%201.69848%2020.0888%202.20228L14.2678%208.20993L30%208.20993L30%2010.7901L14.2678%2010.7901L20.0888%2016.7977C20.577%2017.3015%2020.577%2018.1183%2020.0888%2018.6221C19.6007%2019.1259%2018.8092%2019.1259%2018.3211%2018.6221Z'%20fill='white'/%3e%3c/svg%3e`,Ng=H.div`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
   padding: 20px 60px;
   align-self: stretch;
-`,Ag=H.button`
+`,Pg=H.button`
   width: ${({$isArrow:e})=>e?`60px`:`30px`};
   height: ${({$isArrow:e})=>e?`60px`:`30px`};
   display: flex;
@@ -1871,39 +1871,39 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     cursor: not-allowed;
     transform: none;
   }
-`,jg=H.span`
+`,Fg=H.span`
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
   font-size: 24px;
   font-weight: ${({$active:e})=>e?700:400};
   line-height: normal;
-`,Mg=H.img`
+`,Ig=H.img`
   width: 40px;
   height: 19px;
   ${({$reversed:e})=>e&&`transform: rotate(180deg);`}
-`,Ng=({currentPage:e,totalPages:t,onPageChange:n})=>{let r=Array.from({length:t},(e,t)=>t+1);return(0,U.jsxs)(kg,{children:[(0,U.jsx)(Ag,{$isArrow:!0,onClick:()=>n(e-1),disabled:e===1,children:(0,U.jsx)(Mg,{src:Og,alt:`Previous`})}),r.map(t=>(0,U.jsx)(Ag,{$active:t===e,onClick:()=>n(t),children:(0,U.jsx)(jg,{$active:t===e,children:t})},t)),(0,U.jsx)(Ag,{$isArrow:!0,onClick:()=>n(e+1),disabled:e===t,children:(0,U.jsx)(Mg,{src:Og,alt:`Next`,$reversed:!0})})]})},Pg=({t:e,operators:t,currentPage:n,totalPages:r,onPageChange:i,onIbanClick:a,onOperatorClick:o})=>(0,U.jsxs)(mg,{children:[(0,U.jsxs)(gg,{children:[(0,U.jsx)(_g,{children:e.utilitiesScreen.title}),(0,U.jsx)(vg,{onClick:a,children:(0,U.jsx)(`span`,{children:e.utilitiesScreen.ibanButton})})]}),(0,U.jsx)(hg,{children:t.map(e=>(0,U.jsx)(Dg,{name:e.name,iconSrc:e.icon,arrowSrc:il,onClick:()=>o(e)},e.id))}),(0,U.jsx)(Ng,{currentPage:n,totalPages:r,onPageChange:i})]}),Fg=[{id:`1`,name:`Рівнеоблводоканал`,icon:`/assets/icon_01-DQH_yqCP.png`},{id:`2`,name:`Рівненська обласна ЕК (електроенергія)`,icon:`/assets/icon_02-yiQwg0SC.png`},{id:`3`,name:`ДП «КиївГазЕнерджі»`,icon:`/assets/icon_03-5sHAJdFH.png`},{id:`4`,name:`"Київтеплоенерго" Централізоване опалення і постачання гарячої води`,icon:`data:image/png;base64,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`},{id:`5`,name:`YASNO Київські енергетичні послуги (електроенергія)`,icon:`/assets/icon_05-CgVlHRqf.png`},{id:`6`,name:`Київводоканал`,icon:`/assets/icon_06-B70UMWHO.png`},{id:`7`,name:`Газмережі Рівненська філія за розподіл газу`,icon:`/assets/icon_07-BBeTDDDm.png`},{id:`8`,name:`ГК "Нафтогаз України"`,icon:`/assets/icon_08-BSjwSTAF.png`},{id:`9`,name:`Рівнеоблводоканал`,icon:`/assets/icon_09-CtK_9xki.png`},{id:`10`,name:`Рівненська обласна ЕК (електроенергія)`,icon:`/assets/icon_10-LhTwYmy2.png`},{id:`11`,name:`Київводоканал`,icon:`/assets/icon_11-qKIlZg23.png`},{id:`12`,name:`ДП «КиївГазЕнерджі»`,icon:`/assets/icon_12-C-PnhIQ3.png`},{id:`13`,name:`Газмережі Рівненська філія за розподіл газу`,icon:`/assets/icon_13-DOs_D_r-.png`},{id:`14`,name:`Київтеплоенерго`,icon:`/assets/icon_14-DdZSaz5G.png`},{id:`15`,name:`Київводоканал`,icon:`/assets/icon_15-CTdqkJ5Q.png`}],Ig=8,Lg=ku(({navigation:e,currentStepId:t})=>{let n=tr();Qn();let{locale:r,setLocale:i}=G(),[a,o]=(0,x.useState)(1),s=W[r],c=Math.ceil(Fg.length/Ig),l=Fg.slice((a-1)*Ig,a*Ig);return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:s.header.exit,supportPhone:s.header.supportPhone,supportDescription:s.header.supportDescription,onLanguageChange:e=>{i(e===`UA`?`uk`:`en`)},onExit:()=>{n(I.chooseOperationType)}}),footer:null,children:(0,U.jsx)(Pg,{t:s,operators:l,currentPage:a,totalPages:c,onPageChange:o,onIbanClick:()=>{n(I.ibanInput,{state:{scenarioId:`billsPayment`}})},onOperatorClick:n=>{e.goToError(t)}})})})},`utilities`),Rg=()=>`100px`,zg=()=>`60px`,Bg=()=>`46px`,Vg=()=>`46px`,Hg=()=>`520px`,Ug=()=>`24px`,Wg=()=>`32px`,Gg=H.div`
+`,Lg=({currentPage:e,totalPages:t,onPageChange:n})=>{let r=Array.from({length:t},(e,t)=>t+1);return(0,U.jsxs)(Ng,{children:[(0,U.jsx)(Pg,{$isArrow:!0,onClick:()=>n(e-1),disabled:e===1,children:(0,U.jsx)(Ig,{src:Mg,alt:`Previous`})}),r.map(t=>(0,U.jsx)(Pg,{$active:t===e,onClick:()=>n(t),children:(0,U.jsx)(Fg,{$active:t===e,children:t})},t)),(0,U.jsx)(Pg,{$isArrow:!0,onClick:()=>n(e+1),disabled:e===t,children:(0,U.jsx)(Ig,{src:Mg,alt:`Next`,$reversed:!0})})]})},Rg=({t:e,operators:t,currentPage:n,totalPages:r,onPageChange:i,onIbanClick:a,onOperatorClick:o})=>(0,U.jsxs)(vg,{children:[(0,U.jsxs)(bg,{children:[(0,U.jsx)(xg,{children:e.utilitiesScreen.title}),(0,U.jsx)(Sg,{onClick:a,children:(0,U.jsx)(`span`,{children:e.utilitiesScreen.ibanButton})})]}),(0,U.jsx)(yg,{children:t.map(e=>(0,U.jsx)(jg,{name:e.name,iconSrc:e.icon,arrowSrc:il,onClick:()=>o(e)},e.id))}),(0,U.jsx)(Lg,{currentPage:n,totalPages:r,onPageChange:i})]}),zg=[{id:`1`,name:`Рівнеоблводоканал`,icon:`/assets/icon_01-DQH_yqCP.png`},{id:`2`,name:`Рівненська обласна ЕК (електроенергія)`,icon:`/assets/icon_02-yiQwg0SC.png`},{id:`3`,name:`ДП «КиївГазЕнерджі»`,icon:`/assets/icon_03-5sHAJdFH.png`},{id:`4`,name:`"Київтеплоенерго" Централізоване опалення і постачання гарячої води`,icon:`data:image/png;base64,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`},{id:`5`,name:`YASNO Київські енергетичні послуги (електроенергія)`,icon:`/assets/icon_05-CgVlHRqf.png`},{id:`6`,name:`Київводоканал`,icon:`/assets/icon_06-B70UMWHO.png`},{id:`7`,name:`Газмережі Рівненська філія за розподіл газу`,icon:`/assets/icon_07-BBeTDDDm.png`},{id:`8`,name:`ГК "Нафтогаз України"`,icon:`/assets/icon_08-BSjwSTAF.png`},{id:`9`,name:`Рівнеоблводоканал`,icon:`/assets/icon_09-CtK_9xki.png`},{id:`10`,name:`Рівненська обласна ЕК (електроенергія)`,icon:`/assets/icon_10-LhTwYmy2.png`},{id:`11`,name:`Київводоканал`,icon:`/assets/icon_11-qKIlZg23.png`},{id:`12`,name:`ДП «КиївГазЕнерджі»`,icon:`/assets/icon_12-C-PnhIQ3.png`},{id:`13`,name:`Газмережі Рівненська філія за розподіл газу`,icon:`/assets/icon_13-DOs_D_r-.png`},{id:`14`,name:`Київтеплоенерго`,icon:`/assets/icon_14-DdZSaz5G.png`},{id:`15`,name:`Київводоканал`,icon:`/assets/icon_15-CTdqkJ5Q.png`}],Bg=8,Vg=ku(({navigation:e,currentStepId:t})=>{let n=tr();Qn();let{locale:r,setLocale:i}=G(),[a,o]=(0,x.useState)(1),s=W[r],c=Math.ceil(zg.length/Bg),l=zg.slice((a-1)*Bg,a*Bg);return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:s.header.exit,supportPhone:s.header.supportPhone,supportDescription:s.header.supportDescription,onLanguageChange:e=>{i(e===`UA`?`uk`:`en`)},onExit:()=>{n(I.chooseOperationType)}}),footer:null,children:(0,U.jsx)(Rg,{t:s,operators:l,currentPage:a,totalPages:c,onPageChange:o,onIbanClick:()=>{n(I.ibanInput,{state:{scenarioId:`billsPayment`}})},onOperatorClick:n=>{e.goToError(t)}})})})},`utilities`),Hg=()=>`100px`,Ug=()=>`60px`,Wg=()=>`46px`,Gg=()=>`46px`,Kg=()=>`520px`,qg=()=>`24px`,Jg=()=>`32px`,Yg=H.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${Rg()};
-  gap: ${zg()};
-`,Kg=H.div`
+  padding-top: ${Hg()};
+  gap: ${Ug()};
+`,Xg=H.div`
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 0 60px;
-`,qg=H.h1`
+`,Zg=H.h1`
   margin: 0;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${Bg()};
+  font-size: ${Wg()};
   font-weight: 600;
-  line-height: ${Vg()};
+  line-height: ${Gg()};
   text-align: center;
-`,Jg=H.div`
-  width: ${Hg()};
+`,Qg=H.div`
+  width: ${Kg()};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1913,16 +1913,16 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   border-radius: 20px;
   background-color: #ffffff;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
-`,Yg=H.p`
+`,$g=H.p`
   margin: 0;
   width: 100%;
   color: rgba(17, 30, 41, 1);
   font-family: 'Oschad Sans', Arial, sans-serif;
-  font-size: ${Ug()};
+  font-size: ${qg()};
   font-weight: 500;
-  line-height: ${Wg()};
+  line-height: ${Jg()};
   text-align: center;
-`,Xg=({t:e})=>(0,U.jsxs)(Gg,{children:[(0,U.jsx)(Kg,{children:(0,U.jsx)(qg,{children:e.utilitiesErrorScreen.title})}),(0,U.jsx)(Jg,{children:(0,U.jsx)(Yg,{children:e.utilitiesErrorScreen.message})})]}),Zg=Ci([{path:I.home,element:(0,U.jsx)(Ir,{to:I.start,replace:!0})},{path:I.start,element:(0,U.jsx)(Oc,{})},{path:I.chooseOperationType,element:(0,U.jsx)(Cl,{})},{path:I.phoneInput,element:(0,U.jsx)(_p,{})},{path:I.cardInput,element:(0,U.jsx)(Zu,{})},{path:I.printerError,element:(0,U.jsx)(Pp,{})},{path:I.cardError,element:(0,U.jsx)(Yl,{})},{path:I.ibanInput,element:(0,U.jsx)(Of,{})},{path:I.ibanError,element:(0,U.jsx)(Wf,{})},{path:I.textInput,element:(0,U.jsx)(ym,{})},{path:I.cashAcceptance,element:(0,U.jsx)(Qd,{})},{path:I.smsInput,element:(0,U.jsx)(Um,{})},{path:I.paymentInfo,element:(0,U.jsx)(gh,{})},{path:I.paymentResult,element:(0,U.jsx)(Nh,{})},{path:I.receipt,element:(0,U.jsx)(Zh,{})},{path:I.paymentPurpose,element:(0,U.jsx)(ug,{})},{path:I.utilities,element:(0,U.jsx)(Lg,{})},{path:I.utilitiesError,element:(0,U.jsx)(()=>{let e=tr(),t=Qn(),{locale:n,setLocale:r}=G(),i=W[n];return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:i.header.exit,supportPhone:i.header.supportPhone,supportDescription:i.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)},onExit:()=>{e(I.chooseOperationType)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:i.footer.back,variant:`back`,icon:`arrow-back`,onClick:()=>{e(I.utilities,{state:t.state})}}],rightButtons:[]}),children:(0,U.jsx)(Xg,{t:i})})})},{})}]),Qg=ac`
+`,e_=({t:e})=>(0,U.jsxs)(Yg,{children:[(0,U.jsx)(Xg,{children:(0,U.jsx)(Zg,{children:e.utilitiesErrorScreen.title})}),(0,U.jsx)(Qg,{children:(0,U.jsx)($g,{children:e.utilitiesErrorScreen.message})})]}),t_=Ci([{path:I.home,element:(0,U.jsx)(Ir,{to:I.start,replace:!0})},{path:I.start,element:(0,U.jsx)(Oc,{})},{path:I.chooseOperationType,element:(0,U.jsx)(Cl,{})},{path:I.phoneInput,element:(0,U.jsx)(_p,{})},{path:I.cardInput,element:(0,U.jsx)(Zu,{})},{path:I.printerError,element:(0,U.jsx)(Pp,{})},{path:I.cardError,element:(0,U.jsx)(Yl,{})},{path:I.ibanInput,element:(0,U.jsx)(Of,{})},{path:I.ibanError,element:(0,U.jsx)(Wf,{})},{path:I.textInput,element:(0,U.jsx)(ym,{})},{path:I.cashAcceptance,element:(0,U.jsx)(Qd,{})},{path:I.smsInput,element:(0,U.jsx)(Um,{})},{path:I.paymentInfo,element:(0,U.jsx)(yh,{})},{path:I.paymentResult,element:(0,U.jsx)(Ih,{})},{path:I.receipt,element:(0,U.jsx)(tg,{})},{path:I.paymentPurpose,element:(0,U.jsx)(mg,{})},{path:I.utilities,element:(0,U.jsx)(Vg,{})},{path:I.utilitiesError,element:(0,U.jsx)(()=>{let e=tr(),t=Qn(),{locale:n,setLocale:r}=G(),i=W[n];return(0,U.jsx)(tl,{children:(0,U.jsx)(Qc,{variant:`default`,header:(0,U.jsx)(Wc,{variant:`action-button`,actionLabel:i.header.exit,supportPhone:i.header.supportPhone,supportDescription:i.header.supportDescription,onLanguageChange:e=>{r(e===`UA`?`uk`:`en`)},onExit:()=>{e(I.chooseOperationType)}}),footer:(0,U.jsx)(Ll,{leftButtons:[{label:i.footer.back,variant:`back`,icon:`arrow-back`,onClick:()=>{e(I.utilities,{state:t.state})}}],rightButtons:[]}),children:(0,U.jsx)(e_,{t:i})})})},{})}]),n_=ac`
   @font-face {
     font-family: 'Oschad Sans';
     src: url(${`/assets/OschadSans-Regular-BMB5GAJD.woff2`}) format('woff2');
@@ -1991,4 +1991,4 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     color: inherit;
     text-decoration: none;
   }
-`;function $g(){return(0,U.jsx)(rl,{children:(0,U.jsx)(ju,{children:(0,U.jsxs)(rd,{children:[(0,U.jsx)(Qg,{}),(0,U.jsx)(Ki,{router:Zg,future:{v7_startTransition:!0}})]})})})}(0,qi.createRoot)(document.getElementById(`root`)).render((0,U.jsx)(x.StrictMode,{children:(0,U.jsx)($g,{})}));
+`;function r_(){return(0,U.jsx)(rl,{children:(0,U.jsx)(ju,{children:(0,U.jsxs)(rd,{children:[(0,U.jsx)(n_,{}),(0,U.jsx)(Ki,{router:t_,future:{v7_startTransition:!0}})]})})})}(0,qi.createRoot)(document.getElementById(`root`)).render((0,U.jsx)(x.StrictMode,{children:(0,U.jsx)(r_,{})}));

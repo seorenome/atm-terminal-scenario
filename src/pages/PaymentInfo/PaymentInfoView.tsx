@@ -20,6 +20,7 @@ type PaymentInfoViewProps = {
   isCardTopUp: boolean
   isMobileTopUp: boolean
   isBillsPayment: boolean
+  isUtilities: boolean
   cardNumber: string
   phoneNumber: string
   amount: string
@@ -35,6 +36,11 @@ type PaymentInfoViewProps = {
   iban: string
   paymentPurposeBills: string
   recipientBills: string
+  operatorName: string
+  accountNumber: string
+  servicePayerName: string
+  serviceAddress: string
+  serviceAmount: number
 }
 
 const formatCardNumber = (cardNumber: string): string => {
@@ -45,21 +51,11 @@ const formatCardNumber = (cardNumber: string): string => {
 }
 
 const formatIban = (iban: string): string => {
-  // Видаляємо всі пробіли та переводимо у верхній регістр
   let cleanIban = iban.replace(/\s/g, '').toUpperCase()
-  
-  // Перевіряємо наявність префікса UA
   let hasPrefix = cleanIban.startsWith('UA')
-  
-  // Отримуємо тільки цифри
   let digits = hasPrefix ? cleanIban.slice(2) : cleanIban
-  
-  // Перевіряємо довжину цифр (має бути 27)
   if (digits.length !== 27) return iban
-  
-  // Беремо останні 14 цифр
   const last14 = digits.slice(-14)
-  
   return `UA ** ${last14}`
 }
 
@@ -68,6 +64,7 @@ const PaymentInfoView = ({
   isCardTopUp,
   isMobileTopUp,
   isBillsPayment,
+  isUtilities,
   cardNumber,
   phoneNumber,
   amount,
@@ -83,12 +80,19 @@ const PaymentInfoView = ({
   iban,
   paymentPurposeBills,
   recipientBills,
+  operatorName,
+  accountNumber,
+  servicePayerName,
+  serviceAddress,
+  serviceAmount,
 }: PaymentInfoViewProps) => {
   const title = isCardTopUp
     ? t.paymentInfoScreen.title
     : isMobileTopUp
     ? t.paymentInfoScreen.titleMobile
-    : t.paymentInfoScreen.titleBills
+    : isBillsPayment
+    ? t.paymentInfoScreen.titleBills
+    : 'Комунальні послуги'
 
   const formattedCardNumber = formatCardNumber(cardNumber)
   const formattedIban = formatIban(iban)
@@ -167,12 +171,41 @@ const PaymentInfoView = ({
                   </InfoRow>
                 </>
               )}
+
+              {isUtilities && (
+                <>
+                  <InfoRow>
+                    <Label>Отримувач:</Label>
+                    <Data>{operatorName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>Номер рахунку:</Label>
+                    <Data>{accountNumber}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>Платник:</Label>
+                    <Data>{servicePayerName}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>Адреса:</Label>
+                    <Data>{serviceAddress}</Data>
+                  </InfoRow>
+                  <InfoRow>
+                    <Label>Номер телефону:</Label>
+                    <Data>{phoneNumber}</Data>
+                  </InfoRow>
+                </>
+              )}
             </Column>
 
             <Column>
               <InfoRow>
                 <Label>{t.paymentInfoScreen.amount}</Label>
-                <Data>{amount}</Data>
+                <Data>
+                  {isUtilities && serviceAmount > 0
+                    ? `${serviceAmount.toFixed(2)} ${t.paymentInfoScreen.currency}`
+                    : amount}
+                </Data>
               </InfoRow>
 
               <InfoRow>
@@ -192,7 +225,9 @@ const PaymentInfoView = ({
                     ? paymentPurposeCard
                     : isMobileTopUp
                     ? paymentPurposeMobile
-                    : paymentPurposeBills}
+                    : isBillsPayment
+                    ? paymentPurposeBills
+                    : `Оплата за ${operatorName} за квітень 2026`}
                 </Data>
               </InfoRow>
             </Column>

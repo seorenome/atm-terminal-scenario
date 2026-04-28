@@ -17,6 +17,8 @@ import ReceiptPage from '../pages/Receipt/ReceiptPage'
 import PaymentPurposePage from '../pages/PaymentPurpose/PaymentPurposePage'
 import UtilitiesPage from '../pages/Utilities/UtilitiesPage'
 import UtilitiesErrorPage from '../pages/UtilitiesError/UtilitiesErrorPage'
+import AccountInputPage from '../pages/AccountInput/AccountInputPage'
+import AccountErrorPage from '../pages/AccountError/AccountErrorPage'
 
 export const router = createBrowserRouter([
   {
@@ -90,5 +92,13 @@ export const router = createBrowserRouter([
   {
     path: routePaths.utilitiesError,
     element: <UtilitiesErrorPage />,
+  },
+  {
+    path: routePaths.accountInput,
+    element: <AccountInputPage />,
+  },
+  {
+    path: routePaths.accountError,
+    element: <AccountErrorPage />,
   },
 ])
