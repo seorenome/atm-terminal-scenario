@@ -120,6 +120,14 @@ export const getReceiptConfig = (
       break
 
     case 'utilities':
+      const serviceTypeMap: Record<string, string> = {
+        'водопостачання': 'водопостачання',
+        'газопостачання': 'газопостачання',
+        'теплопостачання': 'теплопостачання',
+        'електроенергію': 'електроенергію',
+      }
+      const serviceTypeText = serviceTypeMap[data.serviceType || ''] || 'послуги'
+      
       leftColumnBottom = [
         `Послуга: ${data.operatorName || 'Комунальна послуга'}`,
         `Особовий рахунок: ${data.accountNumber || '___________'}`,
@@ -129,7 +137,7 @@ export const getReceiptConfig = (
       ]
       rightColumnBottom = [
         `Отримувач: ${data.operatorName || 'Комунальне підприємство'}`,
-        `Призначення платежу: ${data.paymentPurpose || `Оплата за ${data.operatorName || 'послуги'} за квітень 2026`}`,
+        `Призначення платежу: Оплата за ${serviceTypeText} за квітень 2026`,
         `Період оплати: квітень 2026`,
         `Платіжна система: ${paymentSystem}`,
       ]

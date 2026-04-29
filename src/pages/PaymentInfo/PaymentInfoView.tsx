@@ -41,6 +41,7 @@ type PaymentInfoViewProps = {
   servicePayerName: string
   serviceAddress: string
   serviceAmount: number
+  serviceType?: string
 }
 
 const formatCardNumber = (cardNumber: string): string => {
@@ -85,6 +86,7 @@ const PaymentInfoView = ({
   servicePayerName,
   serviceAddress,
   serviceAmount,
+  serviceType,
 }: PaymentInfoViewProps) => {
   const title = isCardTopUp
     ? t.paymentInfoScreen.title
@@ -96,6 +98,14 @@ const PaymentInfoView = ({
 
   const formattedCardNumber = formatCardNumber(cardNumber)
   const formattedIban = formatIban(iban)
+
+  const serviceTypeTextMap: Record<string, string> = {
+    'водопостачання': 'водопостачання',
+    'газопостачання': 'газопостачання',
+    'теплопостачання': 'теплопостачання',
+    'електроенергію': 'електроенергію',
+  }
+  const serviceTypeText = serviceType ? serviceTypeTextMap[serviceType] || 'послуги' : 'послуги'
 
   return (
     <ContentWrapper>
@@ -227,7 +237,7 @@ const PaymentInfoView = ({
                     ? paymentPurposeMobile
                     : isBillsPayment
                     ? paymentPurposeBills
-                    : `Оплата за ${operatorName} за квітень 2026`}
+                    : `Оплата за ${serviceTypeText} за квітень 2026`}
                 </Data>
               </InfoRow>
             </Column>

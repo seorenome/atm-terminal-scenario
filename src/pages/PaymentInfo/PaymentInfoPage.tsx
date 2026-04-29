@@ -97,6 +97,7 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
   const servicePayerName = data.payerName || ''
   const serviceAddress = data.serviceAddress || ''
   const serviceAmount = data.amount || 0
+  const serviceType = data.serviceType || ''
 
   const isCardTopUp = scenarioId === 'cardTopUp'
   const isMobileTopUp = scenarioId === 'mobileTopUp'
@@ -165,6 +166,7 @@ const PaymentInfoPage = ({ navigation, currentStepId }: PaymentInfoPageProps) =>
           servicePayerName={servicePayerName}
           serviceAddress={serviceAddress}
           serviceAmount={serviceAmount}
+          serviceType={serviceType}
         />
       </TerminalLayout>
     </TerminalViewport>
