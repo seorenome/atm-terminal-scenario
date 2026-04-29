@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react'
 import deleteIcon from '../../../assets/icons/delete.svg'
 import {
   DeleteButton,
@@ -10,52 +11,56 @@ import {
 } from './NumericKeypad.styled'
 import type { NumericKeypadProps } from './NumericKeypad.types'
 
-const NumericKeypad = ({
+const NumericKeypad = memo(({
   onDigitClick,
   onDeleteClick,
   deleteLabel,
 }: NumericKeypadProps) => {
+  const handleDigitClick = useCallback((digit: string) => {
+    onDigitClick(digit)
+  }, [onDigitClick])
+
   return (
     <Keypad>
       <KeyRows>
         <Row>
-          <KeyButton type="button" onClick={() => onDigitClick('1')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('1')}>
             1
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('2')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('2')}>
             2
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('3')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('3')}>
             3
           </KeyButton>
         </Row>
 
         <Row>
-          <KeyButton type="button" onClick={() => onDigitClick('4')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('4')}>
             4
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('5')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('5')}>
             5
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('6')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('6')}>
             6
           </KeyButton>
         </Row>
 
         <Row>
-          <KeyButton type="button" onClick={() => onDigitClick('7')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('7')}>
             7
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('8')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('8')}>
             8
           </KeyButton>
-          <KeyButton type="button" onClick={() => onDigitClick('9')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('9')}>
             9
           </KeyButton>
         </Row>
 
         <Row>
-          <KeyButton type="button" onClick={() => onDigitClick('0')}>
+          <KeyButton type="button" onClick={() => handleDigitClick('0')}>
             0
           </KeyButton>
 
@@ -67,6 +72,8 @@ const NumericKeypad = ({
       </KeyRows>
     </Keypad>
   )
-}
+})
+
+NumericKeypad.displayName = 'NumericKeypad'
 
 export default NumericKeypad

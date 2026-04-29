@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import ArrowBackIcon from '../../../assets/icons/arrow-back.svg'
 import ArrowNextIcon from '../../../assets/icons/arrow-next.svg'
 
@@ -14,7 +15,7 @@ const iconMap: Record<ButtonIconType, string> = {
   'arrow-next': ArrowNextIcon,
 }
 
-const Button = ({
+const Button = memo(({
   label,
   variant,
   icon,
@@ -46,6 +47,8 @@ const Button = ({
       </ButtonContent>
     </StyledButton>
   )
-}
+})
+
+Button.displayName = 'Button'
 
 export default Button

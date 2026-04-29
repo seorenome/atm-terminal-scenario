@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { UtilityCardProps } from './UtilityCard.types'
 import {
   Arrow,
@@ -10,7 +11,7 @@ import {
   TopRow,
 } from './UtilityCard.styled'
 
-const UtilityCard = ({ name, iconSrc, arrowSrc, onClick }: UtilityCardProps) => {
+const UtilityCard = memo(({ name, iconSrc, arrowSrc, onClick }: UtilityCardProps) => {
   return (
     <Card onClick={onClick}>
       <TopRow>
@@ -26,6 +27,8 @@ const UtilityCard = ({ name, iconSrc, arrowSrc, onClick }: UtilityCardProps) => 
       </NameWrapper>
     </Card>
   )
-}
+})
+
+UtilityCard.displayName = 'UtilityCard'
 
 export default UtilityCard

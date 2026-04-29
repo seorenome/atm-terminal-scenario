@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { PaginationProps } from './Pagination.types'
 import arrowIcon from '../../../assets/icons/cont.svg?url'
 import {
@@ -7,7 +8,7 @@ import {
   PaginationRoot,
 } from './Pagination.styled'
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+const Pagination = memo(({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
@@ -39,6 +40,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
       </PageButton>
     </PaginationRoot>
   )
-}
+})
+
+Pagination.displayName = 'Pagination'
 
 export default Pagination

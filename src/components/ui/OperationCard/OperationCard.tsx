@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { OperationCardProps } from './OperationCard.types'
 import {
   Arrow,
@@ -10,7 +11,7 @@ import {
   Top,
 } from './OperationCard.styled'
 
-const OperationCard = ({
+const OperationCard = memo(({
   title,
   description,
   iconSrc,
@@ -33,6 +34,8 @@ const OperationCard = ({
       </Bottom>
     </Card>
   )
-}
+})
+
+OperationCard.displayName = 'OperationCard'
 
 export default OperationCard

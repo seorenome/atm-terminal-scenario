@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import TerminalFooter from '../../components/layout/TerminalFooter/TerminalFooter'
@@ -59,11 +59,10 @@ const AccountInputPage = ({ navigation, currentStepId }: AccountInputPageProps) 
   const requiredLength = operator?.accountLength || 12
   const isComplete = accountNumber.length === requiredLength
 
-  const getLastDigit = (account: string): string => {
+  const getLastDigit = useCallback((account: string): string => {
     if (account.length === 0) return '0'
-    const lastChar = account.slice(-1)
-    return lastChar
-  }
+    return account.slice(-1)
+  }, [])
 
   useEffect(() => {
     if (isComplete && operator) {
@@ -77,33 +76,32 @@ const AccountInputPage = ({ navigation, currentStepId }: AccountInputPageProps) 
     } else {
       setFoundData(null)
     }
-  }, [accountNumber, isComplete, operator])
+  }, [accountNumber, isComplete, operator, getLastDigit])
 
-  const handleLanguageChange = (language: HeaderLanguage) => {
+  const handleLanguageChange = useCallback((language: HeaderLanguage) => {
     setLocale(language === 'UA' ? 'uk' : 'en')
-  }
+  }, [setLocale])
 
-  const handleDigitClick = (digit: string) => {
+  const handleDigitClick = useCallback((digit: string) => {
     if (accountNumber.length < requiredLength) {
       setAccountNumber((prev) => prev + digit)
     }
-  }
+  }, [accountNumber.length, requiredLength])
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = useCallback(() => {
     setAccountNumber((prev) => prev.slice(0, -1))
-  }
+  }, [])
 
-  const handleExit = () => {
+  const handleExit = useCallback(() => {
     navigate(routePaths.chooseOperationType)
-  }
+  }, [navigate])
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigation.goToStep('utilities')
-  }
+  }, [navigation])
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (isComplete && foundData && operator) {
-      // Зберігаємо дані utilities в TransactionContext
       updateData({
         operatorId: operator.id,
         operatorName: operator.name,
@@ -115,18 +113,20 @@ const AccountInputPage = ({ navigation, currentStepId }: AccountInputPageProps) 
       })
       navigation.goToNext(currentStepId)
     }
-  }
+  }, [isComplete, foundData, operator, accountNumber, updateData, navigation, currentStepId])
 
-  const getDisplayValue = () => {
+  const displayValue = useMemo(() => {
     if (accountNumber.length === 0) {
       return '_'.repeat(requiredLength)
     }
     return accountNumber + '_'.repeat(requiredLength - accountNumber.length)
-  }
+  }, [accountNumber, requiredLength])
 
-  const getHintText = () => {
+  const hintText = useMemo(() => {
     return t.accountInputScreen.hint.replace('{length}', requiredLength.toString())
-  }
+  }, [t.accountInputScreen.hint, requiredLength])
+
+  const isButtonDisabled = !isComplete || !foundData
 
   return (
     <TerminalViewport>
@@ -157,7 +157,7 @@ const AccountInputPage = ({ navigation, currentStepId }: AccountInputPageProps) 
                 label: t.accountInputScreen.continue,
                 variant: 'continue',
                 icon: 'arrow-next',
-                disabled: !isComplete || !foundData,
+                disabled: isButtonDisabled,
                 onClick: handleContinue,
               },
             ]}
@@ -175,16 +175,16 @@ const AccountInputPage = ({ navigation, currentStepId }: AccountInputPageProps) 
             <InputWrapper>
               <InputField>
                 {accountNumber.length === 0 ? (
-                  <InputPlaceholder>{getDisplayValue()}</InputPlaceholder>
+                  <InputPlaceholder>{displayValue}</InputPlaceholder>
                 ) : (
-                  getDisplayValue()
+                  displayValue
                 )}
               </InputField>
             </InputWrapper>
 
             {!isComplete && (
               <HintCard>
-                <HintText>{getHintText()}</HintText>
+                <HintText>{hintText}</HintText>
               </HintCard>
             )}
 
